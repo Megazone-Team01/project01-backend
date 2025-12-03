@@ -12,3 +12,6 @@ services:
       - TZ=Asia/Seoul
     volumes:
       - ./mysql/init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql  # 이 줄 추가
+volumes:
+  mysql_data:  # 파일 맨 아래에 추가
