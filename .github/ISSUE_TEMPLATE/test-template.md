@@ -1,7 +1,7 @@
 ---
 name: Test Template
 about: 테스트 이슈 템플릿
-title: "[# ] test : "
+title: 'test : '
 labels: test
 assignees: ''
 

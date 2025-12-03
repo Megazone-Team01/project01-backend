@@ -1,7 +1,7 @@
 ---
 name: Hotfix Template
 about: 긴급으로 처리해야 하는 이슈
-title: "[# ] hotfix : "
+title: 'hotfix : '
 labels: hotfix
 assignees: ''
 

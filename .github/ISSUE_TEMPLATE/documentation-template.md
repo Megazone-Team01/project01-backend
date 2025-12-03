@@ -1,7 +1,7 @@
 ---
 name: Documentation Template
 about: 문서화 이슈 템플릿
-title: "[# ] docs : "
+title: 'docs : '
 labels: documentation
 assignees: ''
 
