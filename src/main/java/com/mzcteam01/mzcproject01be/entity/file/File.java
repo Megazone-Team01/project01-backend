@@ -1,0 +1,37 @@
+package com.mzcteam01.mzcproject01be.entity.file;
+
+import com.mzcteam01.mzcproject01be.entity.BaseEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table( name = "file" )
+public class File extends BaseEntity {
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    private int id;
+
+    @Column( name = "url" )
+    private String url;
+
+    // @ManyToOne( fetch = FetchType.EAGER )
+    // @JoinColumn( name = "lecture_id" )
+    // private Lecture lecture;
+
+    // @ManyToOne( fetch = FetchType.LAZY )
+    // @JoinColumn( name = "uploader_id" )
+    // private User uploader;
+
+    @Column( name = "extension" )
+    private String extension;
+
+    @Column( name = "original_name" )
+    private String originalName;
+}
