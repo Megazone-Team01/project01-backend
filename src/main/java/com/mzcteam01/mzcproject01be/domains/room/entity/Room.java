@@ -1,6 +1,6 @@
-package com.mzcteam01.mzcproject01be.entity.room;
+package com.mzcteam01.mzcproject01be.domains.room.entity;
 
-import com.mzcteam01.mzcproject01be.entity.BaseEntity;
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package com.mzcteam01.mzcproject01be.entity.reservation;
+package com.mzcteam01.mzcproject01be.domains.reservation.entity;
 
-import com.mzcteam01.mzcproject01be.entity.BaseEntity;
-import com.mzcteam01.mzcproject01be.entity.room.Room;
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

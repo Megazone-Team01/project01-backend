@@ -1,6 +1,6 @@
-package com.mzcteam01.mzcproject01be.entity.file;
+package com.mzcteam01.mzcproject01be.domains.file.entity;
 
-import com.mzcteam01.mzcproject01be.entity.BaseEntity;
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

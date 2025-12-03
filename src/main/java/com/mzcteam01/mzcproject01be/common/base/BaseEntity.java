@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.entity;
+package com.mzcteam01.mzcproject01be.common.base;
 
 import jakarta.persistence.Column;
 import lombok.Getter;
