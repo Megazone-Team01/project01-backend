@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "organiazation")
+@Table(name = "organization")
 public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, length = 5)
+    @Column(name = "id")
     private int id;
 
     @Column(name = "name", nullable = false, length = 50)
@@ -34,6 +34,6 @@ public class Organization {
     private String tel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "owner_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 }

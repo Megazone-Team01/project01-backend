@@ -38,7 +38,7 @@ public class User {
     private String addressDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role", nullable = false)
+    @JoinColumn(name = "role_id", nullable = false)
     private UserRole role;
 
     @Column(name = "type")
