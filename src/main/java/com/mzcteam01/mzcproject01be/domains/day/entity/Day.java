@@ -21,6 +21,7 @@ public class Day {
     @Column(name = "name", length = 10)
     private String name;
 
+    // 0(월)부터 6(일)까지
     @Column(name = "value")
     private int value;
 

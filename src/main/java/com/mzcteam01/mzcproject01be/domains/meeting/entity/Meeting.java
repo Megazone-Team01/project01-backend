@@ -1,7 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @MappedSuperclass

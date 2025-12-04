@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
-//@Builder
+@Builder
 @Table(name = "online_lecture")
 public class OnlineLecture extends Lecture {
 //    @OneToOne(fetch = FetchType.LAZY)
