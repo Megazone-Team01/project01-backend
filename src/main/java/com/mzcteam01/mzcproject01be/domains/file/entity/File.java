@@ -21,10 +21,6 @@ public class File extends BaseEntity {
     @Column( name = "url" )
     private String url;
 
-    // @ManyToOne( fetch = FetchType.EAGER )
-    // @JoinColumn( name = "lecture_id" )
-    // private Lecture lecture;
-
     // @ManyToOne( fetch = FetchType.LAZY )
     // @JoinColumn( name = "uploader_id" )
     // private User uploader;
