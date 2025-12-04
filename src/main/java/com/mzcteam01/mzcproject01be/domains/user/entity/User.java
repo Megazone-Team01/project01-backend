@@ -21,7 +21,7 @@ public class User {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "email", nullable = false, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
     @Column(name = "password", nullable = false, length = 255)
@@ -45,7 +45,7 @@ public class User {
     private Integer type;
 
     @Column(name = "registered_at")
-    private LocalDateTime registerdAt;
+    private LocalDateTime registeredAt;
 
     @Column(name = "expired_at")
     private LocalDateTime expiredAt;
