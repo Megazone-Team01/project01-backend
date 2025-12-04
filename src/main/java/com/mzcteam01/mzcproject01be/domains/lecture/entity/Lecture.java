@@ -34,8 +34,8 @@ public abstract class Lecture {
     @Column(name = "end_at")
     private LocalDateTime endAt;
 
+    @Lob
     @Column(name = "description")
     private String description;
 
-    protected Lecture() {}
 }

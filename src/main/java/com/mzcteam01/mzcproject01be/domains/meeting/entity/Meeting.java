@@ -32,5 +32,4 @@ public abstract class Meeting {
     @Column(name = "end_at")
     private LocalDateTime endAt;
 
-    protected Meeting() {}
 }

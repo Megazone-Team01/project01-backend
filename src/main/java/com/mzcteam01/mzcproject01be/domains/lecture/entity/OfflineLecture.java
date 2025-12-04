@@ -25,10 +25,11 @@ public class OfflineLecture extends Lecture {
 //    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "room_id")
 //    private Room room;
-    @Column(name = "start_time_at", length = 4)
+
+    @Column(name = "start_time", length = 4)
     private String startTimeAt;
 
-    @Column(name = "end_time_at", length = 4)
+    @Column(name = "end_time", length = 4)
     private String endTimeAt;
 
     @OneToOne(fetch = FetchType.LAZY)
