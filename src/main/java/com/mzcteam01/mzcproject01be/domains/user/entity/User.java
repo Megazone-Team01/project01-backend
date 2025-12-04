@@ -42,7 +42,7 @@ public class User {
     private UserRole role;
 
     @Column(name = "type")
-    private int type;
+    private Integer type;
 
     @Column(name = "registered_at")
     private LocalDateTime registerdAt;
