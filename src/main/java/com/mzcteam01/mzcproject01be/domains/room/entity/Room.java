@@ -46,6 +46,6 @@ public class Room extends BaseEntity {
     //private User manager;
 
     @Enumerated( EnumType.STRING )
-    @Column( name = "status" )
+    @Column( name = "status", length = 50 )
     private RoomStatus status;
 }
