@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Entity
 @Getter
@@ -21,8 +23,8 @@ public class Attendence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private Timestamp check_in;
-    private Timestamp check_out;
+    private LocalDateTime check_in;
+    private LocalDateTime check_out;
     /*
         organization table, 조인
      */

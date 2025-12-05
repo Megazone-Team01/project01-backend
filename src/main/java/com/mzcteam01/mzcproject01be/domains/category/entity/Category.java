@@ -19,8 +19,8 @@ public class Category {
     private Integer id;
 
     // self join: parent category
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", nullable = true)
     private Category parent;
 
     @Column(length = 10, unique = true)
