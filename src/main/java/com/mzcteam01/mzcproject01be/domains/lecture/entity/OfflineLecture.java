@@ -21,7 +21,7 @@ public class OfflineLecture extends Lecture {
     private int maxNum;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
     @Column(name = "start_time", nullable = false, length = 4)
