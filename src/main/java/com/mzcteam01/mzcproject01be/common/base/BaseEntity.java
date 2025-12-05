@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public abstract class BaseEntity {
     @CreatedDate
-    @Column( name = "created_at" )
+    @Column( name = "created_at", nullable = false, updatable = false )
     private LocalDateTime createdAt;
 
     @LastModifiedDate
@@ -30,7 +30,7 @@ public abstract class BaseEntity {
     @Column( name = "deleted_at" )
     private LocalDateTime deletedAt;
 
-    @Column( name = "created_by" )
+    @Column( name = "created_by", nullable = false, updatable = false )
     protected int createdBy;
 
     @Column( name = "updated_by" )
