@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.day.entity;
 
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @Table(name = "day")
-public class Day {
+public class Day extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
