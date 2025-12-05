@@ -24,7 +24,7 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @Column(length = 10, unique = false)
+    @Column(length = 10, unique = true, nullable = false)
     private String code;
 
     @Column(length = 50, nullable = false)

@@ -28,6 +28,7 @@ public class Attendance extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime check_in;
     private LocalDateTime check_out;
+
     /*
         organization table, 조인
      */
