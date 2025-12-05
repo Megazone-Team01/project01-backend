@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.organization.entity;
 
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "organization")
-public class Organization {
+public class Organization extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

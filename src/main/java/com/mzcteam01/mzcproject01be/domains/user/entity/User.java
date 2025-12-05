@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.entity;
 
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name ="user")
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
