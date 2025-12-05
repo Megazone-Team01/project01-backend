@@ -3,6 +3,8 @@ package com.mzcteam01.mzcproject01be.domains.user.entity;
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name ="user")
-public class User extends BaseEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +33,10 @@ public class User extends BaseEntity {
     @Column(name = "phone", nullable = false, length = 11)
     private String phone;
 
-    @Column(name = "address_code", length = 5)
+    @Column(name = "address_code", nullable = false, length = 5)
     private String addressCode;
 
-    @Lob
-    @Column(name = "address_detail")
+    @Column(name = "address_detail", columnDefinition = "Text")
     private String addressDetail;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,11 +46,16 @@ public class User extends BaseEntity {
     @Column(name = "type")
     private Integer type;
 
-    @Column(name = "registered_at")
-    private LocalDateTime registeredAt;
+    @CreatedDate
+    @Column( name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "expired_at")
-    private LocalDateTime expiredAt;
+    @LastModifiedDate
+    @Column( name = "updated_at" )
+    private LocalDateTime updatedAt;
+
+    @Column( name = "deleted_at" )
+    private LocalDateTime deletedAt;
 
 
 }
