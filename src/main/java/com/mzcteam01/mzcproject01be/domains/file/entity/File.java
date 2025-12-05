@@ -19,16 +19,16 @@ public class File extends BaseEntity {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private int id;
 
-    @Column( name = "url" )
+    @Column( name = "url", nullable = false )
     private String url;
 
      @ManyToOne( fetch = FetchType.LAZY )
-     @JoinColumn( name = "uploader_id" )
+     @JoinColumn( name = "uploader_id", nullable = false )
      private User uploader;
 
-    @Column( name = "extension", length = 100)
+    @Column( name = "extension", length = 100, nullable = false)
     private String extension;
 
-    @Column( name = "original_name" )
+    @Column( name = "original_name", nullable = false )
     private String originalName;
 }
