@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.reservation.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
+import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,9 +22,10 @@ public class Reservation extends BaseEntity {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private int id;
 
-    // @ManyToOne( fetch = FetchType.EAGER )
-    // @JoinColumn( name = "user_id" )
-    // private User user;
+    // EAGER 사유: Reservation을 조회할 때 필수적으로 사용자 정보를 함께 조회함
+     @ManyToOne( fetch = FetchType.EAGER )
+     @JoinColumn( name = "user_id" )
+     private User user;
 
      @ManyToOne( fetch = FetchType.LAZY )
      @JoinColumn( name = "room_id" )

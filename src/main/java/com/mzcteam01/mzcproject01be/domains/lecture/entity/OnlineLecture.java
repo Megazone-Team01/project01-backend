@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
+import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -10,9 +11,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "online_lecture")
 public class OnlineLecture extends Lecture {
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "file_id")
-//    private file file;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private File file;
 
     // 승인여부
     // -1 (반려), 0 (대기), 1(승인)

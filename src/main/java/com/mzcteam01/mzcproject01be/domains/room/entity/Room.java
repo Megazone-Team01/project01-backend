@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.room.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -24,9 +26,9 @@ public class Room extends BaseEntity {
     @Column( name = "name", length = 20 )
     private String name;
 
-    //@ManyToOne( fetch = FetchType.LAZY )
-    //@JoinColumn( name = "organization_id" )
-    //private Organization organization;
+    @ManyToOne( fetch = FetchType.LAZY )
+    @JoinColumn( name = "organization_id" )
+    private Organization organization;
 
     @Column( name = "location" )
     private String location;
@@ -41,9 +43,9 @@ public class Room extends BaseEntity {
     @Column( name = "end_at" )
     private LocalDateTime endAt;
 
-    // @ManyToOne( fetch = FetchType.LAZY )
-    // @JoinColumn( name = "manager_id" )
-    //private User manager;
+     @ManyToOne( fetch = FetchType.LAZY )
+     @JoinColumn( name = "manager_id" )
+    private User manager;
 
     @Enumerated( EnumType.STRING )
     @Column( name = "status", length = 50 )

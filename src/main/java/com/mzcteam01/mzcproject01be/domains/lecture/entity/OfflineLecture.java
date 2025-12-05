@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
 import com.mzcteam01.mzcproject01be.domains.day.entity.Day;
+import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.Min;
@@ -19,9 +20,9 @@ public class OfflineLecture extends Lecture {
     @Min(value = 1)
     private int maxNum;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "room_id")
-//    private Room room;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
+    private Room room;
 
     @Column(name = "start_time", nullable = false, length = 4)
     private String startTimeAt;
