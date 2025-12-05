@@ -21,7 +21,7 @@ public class Room extends BaseEntity {
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     private int id;
 
-    @Column( name = "name" )
+    @Column( name = "name", length = 20 )
     private String name;
 
     //@ManyToOne( fetch = FetchType.LAZY )

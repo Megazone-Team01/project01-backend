@@ -25,7 +25,7 @@ public class File extends BaseEntity {
     // @JoinColumn( name = "uploader_id" )
     // private User uploader;
 
-    @Column( name = "extension" )
+    @Column( name = "extension", length = 100)
     private String extension;
 
     @Column( name = "original_name" )
