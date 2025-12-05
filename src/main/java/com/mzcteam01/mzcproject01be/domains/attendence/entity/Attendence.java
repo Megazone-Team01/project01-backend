@@ -1,15 +1,17 @@
 
 package com.mzcteam01.mzcproject01be.domains.attendence.entity;
 
+import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Locale;
+
 
 @Entity
 @Getter
@@ -17,7 +19,7 @@ import java.util.Locale;
 @AllArgsConstructor
 @Builder
 @Table(name = "attendence")
-public class Attendence {
+public class Attendence extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +30,14 @@ public class Attendence {
     /*
         organization table, 조인
      */
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "organization_id")
-//    private Organization organization;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     /*
     * User table와 조인, 외래키
     * */
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
