@@ -33,7 +33,7 @@ public class Attendance extends BaseEntity {
         organization table, 조인
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orga_id", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
     /*
