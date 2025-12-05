@@ -24,9 +24,9 @@ public class UserLecture extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id", nullable = false)
-    private Lecture lecture;
+    // 강의 ID: OnlineLecture 또는 OfflineLecture PK
+    @Column(name = "lecture_id", nullable = false)
+    private Long lectureId;
 
     // 온라인 강의 여부
     // 0 (오프라인), 1(온라인)

@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,13 +24,13 @@ public abstract class Lecture extends BaseEntity {
     @Column(length = 50, nullable = false, name = "name")
     private String name;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "organization_id")
-//    private Organization organization_id;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
+    private Organization organization_id;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "teacher_id")
-//    private User teacher;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private User teacher;
 
     @Column(length = 50, nullable = false, name = "category")
     private String category;
