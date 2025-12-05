@@ -18,26 +18,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "attendence")
-public class Attendence extends BaseEntity {
+@Table(name = "attendance")
+public class Attendance extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false)
     private LocalDateTime check_in;
     private LocalDateTime check_out;
     /*
         organization table, 조인
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
+    @JoinColumn(name = "orga_id", nullable = false)
     private Organization organization;
 
     /*
     * User table와 조인, 외래키
     * */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
