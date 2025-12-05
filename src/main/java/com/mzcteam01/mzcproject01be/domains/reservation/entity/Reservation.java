@@ -24,16 +24,16 @@ public class Reservation extends BaseEntity {
 
     // EAGER 사유: Reservation을 조회할 때 필수적으로 사용자 정보를 함께 조회함
      @ManyToOne( fetch = FetchType.EAGER )
-     @JoinColumn( name = "user_id" )
+     @JoinColumn( name = "user_id", nullable = false )
      private User user;
 
      @ManyToOne( fetch = FetchType.LAZY )
-     @JoinColumn( name = "room_id" )
+     @JoinColumn( name = "room_id", nullable = false )
      private Room room;
 
-     @Column( name = "start_at" )
+     @Column( name = "start_at", nullable = false )
      private LocalDateTime startAt;
 
-     @Column( name = "end_at" )
+     @Column( name = "end_at", nullable = false )
     private LocalDateTime endAt;
 }
