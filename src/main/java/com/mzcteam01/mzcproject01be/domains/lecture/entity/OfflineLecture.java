@@ -2,23 +2,20 @@ package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
 import com.mzcteam01.mzcproject01be.domains.day.entity.Day;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import jakarta.validation.constraints.Min;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
+@SuperBuilder
 @Table(name = "offline_lecture")
 public class OfflineLecture extends Lecture {
 
-    @Column(name = "max_num")
+    @Column(name = "max_num", nullable = false)
     @Min(value = 1)
     private int maxNum;
 
@@ -26,13 +23,12 @@ public class OfflineLecture extends Lecture {
 //    @JoinColumn(name = "room_id")
 //    private Room room;
 
-    @Column(name = "start_time", length = 4)
+    @Column(name = "start_time", nullable = false, length = 4)
     private String startTimeAt;
 
-    @Column(name = "end_time", length = 4)
+    @Column(name = "end_time", nullable = false, length = 4)
     private String endTimeAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "day_value")
-    private Day day;
+    @Column(name = "day", nullable = false)
+    private int day;
 }

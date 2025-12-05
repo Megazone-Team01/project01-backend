@@ -1,8 +1,16 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 @MappedSuperclass
 public abstract class Lecture {
 
@@ -24,13 +32,13 @@ public abstract class Lecture {
     @Column(length = 50, nullable = false, name = "category")
     private String category;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private int price;
 
-    @Column(name = "start_at")
+    @Column(name = "start_at", nullable = false)
     private LocalDateTime startAt;
 
-    @Column(name = "end_at")
+    @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
     @Lob

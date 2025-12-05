@@ -1,8 +1,16 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 @MappedSuperclass
 public abstract class Meeting {
 
@@ -30,5 +38,10 @@ public abstract class Meeting {
 
     @Column(name = "end_at")
     private LocalDateTime endAt;
+
+    // 승인여부
+    // -1 (반려), 0 (대기), 1(승인)
+    @Column(name = "status", nullable = false)
+    private int status;
 
 }
