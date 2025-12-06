@@ -21,10 +21,10 @@ public class Category extends BaseEntity {
 
     // self join: parent category
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", nullable = true)
+    @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @Column(length = 10, unique = true)
+    @Column(length = 10, unique = true, nullable = false)
     private String code;
 
     @Column(length = 50, nullable = false)
