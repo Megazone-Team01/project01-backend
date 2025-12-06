@@ -25,9 +25,11 @@ public class Attendance extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private LocalDateTime check_in;
-    private LocalDateTime check_out;
+    @Column(name = "check_in", nullable = false)
+    private LocalDateTime checkIn;
+
+    @Column(name = "check_out")
+    private LocalDateTime checkOut;
 
     /*
         organization table, 조인
