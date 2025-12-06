@@ -25,4 +25,11 @@ public class OrganizationService {
         return organizations.stream().map( GetOrganizationResponse::of ).toList();
     }
 
+    public GetOrganizationResponse findById( int organizationId ){
+        Organization organization = organizationRepository.findById( organizationId ).orElse( null );
+        // 추후 커스텀 Exception으로 변경
+        if( organization == null ) throw new RuntimeException("해당하는 기관이 존재하지 않습니다");
+        return GetOrganizationResponse.of( organization );
+    }
+
 }

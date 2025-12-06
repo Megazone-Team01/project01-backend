@@ -6,10 +6,7 @@ import com.mzcteam01.mzcproject01be.domains.organization.service.OrganizationSer
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +22,12 @@ public class OrganizationController {
             @RequestBody GetOrganizationRequest request
     ){
         return ResponseEntity.ok( service.list( request ) );
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<GetOrganizationResponse> findById(
+            @PathVariable int id
+    ){
+        return ResponseEntity.ok( service.findById( id ) );
     }
 }
