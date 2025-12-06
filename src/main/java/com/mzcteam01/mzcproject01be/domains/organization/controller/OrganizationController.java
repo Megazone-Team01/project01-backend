@@ -1,11 +1,13 @@
 package com.mzcteam01.mzcproject01be.domains.organization.controller;
 
+import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.service.OrganizationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +21,9 @@ public class OrganizationController {
     private final OrganizationService service;
 
     @GetMapping()
-    public ResponseEntity<List<GetOrganizationResponse>> list(){
-        return ResponseEntity.ok( service.list() );
+    public ResponseEntity<List<GetOrganizationResponse>> list(
+            @RequestBody GetOrganizationRequest request
+    ){
+        return ResponseEntity.ok( service.list( request ) );
     }
 }
