@@ -8,11 +8,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "category")
 public class Category extends BaseEntity {
 
     @Id

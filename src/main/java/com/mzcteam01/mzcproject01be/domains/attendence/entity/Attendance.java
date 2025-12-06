@@ -31,16 +31,10 @@ public class Attendance extends BaseEntity {
     @Column(name = "check_out")
     private LocalDateTime checkOut;
 
-    /*
-        organization table, 조인
-     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
-    /*
-    * User table와 조인, 외래키
-    * */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
