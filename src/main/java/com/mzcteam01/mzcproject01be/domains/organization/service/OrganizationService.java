@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.organization.service;
 
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationTeacherResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
@@ -22,6 +24,7 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final UserRepository userRepository;
+    private final LectureRepository lectureRepository;
 
     public List<GetOrganizationResponse> list(GetOrganizationRequest request ){
         /*
@@ -50,6 +53,11 @@ public class OrganizationService {
             if( user.getRole().getName().equals("선생님") ) result.add( GetOrganizationTeacherResponse.of( user ) );
         }
         return result;
+    }
+
+    @Transactional
+    public List<GetOrganizationLectureResponse> findOrganizationLecture(int organizationId ){
+        return lectureRepository.findAllByOrganizationId( organizationId ).stream().map( GetOrganizationLectureResponse::of ).toList();
     }
 
 }

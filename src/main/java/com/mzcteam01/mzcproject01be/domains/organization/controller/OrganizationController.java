@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.organization.controller;
 
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationTeacherResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.service.OrganizationService;
@@ -42,5 +43,13 @@ public class OrganizationController {
             @PathVariable int organizationId
     ){
         return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
+    }
+
+    @GetMapping( "/{organizationId}/lectures")
+    @Operation( summary = "해당 아카데미에 소속된 강의 목록 조회" )
+    public ResponseEntity<List<GetOrganizationLectureResponse>> findAllLecturesInOrganization(
+            @PathVariable int organizationId
+    ){
+        return ResponseEntity.ok( service.findOrganizationLecture( organizationId ) );
     }
 }
