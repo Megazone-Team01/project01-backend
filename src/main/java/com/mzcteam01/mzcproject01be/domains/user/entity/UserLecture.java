@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class UserLecture extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -32,4 +34,10 @@ public class UserLecture extends BaseEntity {
     // 0 (오프라인), 1(온라인)
     @Column(name = "is_online", nullable = false)
     private int isOnline;
+
+    @Column(name = "registered_at", nullable = false)
+    private LocalDateTime registeredAt;
+
+    @Column(name = "expired_at", nullable = false)
+    private LocalDateTime expiredAt;
 }

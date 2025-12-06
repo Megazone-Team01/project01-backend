@@ -19,11 +19,11 @@ public class Day extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", length = 10)
+    @Column(name = "name", nullable = false, length = 10)
     private String name;
 
     // 0(월)부터 6(일)까지
-    @Column(name = "value")
+    @Column(name = "value", nullable = false)
     private int value;
 
 }
