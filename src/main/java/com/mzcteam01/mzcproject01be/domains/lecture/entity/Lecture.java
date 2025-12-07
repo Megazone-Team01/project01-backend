@@ -24,12 +24,12 @@ public abstract class Lecture extends BaseEntity {
     @Column(length = 50, nullable = false, name = "name")
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization_id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher;
 
     @Column(length = 50, nullable = false, name = "category")
@@ -44,8 +44,7 @@ public abstract class Lecture extends BaseEntity {
     @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
-    @Lob
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
 }
