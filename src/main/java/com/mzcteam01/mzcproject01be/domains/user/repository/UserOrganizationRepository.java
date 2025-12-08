@@ -1,0 +1,7 @@
+package com.mzcteam01.mzcproject01be.domains.user.repository;
+
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserOrganizationRepository extends JpaRepository<UserOrganization, Integer> {
+}

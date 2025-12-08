@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.day.entity;
+package com.mzcteam01.mzcproject01be.common.base.day.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;

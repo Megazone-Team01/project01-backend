@@ -1,13 +1,10 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
-import com.mzcteam01.mzcproject01be.domains.day.entity.Day;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.Min;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
