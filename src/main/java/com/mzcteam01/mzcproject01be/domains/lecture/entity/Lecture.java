@@ -26,7 +26,7 @@ public abstract class Lecture extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
-    private Organization organization_id;
+    private Organization organization;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")

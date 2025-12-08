@@ -23,7 +23,7 @@ public class OrganizationController {
     @GetMapping()
     @Operation( summary = "조건에 따른 Organization 목록 조회", description = "현재는 status에 따른 구분만 가능 ( 추후 필터 검색 기능 추가시 구현 예정 )")
     public ResponseEntity<List<GetOrganizationResponse>> list(
-            @RequestBody GetOrganizationRequest request
+            @ModelAttribute GetOrganizationRequest request
     ){
         return ResponseEntity.ok( service.list( request ) );
     }
