@@ -32,4 +32,9 @@ public class Category extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    public void update( String name, String description ){
+        if( name != null ) this.name = name;
+        if( description != null ) this.description = description;
+    }
 }
