@@ -37,7 +37,7 @@ public abstract class BaseEntity {
     protected int updatedBy;
 
     @Column( name = "deleted_by" )
-    private int deletedBy;
+    private Integer deletedBy;
 
     public void delete( int deletedBy ) {
         this.deletedBy = deletedBy;
