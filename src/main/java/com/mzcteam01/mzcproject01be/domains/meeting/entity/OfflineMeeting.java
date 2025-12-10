@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 public class OfflineMeeting extends Meeting{
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
 }
