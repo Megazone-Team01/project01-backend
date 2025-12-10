@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.service;
 
+import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
@@ -31,12 +32,12 @@ public class UserServiceImpl implements UserService {
 
         // 2차 비밀번호 체크
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException("비밀번호가 일치하지 않습니다.");
         }
 
         // 이메일 중복 체크
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new CustomException("이미 존재하는 이메일입니다.");
         }
 
         // 비밀번호 암호화
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
         // 현재는 User만 회원가입 할 수 있도록
         UserRole defaultRole = userRoleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Default role not found"));
+                .orElseThrow(() -> new CustomException("Default role not found"));
 
         // User 생성 후 저장
         User user = User.builder()
@@ -72,11 +73,11 @@ public class UserServiceImpl implements UserService {
     public GetLoginResponse login(LoginRequest request) {
         // 이메일이 존재하는지 확인
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new CustomException("존재하지 않는 이메일입니다."));
 
         // 사용자게 입력받은 비밀번호와 이메일에 해당하는 복호화된 비밀번호를 비교
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException("비밀번호가 일치하지 않습니다.");
         }
 
         String password = passwordEncoder.encode(user.getPassword());
