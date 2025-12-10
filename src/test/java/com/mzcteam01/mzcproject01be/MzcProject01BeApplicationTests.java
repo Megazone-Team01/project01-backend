@@ -19,11 +19,7 @@ class MzcProject01BeApplicationTests {
     @Test
     @Transactional(readOnly = true)
     void contextLoads() {
-        List<OnlineLecture> list = homeService.getAllOnlineLectures();
-        for (OnlineLecture onlineLecture : list) {
-            System.out.println("title: "+ onlineLecture.getName());
-            System.out.println("description: "+ onlineLecture.getDescription());
-        }
+
     }
 
 }

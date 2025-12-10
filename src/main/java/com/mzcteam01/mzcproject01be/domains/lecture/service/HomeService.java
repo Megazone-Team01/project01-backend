@@ -1,10 +1,10 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.HomeLectureRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +18,25 @@ public class HomeService {
 
     private final HomeLectureRepository homeLectureRepository;
 
-    public List<OfflineLecture> getAllLectures() {
+    public List<GetLectureResponse> getAllOfflineLectures() {
 
-      return homeLectureRepository.findAll();
+        PageRequest pageOffline = PageRequest.of(0, 9);
+
+        return homeLectureRepository.findAllOfflineLecture(pageOffline)
+              .stream()
+              .map(GetLectureResponse::of)
+              .toList();
 
     }
 
-    public List<OnlineLecture> getAllOnlineLectures() {
-     return homeLectureRepository.findAllOnlineLecture();
+    public List<GetLectureResponse> getAllOnlineLectures() {
+
+        PageRequest pageOnline = PageRequest.of(0, 9);
+
+        return homeLectureRepository.findAllOnlineLecture(pageOnline)
+                .stream()
+                .map(GetLectureResponse::of)
+                .toList();
     }
 
 
