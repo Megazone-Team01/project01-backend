@@ -1,10 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserLectureResponse;

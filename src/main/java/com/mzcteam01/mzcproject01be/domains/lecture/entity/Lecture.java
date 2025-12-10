@@ -26,7 +26,7 @@ public abstract class Lecture extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
-    private Organization organization_id;
+    private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id", nullable = false)
@@ -46,5 +46,14 @@ public abstract class Lecture extends BaseEntity {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    public void update( String name, User teacher, Integer price, LocalDateTime startAt, LocalDateTime endAt, String description ) {
+        if( name != null ) this.name = name;
+        if( price != null ) this.price = price;
+        if( teacher != null ) this.teacher = teacher;
+        if( startAt != null ) this.startAt = startAt;
+        if( endAt != null ) this.endAt = endAt;
+        if( description != null ) this.description = description;
+    }
 
 }
