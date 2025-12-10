@@ -21,7 +21,4 @@ public class CreateUserRequest {
     private String phone;
     private String addressCode;
     private int type;
-
-    // 기본 정보 : 학생만 회원가입 가능하도록, 강사는 관리자에게 승인이 필요.
-//    private int roleId;
 }

@@ -43,11 +43,9 @@ public class UserServiceImpl implements UserService {
         // 비밀번호 암호화
         String password = passwordEncoder.encode(request.getPassword());
 
-        // 추후 강사는 관리자 승인 요청 후 처리되도록 하기 위해 우선 주석
-        // UserRole role = roleRepository.findById(request.getRoleId())
-        //                .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        // 현재는 User만 회원가입 할 수 있도록
+        // 현재는 User로만 회원가입 할 수 있도록
+        // 만약 강사인 경우 추후 관리자 승인 요청 및 승인하는 화면에서 처리될 예정
         UserRole defaultRole = userRoleRepository.findByName("USER")
                 .orElseThrow(() -> new CustomException("Default role not found"));
 
