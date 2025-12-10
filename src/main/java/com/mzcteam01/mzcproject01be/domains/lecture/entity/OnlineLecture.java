@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "online_lecture")
 public class OnlineLecture extends Lecture {
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_id")
+    @JoinColumn(name = "file_id", nullable = false)
     private File file;
 
     // 승인여부
