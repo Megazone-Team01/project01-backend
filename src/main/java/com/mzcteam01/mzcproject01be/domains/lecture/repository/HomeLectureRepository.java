@@ -1,6 +1,5 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository;
 
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import org.springframework.data.domain.Pageable;
