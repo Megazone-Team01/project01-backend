@@ -24,7 +24,8 @@ public class RoomDetailResponse {
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private RoomStatus status;
-    // + 관리자 정보 ?
+    private Integer managerId;
+    private String managerName;
 
     public static RoomDetailResponse from(Room room) {
         return RoomDetailResponse.builder()
@@ -37,6 +38,8 @@ public class RoomDetailResponse {
                 .startAt(room.getStartAt())
                 .endAt(room.getEndAt())
                 .status(room.getStatus())
+                .managerId(room.getManager().getId())
+                .managerName(room.getManager().getName())
                 .build();
     }
 }

@@ -22,6 +22,7 @@ public class RoomListResponse {
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private RoomStatus status;
+    private String managerName;
 
     public static RoomListResponse from(Room room) {
         return RoomListResponse.builder()
@@ -32,6 +33,7 @@ public class RoomListResponse {
                 .startAt(room.getStartAt())
                 .endAt(room.getEndAt())
                 .status(room.getStatus())
+                .managerName(room.getManager().getName())
                 .build();
     }
 
