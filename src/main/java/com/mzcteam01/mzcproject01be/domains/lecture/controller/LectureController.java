@@ -19,26 +19,17 @@ public class LectureController {
 
     @GetMapping("/offline")
     public ResponseEntity<List<GetLectureResponse>> homeOffline() {
-        log.info("home Offline");
-        List<GetLectureResponse> offlineList = homeService.getAllLectures()
-                .stream()
-                .map(GetLectureResponse::of)
-                .toList();
+        log.info("Controller.Get.HomeOffline");
+        List<GetLectureResponse> offline = homeService.getAllOfflineLectures();
 
-        return ResponseEntity.ok(offlineList);
+        return ResponseEntity.ok(offline);
     }
 
     @GetMapping("/online")
     public ResponseEntity<List<GetLectureResponse>> homeOnline(){
-        log.info("home Online");
-
-        List<GetLectureResponse> onlineLectures = homeService.getAllOnlineLectures()
-                .stream()
-                .map(GetLectureResponse::of)
-                .toList();
-
-
-        return ResponseEntity.ok(onlineLectures);
+        log.info("Controller.Get.HomeOnline");
+        List<GetLectureResponse> online = homeService.getAllOnlineLectures();
+        return ResponseEntity.ok(online);
     }
 
 
