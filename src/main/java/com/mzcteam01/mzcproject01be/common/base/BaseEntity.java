@@ -31,10 +31,10 @@ public abstract class BaseEntity {
     private LocalDateTime deletedAt;
 
     @Column( name = "created_by", nullable = false, updatable = false )
-    protected int createdBy;
+    protected Integer createdBy;
 
     @Column( name = "updated_by" )
-    protected int updatedBy;
+    protected Integer updatedBy;
 
     @Column( name = "deleted_by" )
     private Integer deletedBy;
