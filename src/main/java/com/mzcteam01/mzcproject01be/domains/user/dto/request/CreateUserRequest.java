@@ -20,5 +20,5 @@ public class CreateUserRequest {
     private String name;
     private String phone;
     private String addressCode;
-    private int type;
+    private String type;
 }

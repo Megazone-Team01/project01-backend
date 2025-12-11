@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.service;
 
+import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService {
         UserRole defaultRole = userRoleRepository.findByName("USER")
                 .orElseThrow(() -> new CustomException("Default role not found"));
 
+        // 프론트에서 받아온 채널역할의 문자열을 코드값으로 변경
+        int channelType = ChannelType.fromName(request.getType()).getCode();
+
         // User 생성 후 저장
         User user = User.builder()
                 .email(request.getEmail())
@@ -57,14 +61,14 @@ public class UserServiceImpl implements UserService {
                 .phone(request.getPhone())
                 .role(defaultRole)
                 .addressCode(request.getAddressCode())
-                .type(request.getType())
+                .type(channelType)
                 .build();
 
         User savedUser = userRepository.save(user);
 
         return new GetUserResponse(savedUser.getId(),
-                                    savedUser.getEmail(),
-                                    savedUser.getName());
+                savedUser.getEmail(),
+                savedUser.getName());
     }
 
     @Override
@@ -82,7 +86,7 @@ public class UserServiceImpl implements UserService {
         passwordEncoder.matches(request.getPassword(), password);
 
         return new GetLoginResponse(user.getId(),
-                                    user.getEmail(),
-                                    user.getName());
+                user.getEmail(),
+                user.getName());
     }
 }
