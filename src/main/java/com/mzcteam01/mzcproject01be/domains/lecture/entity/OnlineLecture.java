@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "online_lecture")
 public class OnlineLecture extends Lecture {
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id", nullable = false)
     private File file;
