@@ -40,4 +40,16 @@ public class Organization extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     private int status;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "is_online")
+    private boolean isOnline;
+
+    @Column(name = "webpage")
+    private String webpage;
+
+    @Column(name = "lead_image")
+    private String leadImage;
 }
