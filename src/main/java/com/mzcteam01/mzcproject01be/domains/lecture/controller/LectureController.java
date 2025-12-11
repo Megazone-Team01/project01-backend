@@ -1,7 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
-import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.LectureRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureService;

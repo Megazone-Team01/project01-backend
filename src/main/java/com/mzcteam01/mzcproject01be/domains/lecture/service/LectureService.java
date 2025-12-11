@@ -2,10 +2,8 @@ package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineRepository;
@@ -17,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service

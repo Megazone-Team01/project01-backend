@@ -1,6 +1,5 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.dto.response;
 
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
