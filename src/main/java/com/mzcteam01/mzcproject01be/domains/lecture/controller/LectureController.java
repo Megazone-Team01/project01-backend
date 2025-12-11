@@ -52,6 +52,7 @@ public class LectureController {
 
             return ResponseEntity.ok().body(response);
         } catch (CustomException e) {
+            log.error("Controller.onlile.courses.error: {}",e.getMessage());
           return ResponseEntity.badRequest().build();
         }
     }
@@ -72,6 +73,7 @@ public class LectureController {
             LectureOfflineListResponse response = lectureService.getOfflineLecture(searchTypeCode, page);
             return ResponseEntity.ok().body(response);
         } catch (Exception e){
+            log.error("error : {}",e.getMessage());
             throw  new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage());
         }
 
@@ -84,9 +86,10 @@ public class LectureController {
   ) {
       try {
           LectureOnlineDetailResponse online = lectureService.findOnlineLecture(onlineId);
-          log.info("Controller.Online.offline, onlineId: {} data : {}", onlineId,online);
+          log.info("Controller.Online, onlineId: {} data : {}", onlineId,online);
           return ResponseEntity.ok().body(online);
       } catch (CustomException e){
+          log.error("Controller.Online.error, onlineId: {}, error: {}", onlineId,e.getMessage());
           return ResponseEntity.badRequest().build();
       }
   }
@@ -101,6 +104,7 @@ public class LectureController {
             log.info("Controller.Offline.offline, offlineId: {} data : {}", offlineId,offline);
             return ResponseEntity.ok().body(offline);
         } catch (CustomException e){
+            log.error("Controller.Offline.error, offlineId: {}, error: {}", offlineId,e.getMessage());
             return ResponseEntity.badRequest().build();
         }
   }
