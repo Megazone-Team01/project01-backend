@@ -26,5 +26,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 
 
     // 지난 예약 조회 (오래된 순서대로)
-
+    @Query( """
+            SELECT r 
+            FROM Reservation r
+            JOIN FETCH r.user
+            JOIN FETCH r.room room
+            JOIN FETCH room.organization
+            WHERE r.user.id = :userId
+                AND r.startAt < :now
+                AND r.deletedAt IS NULL
+            ORDER BY r.startAt DESC 
+            """)
+    List<Reservation> findPastReservations(Integer userId, LocalDateTime now);
 }

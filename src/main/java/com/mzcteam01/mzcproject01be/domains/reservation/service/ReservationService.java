@@ -18,8 +18,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public List<MyReservationListResponse> getMyReservations(Integer userId) {
-        log.info("userId: {}", userId);
+    public List<MyReservationListResponse> getMyReservations(Integer userId, boolean includePast) {
 
         LocalDateTime now = LocalDateTime.now();
         List<Reservation> myReservations = reservationRepository.findMyReservations(userId, now);
@@ -30,7 +29,13 @@ public class ReservationService {
             responses.add(MyReservationListResponse.from(reservation));
         }
 
-        log.info("금일 기준 가장 가까운 예약 목록 개수: {}", myReservations.size());
+        if (includePast){
+            List<Reservation> pastReservations = reservationRepository.findPastReservations(userId, now);
+
+            for (Reservation reservation : pastReservations) {
+                responses.add(MyReservationListResponse.from(reservation));
+            }
+        }
 
         return responses;
     }

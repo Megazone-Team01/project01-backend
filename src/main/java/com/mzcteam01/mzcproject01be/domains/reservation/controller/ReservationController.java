@@ -28,11 +28,12 @@ public class ReservationController {
     @GetMapping("/my")
     @Operation( summary = "나의 예약 목록 조회",
             description = "특정 userId값의 예약 목록 조회 " +
-                          "현재 시간 기준으로 가까운 미래 예약순 반환 " +
-                          "TODO: JWT 인증 구현 후 userId 제거, 과거 예약 조회 추가")
-    public ResponseEntity<List<MyReservationListResponse>> getMyReservation(@RequestParam Integer userId) {
-
-        List<MyReservationListResponse> reservations = reservationService.getMyReservations(userId);
+                          "includePast=false(기본): 현재 시간 기준으로 예정된 예약만(날짜 빠른순)" +
+                          "includePast=true: 과거 예약 목록까지 포함")
+    public ResponseEntity<List<MyReservationListResponse>> getMyReservation(
+                                                            @RequestParam Integer userId,
+                                                            @RequestParam(defaultValue = "false") boolean includePast) {
+        List<MyReservationListResponse> reservations = reservationService.getMyReservations(userId, includePast);
 
         return ResponseEntity.ok(reservations);
     }
