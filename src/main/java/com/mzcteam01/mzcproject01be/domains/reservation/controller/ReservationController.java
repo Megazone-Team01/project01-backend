@@ -2,6 +2,8 @@ package com.mzcteam01.mzcproject01be.domains.reservation.controller;
 
 import com.mzcteam01.mzcproject01be.domains.reservation.dto.response.MyReservationListResponse;
 import com.mzcteam01.mzcproject01be.domains.reservation.service.ReservationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reservations")
 @Slf4j
+@Tag(name = "Reservation", description = "예약 API")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -23,6 +26,10 @@ public class ReservationController {
     // TODO : JWT 인증 구현 후, SecurityContext에서 사용자 ID 추출
 
     @GetMapping("/my")
+    @Operation( summary = "나의 예약 목록 조회",
+            description = "특정 userId값의 예약 목록 조회 " +
+                          "현재 시간 기준으로 가까운 미래 예약순 반환 " +
+                          "TODO: JWT 인증 구현 후 userId 제거, 과거 예약 조회 추가")
     public ResponseEntity<List<MyReservationListResponse>> getMyReservation(@RequestParam Integer userId) {
 
         List<MyReservationListResponse> reservations = reservationService.getMyReservations(userId);
