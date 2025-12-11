@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
+import com.mzcteam01.mzcproject01be.domains.lecture.enums.LectureErrorCode;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,7 @@ public class LectureController {
     @GetMapping("/offline")
     public ResponseEntity<List<GetLectureResponse>> homeOffline() {
         log.info("Controller.Get.HomeOffline");
-        log.info("LectureController.homeOffline ${hello}");
         List<GetLectureResponse> offline = lectureService.getAllOfflineLectures(null);
-
         return ResponseEntity.ok(offline);
     }
 
@@ -43,18 +42,18 @@ public class LectureController {
             @RequestParam(defaultValue = "1") int page
     ) {
 
-        SearchType searchType = null;
-        // code가 있으면 code로 변환, 없으면 enum 이름 사용, 둘 다 없으면 기본값
-        if (searchTypeCode != null) {
-            searchType = SearchType.fromCode(searchTypeCode);
-        } else if (searchType == null) {
-            searchType = SearchType.Lately;
+        try{
+            SearchType searchType = searchTypeCode == null ?
+                    SearchType.fromCode(searchTypeCode)
+                    : SearchType.Lately;
+
+            log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
+            LectureOnlineListResponse response = lectureService.getOnlineLecture(searchTypeCode, page);
+
+            return ResponseEntity.ok().body(response);
+        } catch (CustomException e) {
+          return ResponseEntity.badRequest().build();
         }
-
-        log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
-        LectureOnlineListResponse response = lectureService.getOnlineLecture(searchTypeCode, page);
-
-        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/offline/courses")
@@ -65,6 +64,7 @@ public class LectureController {
 
         try {
             SearchType searchType = searchTypeCode == null ?
+                    // NullPointerException? 주의
                     SearchType.fromCode(searchTypeCode)
                     : SearchType.Lately;
 
@@ -72,27 +72,23 @@ public class LectureController {
             LectureOfflineListResponse response = lectureService.getOfflineLecture(searchTypeCode, page);
             return ResponseEntity.ok().body(response);
         } catch (Exception e){
-            throw  new CustomException("searchType null");
+            throw  new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage());
         }
 
     }
 
 
-//  @GetMapping("/offline/{offlineId}")
-//  public ResponseEntity<GetLectureResponse> offline(
-//          @PathVariable int offlineId
-//  ) {
-//    log.info("Controller.Get.offline: {}", offlineId);
-//    return null;
-//  }
-
   @GetMapping("/online/{onlineId}")
   public ResponseEntity<LectureOnlineDetailResponse> online(
             @PathVariable int onlineId
   ) {
-      LectureOnlineDetailResponse online = lectureService.findOnlineLecture(onlineId);
-      log.info("Controller.Online.offline, onlineId: {} data : {}", onlineId,online);
-      return ResponseEntity.ok().body(online);
+      try {
+          LectureOnlineDetailResponse online = lectureService.findOnlineLecture(onlineId);
+          log.info("Controller.Online.offline, onlineId: {} data : {}", onlineId,online);
+          return ResponseEntity.ok().body(online);
+      } catch (CustomException e){
+          return ResponseEntity.badRequest().build();
+      }
   }
 
 
@@ -100,11 +96,12 @@ public class LectureController {
     public ResponseEntity<LectureOfflineDetailResponse> offline(
             @PathVariable int offlineId
   ){
-        LectureOfflineDetailResponse offline = lectureService.findOfflineLecture(offlineId);
-        log.info("Controller.Offline.offline, offlineId: {} data : {}", offlineId,offline);
-        return ResponseEntity.ok().body(offline);
+        try{
+            LectureOfflineDetailResponse offline = lectureService.findOfflineLecture(offlineId);
+            log.info("Controller.Offline.offline, offlineId: {} data : {}", offlineId,offline);
+            return ResponseEntity.ok().body(offline);
+        } catch (CustomException e){
+            return ResponseEntity.badRequest().build();
+        }
   }
-
-
-
 }
