@@ -41,4 +41,14 @@ public enum ChannelType {
         throw new CustomException("존재하지 않는 채널명입니다. : " + description);
     }
 
+    public static ChannelType fromName(String name) {
+        for (ChannelType channelType : ChannelType.values()) {
+            if (channelType.name().equalsIgnoreCase(name)) {
+                return channelType;
+            }
+        }
+        throw new CustomException("존재하지 않는 채널명입니다. : " + name);
+    }
+
+
 }
