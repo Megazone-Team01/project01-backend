@@ -4,6 +4,7 @@ import com.mzcteam01.mzcproject01be.domains.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,12 +19,23 @@ import java.util.Map;
 public class FileController {
     private final FileService fileService;
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation( summary = "파일 업로드 API")
     public ResponseEntity<Map<String, Object>> upload(
-            @RequestParam List<MultipartFile> files,
+            @RequestParam MultipartFile file,
             @RequestParam Integer uploaderId
     ){
-
+        return ResponseEntity.ok( fileService.uploadFiles( file, uploaderId ) );
     }
+
+    @DeleteMapping("/{id}")
+    @Operation( summary = "파일 삭제" )
+    public ResponseEntity<Map<String, String>> delete(
+            @PathVariable Integer id,
+            @RequestParam Integer deletedBy
+    ){
+        fileService.deleteFile( id, deletedBy );
+        return ResponseEntity.ok( Map.of("status", "성공" ) );
+    }
+
 }
