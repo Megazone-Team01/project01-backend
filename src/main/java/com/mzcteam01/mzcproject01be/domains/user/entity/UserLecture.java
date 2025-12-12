@@ -20,7 +20,7 @@ public class UserLecture extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -28,7 +28,7 @@ public class UserLecture extends BaseEntity {
 
     // 강의 ID: OnlineLecture 또는 OfflineLecture PK
     @Column(name = "lecture_id", nullable = false)
-    private Long lectureId;
+    private int lectureId;
 
     // 온라인 강의 여부
     // 0 (오프라인), 1(온라인)
@@ -40,4 +40,8 @@ public class UserLecture extends BaseEntity {
 
     @Column(name = "expired_at", nullable = false)
     private LocalDateTime expiredAt;
+
+    public void update( LocalDateTime expiredAt ) {
+        this.expiredAt = expiredAt;
+    }
 }

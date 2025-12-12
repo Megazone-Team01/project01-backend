@@ -50,4 +50,14 @@ public class Room extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50, nullable = false)
     private RoomStatus status;
+
+    public void update( String name, String location, Integer maxNum, LocalDateTime startAt, LocalDateTime endAt, User manager, RoomStatus status ) {
+        if( name != null ) this.name = name;
+        if( location != null ) this.location = location;
+        if( maxNum != null ) this.maxNum = maxNum;
+        if( startAt != null ) this.startAt = startAt;
+        if( endAt != null ) this.endAt = endAt;
+        if( manager != null ) this.manager = manager;
+        if( status != null ) this.status = status;
+    }
 }

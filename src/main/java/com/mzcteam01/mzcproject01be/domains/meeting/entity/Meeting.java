@@ -47,4 +47,10 @@ public abstract class Meeting extends BaseEntity {
     @Column(name = "status", nullable = false)
     private int status;
 
+    public void update(String name, LocalDateTime startAt, LocalDateTime endAt) {
+        if( name != null ) this.name = name;
+        if( startAt != null ) this.startAt = startAt;
+        if( endAt != null ) this.endAt = endAt;
+    }
+
 }
