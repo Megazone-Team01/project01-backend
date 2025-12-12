@@ -58,7 +58,6 @@ public class RoomService {
                 .build();
         roomRepository.save( room );
     }
-    public List<RoomListResponse> getAvailableRooms(Integer organizationId) {
 
     @Transactional
     public void update(
@@ -74,7 +73,6 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new CustomException("해당하는 스터디룸을 찾을 수 없습니다")
         );
-        List<Room> rooms = roomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
 
         User manager = null;
         if(managerId != null){
@@ -83,9 +81,6 @@ public class RoomService {
             );
         }
         room.update( name, location, maxNum, startAt, endAt, manager, status );
-        return rooms.stream()
-                .map(RoomListResponse::from)
-                .collect(Collectors.toList());
     }
 
     public void delete( int roomId, int deletedBy ){
@@ -94,6 +89,16 @@ public class RoomService {
         );
         room.delete( deletedBy );
     }
+
+    public List<RoomListResponse> getAvailableRooms(Integer organizationId) {
+
+        List<Room> rooms = roomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
+
+        return rooms.stream()
+                .map(RoomListResponse::from)
+                .collect(Collectors.toList());
+    }
+
     public RoomDetailResponse getRoomDetails(Integer roomId) {
 
         Room room = roomRepository.findByIdWithDetails(roomId)

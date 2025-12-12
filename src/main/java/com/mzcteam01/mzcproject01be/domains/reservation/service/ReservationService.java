@@ -39,6 +39,7 @@ public class ReservationService {
                 .build();
         reservationRepository.save( reservation );
     }
+
     public List<MyReservationListResponse> getMyReservations(Integer userId, boolean includePast) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -50,12 +51,6 @@ public class ReservationService {
             responses.add(MyReservationListResponse.from(reservation));
         }
 
-    // 스터디룸 예약은 업데이트 불가f
-    @Transactional
-    public void delete( int id, int deletedBy ){
-        Reservation reservation = reservationRepository.findById( id ).orElseThrow( () -> new CustomException("존재하지 않는 예약입니다") );
-        reservation.delete( deletedBy );
-    }
         if (includePast){
             List<Reservation> pastReservations = reservationRepository.findPastReservations(userId, now);
 
@@ -65,5 +60,12 @@ public class ReservationService {
         }
 
         return responses;
+    }
+
+    // 스터디룸 예약은 업데이트 불가f
+    @Transactional
+    public void delete( int id, int deletedBy ){
+        Reservation reservation = reservationRepository.findById( id ).orElseThrow( () -> new CustomException("존재하지 않는 예약입니다") );
+        reservation.delete( deletedBy );
     }
 }
