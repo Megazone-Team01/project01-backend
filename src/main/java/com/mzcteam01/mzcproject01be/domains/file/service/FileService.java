@@ -7,6 +7,7 @@ import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,8 @@ public class FileService {
     private final UserRepository userRepository;
 
     // Stage 환경에서는 경로가 변경되어야 함 -> FE에서 조회 필요
-    private final String FILE_PATH = "src/main/resources/files";
+    @Value("${file.path}")
+    private String FILE_PATH;
 
     public Map<String, Object> uploadFiles(MultipartFile file, int uploaderId){
         Map<String, Object> result = new HashMap<>();
