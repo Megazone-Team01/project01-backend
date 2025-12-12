@@ -1,10 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.room.controller;
 
-import com.mzcteam01.mzcproject01be.common.enums.RoomErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomListResponse;
-import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import com.mzcteam01.mzcproject01be.domains.room.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

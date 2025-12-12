@@ -1,6 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.room.service;
 
-import com.mzcteam01.mzcproject01be.common.enums.RoomErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.RoomErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomListResponse;
