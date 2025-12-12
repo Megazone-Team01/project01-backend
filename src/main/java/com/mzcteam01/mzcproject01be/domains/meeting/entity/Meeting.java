@@ -26,7 +26,7 @@ public abstract class Meeting extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
-    private Organization organization_id;
+    private Organization organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id", nullable = false)
@@ -46,5 +46,11 @@ public abstract class Meeting extends BaseEntity {
     // -1 (반려), 0 (대기), 1(승인)
     @Column(name = "status", nullable = false)
     private int status;
+
+    public void update(String name, LocalDateTime startAt, LocalDateTime endAt) {
+        if( name != null ) this.name = name;
+        if( startAt != null ) this.startAt = startAt;
+        if( endAt != null ) this.endAt = endAt;
+    }
 
 }

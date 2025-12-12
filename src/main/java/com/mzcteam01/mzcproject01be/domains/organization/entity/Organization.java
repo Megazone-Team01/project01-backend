@@ -52,4 +52,15 @@ public class Organization extends BaseEntity {
 
     @Column(name = "lead_image")
     private String leadImage;
+    public void update( String name, String addressCode, String addressDetail, String tel ){
+        if( name != null ) this.name = name;
+        if( addressCode != null ) this.addressCode = addressCode;
+        if( addressDetail != null ) this.addressDetail = addressDetail;
+        if( tel != null ) this.tel = tel;
+    }
+
+    public void updateStatus( boolean isApprove ){
+        if( isApprove ) this.status = 1;
+        else this.status = -1;
+    }
 }
