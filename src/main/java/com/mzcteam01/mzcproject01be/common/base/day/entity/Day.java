@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.day.entity;
+package com.mzcteam01.mzcproject01be.common.base.day.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
@@ -26,4 +26,8 @@ public class Day extends BaseEntity {
     @Column(name = "value", nullable = false)
     private int value;
 
+    public void update( String name, int value ) {
+        if( name != null ) this.name = name;
+        if( value != -1 ) this.value = value;
+    }
 }

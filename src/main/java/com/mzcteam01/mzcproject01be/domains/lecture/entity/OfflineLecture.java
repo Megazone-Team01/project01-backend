@@ -1,7 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
-import com.mzcteam01.mzcproject01be.domains.day.entity.Day;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
+import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.validation.constraints.Min;
@@ -32,4 +32,14 @@ public class OfflineLecture extends Lecture {
 
     @Column(name = "day", nullable = false)
     private int day;
+
+    public void update(String name, User teacher, Integer price, LocalDateTime startAt, LocalDateTime endAt, String description, Integer maxNum, Room room,
+                       String startTimeAt, String endTimeAt, Integer day) {
+        super.update( name, teacher, price, startAt, endAt, description );
+        if( maxNum != null ) this.maxNum = maxNum;
+        if( room != null ) this.room = room;
+        if( startTimeAt != null ) this.startTimeAt = startTimeAt;
+        if( endTimeAt != null ) this.endTimeAt = endTimeAt;
+        if( day != null ) this.day = day;
+    }
 }

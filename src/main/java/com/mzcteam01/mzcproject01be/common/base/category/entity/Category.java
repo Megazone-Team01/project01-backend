@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.category.entity;
+package com.mzcteam01.mzcproject01be.common.base.category.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
 import jakarta.persistence.*;
@@ -30,4 +30,9 @@ public class Category extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    public void update( String name, String description ){
+        if( name != null ) this.name = name;
+        if( description != null ) this.description = description;
+    }
 }

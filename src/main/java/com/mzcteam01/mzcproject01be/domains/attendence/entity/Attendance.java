@@ -44,4 +44,9 @@ public class Attendance extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    public void update( LocalDateTime checkIn, LocalDateTime checkOut ) {
+        if( checkIn != null ) this.checkIn = checkIn;
+        if( checkOut != null ) this.checkOut= checkOut;
+    }
 }

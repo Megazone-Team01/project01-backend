@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -16,4 +18,8 @@ public class OfflineMeeting extends Meeting{
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
+    public void update(String name, LocalDateTime startAt, LocalDateTime endAt, Room room) {
+        super.update(name, startAt, endAt);
+        if( room != null ) this.room = room;
+    }
 }
