@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.lecture.enums;
+package com.mzcteam01.mzcproject01be.common.exception;
 
 import lombok.Getter;
 

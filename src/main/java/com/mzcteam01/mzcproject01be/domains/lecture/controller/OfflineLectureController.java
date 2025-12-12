@@ -4,7 +4,7 @@ import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
-import com.mzcteam01.mzcproject01be.domains.lecture.enums.LectureErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureService;
 import lombok.RequiredArgsConstructor;
