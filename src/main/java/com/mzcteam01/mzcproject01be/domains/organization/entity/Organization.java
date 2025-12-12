@@ -44,8 +44,8 @@ public class Organization extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "is_online")
-    private boolean isOnline;
+    @Column(name = "is_online") // 0: 모두 1: 온라인 2: 오프라인
+    private int isOnline;
 
     @Column(name = "webpage")
     private String webpage;
