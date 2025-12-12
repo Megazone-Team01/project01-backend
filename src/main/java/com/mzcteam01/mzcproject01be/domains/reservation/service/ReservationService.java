@@ -20,52 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
-public class ReservationService {
-
-    private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
-    private final RoomRepository roomRepository;
-
-    public void create(int userId, int roomId, LocalDateTime startAt, LocalDateTime endAt) {
-        User user = userRepository.findById( userId ).orElseThrow( () -> new CustomException("해당하는 사용자가 존재하지 않습니다") );
-        Room room = roomRepository.findById( roomId ).orElseThrow( () -> new CustomException("해당하는 스터디룸이 존재하지 않습니다" ) );
-        Reservation reservation = Reservation.builder()
-                .user( user )
-                .room( room )
-                .startAt( startAt )
-                .endAt( endAt )
-                .build();
-        reservationRepository.save( reservation );
-    }
-
-    public List<MyReservationListResponse> getMyReservations(Integer userId, boolean includePast) {
-
-        LocalDateTime now = LocalDateTime.now();
-        List<Reservation> myReservations = reservationRepository.findMyReservations(userId, now);
-
-        List<MyReservationListResponse> responses = new ArrayList<>();
-
-        for (Reservation reservation : myReservations) {
-            responses.add(MyReservationListResponse.from(reservation));
-        }
-
-        if (includePast){
-            List<Reservation> pastReservations = reservationRepository.findPastReservations(userId, now);
-
-            for (Reservation reservation : pastReservations) {
-                responses.add(MyReservationListResponse.from(reservation));
-            }
-        }
-
-        return responses;
-    }
-
-    // 스터디룸 예약은 업데이트 불가f
-    @Transactional
-    public void delete( int id, int deletedBy ){
-        Reservation reservation = reservationRepository.findById( id ).orElseThrow( () -> new CustomException("존재하지 않는 예약입니다") );
-        reservation.delete( deletedBy );
-    }
+public interface ReservationService {
+    void create(int userId, int roomId, LocalDateTime startAt, LocalDateTime endAt);
+    List<MyReservationListResponse> getMyReservations(Integer userId, boolean includePast);
+    void delete( int id, int deletedBy );
 }
