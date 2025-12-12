@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional(readOnly = true)
-public class LectureServiceTest {
+public class LectureServiceImplTest {
     @Autowired
     private HomeService homeService;
 

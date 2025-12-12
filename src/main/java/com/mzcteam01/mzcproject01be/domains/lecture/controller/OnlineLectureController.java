@@ -3,7 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureService;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.LectureFacadeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ import java.util.List;
 @RequestMapping("/api/v1/lecture/online")
 public class OnlineLectureController {
 
-    private final LectureService lectureService;
+    private final LectureFacadeService lectureFacadeService;
 
 
     @GetMapping
     public ResponseEntity<List<GetLectureResponse>> homeOnline(){
         log.info("Controller.Get.HomeOnline");
-        List<GetLectureResponse> online = lectureService.getAllOnlineLectures(null);
+        List<GetLectureResponse> online = lectureFacadeService.online().getTop9Lectures(null);
         return ResponseEntity.ok(online);
     }
 
@@ -40,7 +40,7 @@ public class OnlineLectureController {
                     : SearchType.Lately;
 
             log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
-            LectureOnlineListResponse response = lectureService.getOnlineLecture(searchTypeCode, page);
+            LectureOnlineListResponse response = lectureFacadeService.online().getAllLectures(searchType.getCode(), page);
 
             return ResponseEntity.ok().body(response);
         } catch (CustomException e) {
@@ -54,7 +54,7 @@ public class OnlineLectureController {
             @PathVariable int onlineId
   ) {
       try {
-          LectureOnlineDetailResponse online = lectureService.findOnlineLecture(onlineId);
+          LectureOnlineDetailResponse online = lectureFacadeService.online().findLecture(onlineId);
           log.info("Controller.Online, onlineId: {} data : {}", onlineId,online);
           return ResponseEntity.ok().body(online);
       } catch (CustomException e){

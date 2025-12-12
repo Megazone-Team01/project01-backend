@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.repository;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
