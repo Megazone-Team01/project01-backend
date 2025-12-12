@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.reservation.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.reservation.dto.response.AdminGetReservationResponse;
+import com.mzcteam01.mzcproject01be.domains.reservation.dto.response.MyReservationListResponse;
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.Reservation;
 import com.mzcteam01.mzcproject01be.domains.reservation.repository.ReservationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.AdminGetRoomResponse;
@@ -10,15 +11,19 @@ import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReservationService {
+
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
@@ -34,6 +39,16 @@ public class ReservationService {
                 .build();
         reservationRepository.save( reservation );
     }
+    public List<MyReservationListResponse> getMyReservations(Integer userId, boolean includePast) {
+
+        LocalDateTime now = LocalDateTime.now();
+        List<Reservation> myReservations = reservationRepository.findMyReservations(userId, now);
+
+        List<MyReservationListResponse> responses = new ArrayList<>();
+
+        for (Reservation reservation : myReservations) {
+            responses.add(MyReservationListResponse.from(reservation));
+        }
 
     // 스터디룸 예약은 업데이트 불가f
     @Transactional
@@ -41,13 +56,14 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById( id ).orElseThrow( () -> new CustomException("존재하지 않는 예약입니다") );
         reservation.delete( deletedBy );
     }
+        if (includePast){
+            List<Reservation> pastReservations = reservationRepository.findPastReservations(userId, now);
 
-    public AdminGetReservationResponse findById( int id ){
-        return AdminGetReservationResponse.of( reservationRepository.findById( id )
-                .orElseThrow( () -> new CustomException("해당하는 예약이 존재하지 않습니다")));
-    }
+            for (Reservation reservation : pastReservations) {
+                responses.add(MyReservationListResponse.from(reservation));
+            }
+        }
 
-    public List<AdminGetReservationResponse> findAll(){
-        return reservationRepository.findAll().stream().map(AdminGetReservationResponse::of).toList();
+        return responses;
     }
 }

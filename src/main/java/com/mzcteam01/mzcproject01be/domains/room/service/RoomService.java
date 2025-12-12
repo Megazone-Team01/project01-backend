@@ -1,6 +1,9 @@
 package com.mzcteam01.mzcproject01be.domains.room.service;
 
+import com.mzcteam01.mzcproject01be.common.exception.RoomErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomDetailResponse;
+import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomListResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.AdminGetRoomResponse;
@@ -10,15 +13,19 @@ import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoomService {
+
     private final RoomRepository roomRepository;
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
@@ -51,6 +58,7 @@ public class RoomService {
                 .build();
         roomRepository.save( room );
     }
+    public List<RoomListResponse> getAvailableRooms(Integer organizationId) {
 
     @Transactional
     public void update(
@@ -66,6 +74,7 @@ public class RoomService {
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new CustomException("해당하는 스터디룸을 찾을 수 없습니다")
         );
+        List<Room> rooms = roomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
 
         User manager = null;
         if(managerId != null){
@@ -74,6 +83,9 @@ public class RoomService {
             );
         }
         room.update( name, location, maxNum, startAt, endAt, manager, status );
+        return rooms.stream()
+                .map(RoomListResponse::from)
+                .collect(Collectors.toList());
     }
 
     public void delete( int roomId, int deletedBy ){
@@ -82,14 +94,10 @@ public class RoomService {
         );
         room.delete( deletedBy );
     }
+    public RoomDetailResponse getRoomDetails(Integer roomId) {
 
-    public List<AdminGetRoomResponse> findAll(){
-        return roomRepository.findAll().stream().map( AdminGetRoomResponse::of).toList();
-    }
-
-    public AdminGetRoomResponse findById( int id ){
-        return AdminGetRoomResponse.of( roomRepository.findById(id).orElseThrow(
-                () -> new CustomException("해당하는 스터디룸을 찾을 수 없습니다")
-        ));
+        Room room = roomRepository.findByIdWithDetails(roomId)
+                .orElseThrow(()-> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage()));
+        return RoomDetailResponse.from(room);
     }
 }
