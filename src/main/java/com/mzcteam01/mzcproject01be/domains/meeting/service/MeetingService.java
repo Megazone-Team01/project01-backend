@@ -2,6 +2,8 @@ package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetMeetingResponse;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOfflineMeetingResponse;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOnlineMeetingResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.Meeting;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.OfflineMeeting;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.OnlineMeeting;
@@ -94,5 +96,13 @@ public class MeetingService {
             result.add(AdminGetMeetingResponse.of( meeting, false, meeting.getRoom().getName() ));
         });
         return result;
+    }
+
+    public AdminGetOnlineMeetingResponse findOnlineMeetingById( int id ){
+        return AdminGetOnlineMeetingResponse.of( onlineMeetingRepository.findById( id ).orElseThrow( () -> new CustomException("해당하는 면담이 존재하지 않습니다") ) );
+    }
+
+    public AdminGetOfflineMeetingResponse findOfflineMeetingById(int id ){
+        return AdminGetOfflineMeetingResponse.of( offlineMeetingRepository.findById( id ).orElseThrow( () -> new CustomException("해당하는 면담이 존재하지 않습니다") ) );
     }
 }
