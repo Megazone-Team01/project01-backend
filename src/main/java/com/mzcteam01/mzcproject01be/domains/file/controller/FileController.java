@@ -20,7 +20,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation( summary = "파일 업로드 API")
+    @Operation( summary = "파일 업로드 API", description = "fileUrl: 해당 파일을 볼 수 있는 경로, fileId: File 엔티티 ID")
     public ResponseEntity<Map<String, Object>> upload(
             @RequestParam MultipartFile file,
             @RequestParam Integer uploaderId
