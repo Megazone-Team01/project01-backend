@@ -25,7 +25,9 @@ public class OfflineLectureController {
     @GetMapping
     public ResponseEntity<List<GetLectureResponse>> homeOffline() {
         log.info("Controller.Get.HomeOffline");
-        List<GetLectureResponse> offline = lectureService.offline().getTop9Lectures(null);
+        List<GetLectureResponse> offline = lectureService
+                .offline()
+                .getTop9Lectures(null);
         return ResponseEntity.ok(offline);
     }
 

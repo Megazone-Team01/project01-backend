@@ -58,7 +58,9 @@ public class OnlineLectureController {
             @PathVariable int onlineId
   ) {
       try {
-          LectureOnlineDetailResponse online = lectureService.online().findLecture(onlineId);
+          LectureOnlineDetailResponse online = lectureService
+                  .online()
+                  .findLecture(onlineId);
           log.info("Controller.Online, onlineId: {} data : {}", onlineId,online);
           return ResponseEntity.ok().body(online);
       } catch (CustomException e){
