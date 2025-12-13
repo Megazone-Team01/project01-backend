@@ -2,6 +2,9 @@ package com.mzcteam01.mzcproject01be.lecture;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.LectureRepositoryImpl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -21,53 +26,14 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional(readOnly = true)
 public class LectureServiceImplTest {
     @Autowired
-    private HomeService homeService;
-
-    @PersistenceContext
-     EntityManager em;
-    JPAQueryFactory queryFactory;
-
-    @BeforeEach
-    public void before() {
-        queryFactory = new JPAQueryFactory(em);
-    }
+    private LectureRepository lectureRepository;
 
     @Test
-    @Transactional
-    public void getOffline(){
+    public void lectureRepositoryTest(){
+        PageRequest request = PageRequest.of(1, 2);
+        Page<OfflineLecture> lectures = lectureRepository.findOfflineLectures(1, request);
 
-
-        List<GetLectureResponse> list = homeService.getAllOnlineLectures();
-
-
-
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(9);
-    }
-
-    @Test
-    @Transactional
-    public void getOnline(){
-        List<GetLectureResponse> list = homeService.getAllOfflineLectures();
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(8);
-    }
-
-    @Test
-    @Transactional
-    public void getQueryDslTest(){
-        List<OfflineLecture> result = queryFactory
-                .selectFrom(offlineLecture)
-                .fetch();
-
-        for (OfflineLecture lecture : result) {
-            System.out.println("title: "+lecture.getName());
-            System.out.println("description"+lecture.getDescription());
-            System.out.println("------------------");
-        }
-
-        assertThat(result).isNotNull();
-
-
+        System.out.println(lectures.getTotalPages());
+        System.out.println(lectures.getTotalElements());
     }
 }

@@ -28,11 +28,11 @@ public class LectureServiceImpl implements LectureService {
     private final OfflineLectureRepository offlineRepository;
 
     @Override
-    public List<GetLectureResponse> getAllOfflineLectures(Integer searchType) {
+    public List<GetLectureResponse> getOfflineLectures(Integer searchType) {
 
         PageRequest pageOffline = PageRequest.of(0, 9);
 
-        return lectureRepository.findAllOfflineLecture(searchType, pageOffline)
+        return lectureRepository.findOfflineLectures(searchType, pageOffline)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -40,11 +40,11 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public List<GetLectureResponse> getAllOnlineLectures(Integer searchType) {
+    public List<GetLectureResponse> getOnlineLectures(Integer searchType) {
 
         PageRequest pageOnline = PageRequest.of(0, 9);
 
-        return lectureRepository.findAllOnlineLecture(searchType, pageOnline)
+        return lectureRepository.findOnlineLectures(searchType, pageOnline)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -58,7 +58,7 @@ public class LectureServiceImpl implements LectureService {
 
         Pageable pageable = PageRequest.of(page, 20);
 
-        Page<OnlineLecture> lectures = lectureRepository.findAllOnlineLecture(searchType, pageable);
+        Page<OnlineLecture> lectures = lectureRepository.findOnlineLectures(searchType, pageable);
         return LectureOnlineListResponse.of(lectures);
     }
 
@@ -68,7 +68,7 @@ public class LectureServiceImpl implements LectureService {
             int page
     ) {
         Pageable pageable = PageRequest.of(page, 20);
-        Page<OfflineLecture> lectures = lectureRepository.findAllOfflineLecture(searchType, pageable);
+        Page<OfflineLecture> lectures = lectureRepository.findOfflineLectures(searchType, pageable);
         return LectureOfflineListResponse.of(lectures);
     }
 

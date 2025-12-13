@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class MzcProject01BeApplicationTests {
 
-    @Autowired
-    HomeService homeService;
 
     @Test
     @Transactional(readOnly = true)

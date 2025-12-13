@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineL
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.OfflineLectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,7 +37,7 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
 
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return  lectureRepository.findAllOfflineLecture(searchType, pageRequest)
+        return  lectureRepository.findOfflineLectures(searchType, pageRequest)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -45,7 +46,7 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
     @Override
     public LectureOfflineListResponse getAllLectures(Integer searchType, int page) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OfflineLecture> offline = lectureRepository.findAllOfflineLecture(searchType, pageRequest);
+        Page<OfflineLecture> offline = lectureRepository.findOfflineLectures(searchType, pageRequest);
         return LectureOfflineListResponse.of(offline);
     }
 

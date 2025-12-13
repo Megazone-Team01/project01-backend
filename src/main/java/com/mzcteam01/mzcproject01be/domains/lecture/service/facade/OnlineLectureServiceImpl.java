@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineLi
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.OnlineLectureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     @Override
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return lectureRepository.findAllOnlineLecture(searchType, pageRequest)
+        return lectureRepository.findOnlineLectures(searchType, pageRequest)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -46,7 +47,7 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     @Override
     public LectureOnlineListResponse getAllLectures(Integer searchType, int page) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OnlineLecture> onlineLecture = lectureRepository.findAllOnlineLecture(searchType, pageRequest);
+        Page<OnlineLecture> onlineLecture = lectureRepository.findOnlineLectures(searchType, pageRequest);
         return LectureOnlineListResponse.of(onlineLecture);
     }
 

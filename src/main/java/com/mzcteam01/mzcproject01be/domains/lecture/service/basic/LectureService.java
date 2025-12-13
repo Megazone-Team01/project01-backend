@@ -10,8 +10,8 @@ public interface LectureService {
     LectureOfflineDetailResponse findOfflineLecture(int offlineId);
 
     // 신규 강좌 (9개)
-    List<GetLectureResponse> getAllOfflineLectures(Integer searchType);
-    List<GetLectureResponse> getAllOnlineLectures(Integer searchType);
+    List<GetLectureResponse> getOfflineLectures(Integer searchType);
+    List<GetLectureResponse> getOnlineLectures(Integer searchType);
 
     // 페이징 조회 (20개)
     LectureOnlineListResponse getOnlineLectures(Integer searchType, int page);
