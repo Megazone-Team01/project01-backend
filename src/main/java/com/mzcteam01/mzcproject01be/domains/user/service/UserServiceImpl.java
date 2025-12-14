@@ -10,11 +10,15 @@ import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
+import com.mzcteam01.mzcproject01be.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
+import java.util.Map;
 
 
 @Slf4j
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Override
     @Transactional(readOnly = false)
@@ -71,7 +76,9 @@ public class UserServiceImpl implements UserService {
                 savedUser.getName());
     }
 
+
     @Override
+    @Transactional(readOnly = false)
     public GetLoginResponse login(LoginRequest request) {
         // 이메일이 존재하는지 확인
         User user = userRepository.findByEmail(request.getEmail())
@@ -82,11 +89,30 @@ public class UserServiceImpl implements UserService {
             throw new CustomException("비밀번호가 일치하지 않습니다.");
         }
 
-        String password = passwordEncoder.encode(user.getPassword());
-        passwordEncoder.matches(request.getPassword(), password);
+        // JWT claims 생성
+        Map<String, Object> claims = Map.of(
+                "id", user.getId(),
+                "email", user.getEmail(),
+                "name", user.getName(),
+                "role", user.getRole().getName()
+        );
 
-        return new GetLoginResponse(user.getId(),
-                user.getEmail(),
-                user.getName());
+        // AccessToken, RefreshToken 생성
+        String accessToken = jwtUtil.generateToken(claims, 10); // 10분
+        String refreshToken = jwtUtil.generateToken(claims, 180 * 24 * 60); // 180일
+
+        // DB에 RefreshToken 저장
+        user.updateRefreshToken(refreshToken, LocalDateTime.now().plusDays(180));
+        log.info("Saving refreshToken for user {}: {}", user.getId(), refreshToken);
+        userRepository.save(user);
+
+        return GetLoginResponse.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .role(user.getRole().getName())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }

@@ -12,4 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(@Param("email") String email);
+
+    // Refresh Token으로 유저 찾기
+    Optional<User> findByRefreshToken(String refreshToken);
 }

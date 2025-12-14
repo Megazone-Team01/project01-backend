@@ -1,10 +1,13 @@
 package com.mzcteam01.mzcproject01be.config;
 
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
+import com.mzcteam01.mzcproject01be.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,10 +24,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final UserRoleRepository userRoleRepository;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(userRoleRepository);
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,10 +44,18 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers((this.getPermitUrls())).permitAll()
-                        .anyRequest().permitAll()
-                );
+                // 세션 Stateless 적용
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // URL 권한 설정
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/user/sign", "/api/v1/user/login", "/api/v1/refresh").permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                // JWT 필터 등록 (추가)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
