@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces;
+package com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineListResponse;

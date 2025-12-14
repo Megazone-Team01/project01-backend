@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.lecture.service.facade;
+package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
@@ -8,7 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineL
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.OfflineLectureService;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OfflineLectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

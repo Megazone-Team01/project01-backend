@@ -1,4 +1,4 @@
-package com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces;
+package com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces;
 
 public interface LectureService {
     OfflineLectureService offline();

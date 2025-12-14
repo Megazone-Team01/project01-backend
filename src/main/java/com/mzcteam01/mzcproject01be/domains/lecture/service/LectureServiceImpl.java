@@ -1,14 +1,14 @@
-package com.mzcteam01.mzcproject01be.domains.lecture.service.facade;
+package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
-import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.LectureService;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.OfflineLectureService;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.OnlineLectureService;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OfflineLectureService;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OnlineLectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LectureFacadeServiceImpl implements LectureService {
+public class LectureServiceImpl implements LectureService {
 
     private final OfflineLectureService offlineLectureService;
     private final OnlineLectureService onlineLectureService;

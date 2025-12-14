@@ -9,11 +9,13 @@ import lombok.*;
 @Getter
 public class GetLectureResponse {
 
+    private int id;
     private String title;
     private String description;
 
     public static GetLectureResponse of(Lecture lecture) {
         return GetLectureResponse.builder()
+                .id(lecture.getId())
                 .title(lecture.getName())
                 .description(lecture.getDescription())
                 .build();

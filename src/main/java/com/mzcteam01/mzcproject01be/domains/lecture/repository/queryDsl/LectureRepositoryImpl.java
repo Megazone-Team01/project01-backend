@@ -50,7 +50,8 @@ public class LectureRepositoryImpl implements LectureRepositoryCustom {
 
         Long total = queryFactory
                 .select(onlineLecture.count())
-                .from(onlineLecture).fetchOne();
+                .from(onlineLecture)
+                .fetchOne();
 
         return new PageImpl<>(online, pageable, total == null ? 0L : total);
     }

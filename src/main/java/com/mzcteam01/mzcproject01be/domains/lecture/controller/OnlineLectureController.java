@@ -3,7 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.facade.interfaces.LectureService;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
