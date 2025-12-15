@@ -4,12 +4,9 @@ import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.QReservation;
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.Reservation;
 import com.mzcteam01.mzcproject01be.domains.room.entity.QRoom;
-import com.mzcteam01.mzcproject01be.domains.room.repository.QRoomRespository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
-import com.querydsl.core.QueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

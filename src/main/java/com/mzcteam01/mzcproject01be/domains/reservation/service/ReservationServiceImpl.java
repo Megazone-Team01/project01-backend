@@ -2,7 +2,9 @@ package com.mzcteam01.mzcproject01be.domains.reservation.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.reservation.dto.response.MyReservationListResponse;
+import com.mzcteam01.mzcproject01be.domains.reservation.entity.QReservation;
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.Reservation;
+import com.mzcteam01.mzcproject01be.domains.reservation.repository.QReservationRepository;
 import com.mzcteam01.mzcproject01be.domains.reservation.repository.ReservationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
@@ -24,6 +26,7 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final QReservationRepository qReservationRepository;
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
 
@@ -42,7 +45,7 @@ public class ReservationServiceImpl implements ReservationService {
     public List<MyReservationListResponse> getMyReservations(int userId, boolean includePast) {
 
         LocalDateTime now = LocalDateTime.now();
-        List<Reservation> myReservations = reservationRepository.findMyReservations(userId, now);
+        List<Reservation> myReservations = qReservationRepository.findMyReservations(userId, now);
 
         List<MyReservationListResponse> responses = new ArrayList<>();
 
@@ -51,7 +54,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         if (includePast){
-            List<Reservation> pastReservations = reservationRepository.findPastReservations(userId, now);
+            List<Reservation> pastReservations = qReservationRepository.findPastReservations(userId, now);
 
             for (Reservation reservation : pastReservations) {
                 responses.add(MyReservationListResponse.from(reservation));
