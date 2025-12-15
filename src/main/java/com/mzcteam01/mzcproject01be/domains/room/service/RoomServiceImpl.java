@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import com.mzcteam01.mzcproject01be.domains.room.entity.RoomStatus;
+import com.mzcteam01.mzcproject01be.domains.room.repository.QRoomRepository;
 import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
+    private final QRoomRepository qRoomRepository;
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
 
@@ -92,7 +94,7 @@ public class RoomServiceImpl implements RoomService {
 
     public List<RoomListResponse> getAvailableRooms(int organizationId) {
 
-        List<Room> rooms = roomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
+        List<Room> rooms = qRoomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
 
         return rooms.stream()
                 .map(RoomListResponse::from)
@@ -101,7 +103,7 @@ public class RoomServiceImpl implements RoomService {
 
     public RoomDetailResponse getRoomDetails(int roomId) {
 
-        Room room = roomRepository.findByIdWithDetails(roomId)
+        Room room = qRoomRepository.findByIdWithDetails(roomId)
                 .orElseThrow(()-> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage()));
         return RoomDetailResponse.from(room);
     }
