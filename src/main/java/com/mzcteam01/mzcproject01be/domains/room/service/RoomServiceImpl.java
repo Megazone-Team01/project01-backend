@@ -32,6 +32,8 @@ public class RoomServiceImpl implements RoomService {
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
 
+    @Override
+    @Transactional
     public void create(
             String name,
             int organizationId,
@@ -61,6 +63,7 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.save( room );
     }
 
+    @Override
     @Transactional
     public void update(
             int roomId,
@@ -85,6 +88,8 @@ public class RoomServiceImpl implements RoomService {
         room.update( name, location, maxNum, startAt, endAt, manager, status );
     }
 
+    @Override
+    @Transactional
     public void delete( int roomId, int deletedBy ){
         Room room = roomRepository.findById(roomId).orElseThrow(
                 () -> new CustomException("해당하는 스터디룸을 찾을 수 없습니다")
@@ -92,6 +97,7 @@ public class RoomServiceImpl implements RoomService {
         room.delete( deletedBy );
     }
 
+    @Override
     public List<RoomListResponse> getAvailableRooms(int organizationId) {
 
         List<Room> rooms = qRoomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
@@ -101,6 +107,7 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public RoomDetailResponse getRoomDetails(int roomId) {
 
         Room room = qRoomRepository.findByIdWithDetails(roomId)

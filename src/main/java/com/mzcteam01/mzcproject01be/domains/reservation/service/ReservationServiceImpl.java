@@ -30,6 +30,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
 
+    @Override
+    @Transactional
     public void create(int userId, int roomId, LocalDateTime startAt, LocalDateTime endAt) {
         User user = userRepository.findById( userId ).orElseThrow( () -> new CustomException("해당하는 사용자가 존재하지 않습니다") );
         Room room = roomRepository.findById( roomId ).orElseThrow( () -> new CustomException("해당하는 스터디룸이 존재하지 않습니다" ) );
@@ -42,6 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.save( reservation );
     }
 
+    @Override
     public List<MyReservationListResponse> getMyReservations(int userId, boolean includePast) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -64,7 +67,8 @@ public class ReservationServiceImpl implements ReservationService {
         return responses;
     }
 
-    // 스터디룸 예약은 업데이트 불가
+
+    @Override
     @Transactional
     public void delete( int id, int deletedBy ){
         Reservation reservation = reservationRepository.findById( id ).orElseThrow( () -> new CustomException("존재하지 않는 예약입니다") );
