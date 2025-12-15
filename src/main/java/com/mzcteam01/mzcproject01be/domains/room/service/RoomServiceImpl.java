@@ -76,7 +76,7 @@ public class RoomServiceImpl implements RoomService {
             RoomStatus status
     ){
         Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new CustomException("해당하는 스터디룸을 찾을 수 없습니다")
+                () -> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage())
         );
 
         User manager = null;
@@ -92,7 +92,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public void delete( int roomId, int deletedBy ){
         Room room = roomRepository.findById(roomId).orElseThrow(
-                () -> new CustomException("해당하는 스터디룸을 찾을 수 없습니다")
+                () -> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage())
         );
         room.delete( deletedBy );
     }

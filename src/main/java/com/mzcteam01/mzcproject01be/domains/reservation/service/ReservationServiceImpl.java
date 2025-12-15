@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.reservation.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.common.exception.ReservationErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.RoomErrorCode;
 import com.mzcteam01.mzcproject01be.domains.reservation.dto.response.MyReservationListResponse;
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.QReservation;
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.Reservation;
@@ -33,8 +35,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void create(int userId, int roomId, LocalDateTime startAt, LocalDateTime endAt) {
-        User user = userRepository.findById( userId ).orElseThrow( () -> new CustomException("해당하는 사용자가 존재하지 않습니다") );
-        Room room = roomRepository.findById( roomId ).orElseThrow( () -> new CustomException("해당하는 스터디룸이 존재하지 않습니다" ) );
+        User user = userRepository.findById( userId )
+                .orElseThrow( () -> new CustomException("해당하는 사용자가 존재하지 않습니다") );
+        Room room = roomRepository.findById( roomId )
+                .orElseThrow( () -> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage()) );
         Reservation reservation = Reservation.builder()
                 .user( user )
                 .room( room )
@@ -71,7 +75,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void delete( int id, int deletedBy ){
-        Reservation reservation = reservationRepository.findById( id ).orElseThrow( () -> new CustomException("존재하지 않는 예약입니다") );
+        Reservation reservation = reservationRepository.findById( id )
+                .orElseThrow( () -> new CustomException(ReservationErrorCode.RESERVATION_NOT_FOUND.getMessage()));
         reservation.delete( deletedBy );
     }
 }
