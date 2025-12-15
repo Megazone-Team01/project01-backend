@@ -6,7 +6,6 @@ import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomDetailResponse
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomListResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
-import com.mzcteam01.mzcproject01be.domains.room.dto.response.AdminGetRoomResponse;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import com.mzcteam01.mzcproject01be.domains.room.entity.RoomStatus;
 import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
@@ -24,7 +23,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RoomService {
+@Transactional(readOnly = true)
+public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final OrganizationRepository organizationRepository;
