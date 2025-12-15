@@ -90,7 +90,7 @@ public class RoomServiceImpl implements RoomService {
         room.delete( deletedBy );
     }
 
-    public List<RoomListResponse> getAvailableRooms(Integer organizationId) {
+    public List<RoomListResponse> getAvailableRooms(int organizationId) {
 
         List<Room> rooms = roomRepository.findByOrganizationIdAndStatus(organizationId, RoomStatus.AVAILABLE);
 
@@ -99,7 +99,7 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
     }
 
-    public RoomDetailResponse getRoomDetails(Integer roomId) {
+    public RoomDetailResponse getRoomDetails(int roomId) {
 
         Room room = roomRepository.findByIdWithDetails(roomId)
                 .orElseThrow(()-> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage()));

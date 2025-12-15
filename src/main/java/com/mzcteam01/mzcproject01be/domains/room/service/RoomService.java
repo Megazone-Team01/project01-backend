@@ -13,8 +13,8 @@ public interface RoomService {
     // 희의실 삭제
 
     // 특정 기관의 사용 가능한 회의실 목록 조회
-    List<RoomListResponse> getAvailableRooms(Integer organizationId);
+    List<RoomListResponse> getAvailableRooms(int organizationId);
 
     // 회의실 상세 정보 조회
-    RoomDetailResponse getRoomDetails(Integer roomId);
+    RoomDetailResponse getRoomDetails(int roomId);
 }
