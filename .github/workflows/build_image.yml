@@ -39,7 +39,7 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
           tags: |
-            
+            type=sha,prefix=
 
       - name: Build & Push
         uses: docker/build-push-action@v5
