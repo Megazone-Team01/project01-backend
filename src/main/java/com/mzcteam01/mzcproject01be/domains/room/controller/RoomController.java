@@ -3,7 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.room.controller;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.room.dto.response.RoomListResponse;
-import com.mzcteam01.mzcproject01be.domains.room.service.RoomService;
+import com.mzcteam01.mzcproject01be.domains.room.service.RoomServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.List;
 @Tag(name = "Room", description = "회의실 API")
 public class RoomController {
 
-    private final RoomService roomService;
+    private final RoomServiceImpl roomService;
 
     @GetMapping
     @Operation( summary = "사용가능한 회의실 목록 조회",
