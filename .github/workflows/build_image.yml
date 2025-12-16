@@ -24,7 +24,7 @@ jobs:
       - name: gradlew 권한 부여
         run: chmod +x ./gradlew
 
-      - nane: Jar 생성
+      - name: Jar 생성
         run: ./gradlew build -x test
 
       - name: DockerHub 로그인
