@@ -18,12 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
-import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
-import com.mzcteam01.mzcproject01be.domains.user.entity.User;
-import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -45,14 +39,6 @@ public class OrganizationService {
         return organizations.stream().map( GetOrganizationResponse::of ).toList();
     }
 
-    public GetOrganizationResponse findById( int organizationId ){
-        Organization organization = organizationRepository.findById( organizationId ).orElse( null );
-        // 추후 커스텀 Exception으로 변경
-        if( organization == null ) throw new RuntimeException("해당하는 기관이 존재하지 않습니다");
-
-        return GetOrganizationResponse.of( organization );
-    }
-
     @Transactional
     public List<GetOrganizationTeacherResponse> findOrganizationTeacher( int organizationId ){
         List<GetOrganizationTeacherResponse> result = new ArrayList<>();
@@ -69,8 +55,6 @@ public class OrganizationService {
     public List<GetOrganizationLectureResponse> findOrganizationLecture(int organizationId ){
         return lectureRepository.findAllByOrganizationId( organizationId ).stream().map( GetOrganizationLectureResponse::of ).toList();
     }
-
-    private final UserRepository userRepository;
 
     public void create( String name, String addressCode, String addressDetail, String tel, int ownerId ){
         User owner = userRepository.findById( ownerId ).orElseThrow( () -> new CustomException("해당하는 사용자가 없습니다") );
@@ -112,5 +96,9 @@ public class OrganizationService {
     public AdminGetOrganizationResponse findById( int id ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException("해당하는 아카데미가 존재하지 않습니다") );
         return AdminGetOrganizationResponse.of( organization );
+    }
+
+    public List<AdminGetOrganizationResponse> findAllByStatus(int status ){
+        return organizationRepository.findAllByStatus( status ).stream().map( AdminGetOrganizationResponse::of ).toList();
     }
 }

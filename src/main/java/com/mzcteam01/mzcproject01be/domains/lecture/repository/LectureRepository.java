@@ -35,4 +35,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Page<OnlineLecture> findAllOnlineLecture(
             @Param("SearchType") Integer SearchType,
             Pageable pageable);
+
+    List<Lecture> findAllByOrganizationId( int organizationId );
 }

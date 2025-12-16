@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OrganizationRepository extends JpaRepository<Organization, Integer> {
     List<Organization> findByStatus( int status );
+
+    List<Organization> findAllByStatus( int status );
 }

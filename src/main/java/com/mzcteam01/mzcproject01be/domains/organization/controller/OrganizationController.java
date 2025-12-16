@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.organization.controller;
 
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationTeacherResponse;
@@ -30,7 +31,7 @@ public class OrganizationController {
 
     @GetMapping("/{id}")
     @Operation( summary = "해당하는 ID의 Organization에 대한 상세 정보 조회", description = "상세 정보 조회")
-    public ResponseEntity<GetOrganizationResponse> findById(
+    public ResponseEntity<AdminGetOrganizationResponse> findById(
             @PathVariable int id
     ){
         return ResponseEntity.ok( service.findById( id ) );
@@ -51,5 +52,13 @@ public class OrganizationController {
             @PathVariable int organizationId
     ){
         return ResponseEntity.ok( service.findOrganizationLecture( organizationId ) );
+    }
+
+    @GetMapping("/status/{status}")
+    @Operation( summary = "특정 상태의 기관들 목록을 조회" )
+    public ResponseEntity<List<AdminGetOrganizationResponse>> findAllOrganizationStatus(
+            @PathVariable int status
+    ){
+        return ResponseEntity.ok( service.findAllByStatus( status ) );
     }
 }
