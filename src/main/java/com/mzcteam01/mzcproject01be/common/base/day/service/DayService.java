@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.common.base.day.service;
 import com.mzcteam01.mzcproject01be.common.base.day.entity.Day;
 import com.mzcteam01.mzcproject01be.common.base.day.repository.DayRepository;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.common.exception.DayErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,16 +20,16 @@ public class DayService {
     @Transactional
     public void create( String name, int value ){
         Day temp = dayRepository.findByValue( value ).orElse(null);
-        if( temp != null ) throw new CustomException("중복된 요일 value는 존재할 수 없습니다" );
+        if( temp != null ) throw new CustomException(DayErrorCode.DAY_VALUE_ALREADY_EXIST.getMessage());
         Day day = Day.builder().name(name).value(value).build();
         dayRepository.save(day);
     }
 
     @Transactional
     public void update( int id, String name, int value ){
-        Day day = dayRepository.findById(id).orElseThrow( () -> new CustomException("잘못된 접근입니다") );
+        Day day = dayRepository.findById(id).orElseThrow( () -> new CustomException(DayErrorCode.INVALID_DAY_ACCESS.getMessage()) );
         Day temp = dayRepository.findByValue( value ).orElse(null);
-        if( temp != null ) throw new CustomException("중복된 요일 value는 존재할 수 없습니다" );
+        if( temp != null ) throw new CustomException( DayErrorCode.DAY_VALUE_ALREADY_EXIST.getMessage() );
         day.update( name, value );
     }
 
@@ -40,20 +41,20 @@ public class DayService {
     }
 
     public void delete( int id, int deletedBy ){
-        Day day = dayRepository.findById(id).orElseThrow( () -> new CustomException("잘못된 접근입니다") );
+        Day day = dayRepository.findById(id).orElseThrow( () -> new CustomException(DayErrorCode.INVALID_DAY_ACCESS.getMessage()) );
         day.delete( deletedBy );
     }
 
     // value to name
      public String valueToName( int value ){
         Day day = dayRepository.findByValue( value ).orElseThrow(
-                () -> new CustomException("해당하는 요일이 없습니다")
+                () -> new CustomException(DayErrorCode.DAY_NOT_FOUND.getMessage())
         );
         return day.getName();
      }
      public int nameToValue( String name ){
         Day day = dayRepository.findByName( name ).orElseThrow(
-                () -> new CustomException("해당하는 요일이 없습니다")
+                () -> new CustomException(DayErrorCode.DAY_NOT_FOUND.getMessage())
         );
         return day.getValue();
      }
