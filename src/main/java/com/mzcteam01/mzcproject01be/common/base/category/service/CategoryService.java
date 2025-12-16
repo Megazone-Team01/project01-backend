@@ -2,10 +2,12 @@ package com.mzcteam01.mzcproject01be.common.base.category.service;
 
 import com.mzcteam01.mzcproject01be.common.base.category.entity.Category;
 import com.mzcteam01.mzcproject01be.common.base.category.repository.CategoryRepository;
+import com.mzcteam01.mzcproject01be.common.exception.CategoryErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,12 +21,12 @@ public class CategoryService {
         Category.CategoryBuilder builder = Category.builder();
         if( parentId != null ){
             Category parent = categoryRepository.findById( parentId ).orElseThrow(
-                    () -> new CustomException("해당 상위 카테고리가 존재하지 않습니다")
+                    () -> new CustomException(CategoryErrorCode.CATEGORY_IS_ROOT.getMessage())
             );
             builder.parent( parent );
         }
         categoryRepository.findByCode( code ).orElseThrow(
-                () -> new CustomException("해당하는 카테고리 코드가 이미 존재합니다" )
+                () -> new CustomException( CategoryErrorCode.CATEGORY_CODE_ALREADY_EXIST.getMessage() )
         );
         builder.code( code );
         builder.name( name ).description( description );
@@ -33,14 +35,14 @@ public class CategoryService {
 
     public void update( int categoryId, String name, String description ){
         Category category = categoryRepository.findById( categoryId ).orElseThrow(
-                () -> new CustomException("해당하는 카테고리가 존재하지 않습니다")
+                () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
         );
         category.update( name, description );
     }
 
     public void delete( int categoryId, int deletedBy ){
         Category category = categoryRepository.findById( categoryId ).orElseThrow(
-                () -> new CustomException("해당하는 카테고리가 존재하지 않습니다")
+                () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
         );
         category.delete( deletedBy );
     }
@@ -61,6 +63,17 @@ public class CategoryService {
         if( parent == 0 )  categories = categoryRepository.findAllByParentIsNull();
         else categories = categoryRepository.findAllByParentId( parent );
         for( Category category : categories ) result.put( category.getCode(), category.getName() );
+        return result;
+    }
+
+    // Category Code -> Category Layer
+    public List<String> categoryCodeToLayer( String categoryCode ){
+        String[] categoryLayer = categoryCode.split("");
+        List<String> result = new ArrayList<>();
+        for( String layer : categoryLayer ){
+            String categoryName = categoryRepository.findByCode( layer ).orElseThrow( () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage()) ).getName();
+            result.add( categoryName );
+        }
         return result;
     }
 }
