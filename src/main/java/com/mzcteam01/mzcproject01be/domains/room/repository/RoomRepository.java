@@ -14,27 +14,4 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-    // 특정 기관의 특정 상태인 회의실 목록 조회
-    @Query( """
-            SELECT r
-            FROM Room r
-            JOIN FETCH r.organization
-            WHERE r.organization.id =:organizationId
-                AND r.status =:status
-                AND r.deletedAt IS NULL
-            ORDER BY r.name ASC
-            """)
-    List<Room> findByOrganizationIdAndStatus(Integer organizationId, RoomStatus status);
-
-
-    @Query( """
-            SELECT r
-            FROM Room r
-            JOIN FETCH r.manager
-            JOIN FETCH r.organization
-            WHERE r.id =:roomId
-                AND r.deletedAt IS NULL
-            """)
-    Optional<Room> findByIdWithDetails(Integer roomId);
-
 }

@@ -1,7 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.reservation.controller;
 
 import com.mzcteam01.mzcproject01be.domains.reservation.dto.response.MyReservationListResponse;
-import com.mzcteam01.mzcproject01be.domains.reservation.service.ReservationService;
+import com.mzcteam01.mzcproject01be.domains.reservation.service.ReservationServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @Tag(name = "Reservation", description = "예약 API")
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationServiceImpl reservationService;
 
     // TODO : JWT 인증 구현 후, SecurityContext에서 사용자 ID 추출
 

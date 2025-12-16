@@ -2,6 +2,8 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.common.exception.RoomErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
@@ -33,12 +35,12 @@ public class UserServiceImpl implements UserService {
 
         // 2차 비밀번호 체크
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new CustomException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(UserErrorCode.PASSWORD_NOT_MATCH.getMessage());
         }
 
         // 이메일 중복 체크
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new CustomException("이미 존재하는 이메일입니다.");
+            throw new CustomException(UserErrorCode.EMAIL_ALREADY_EXISTS.getMessage());
         }
 
         // 비밀번호 암호화
@@ -48,7 +50,7 @@ public class UserServiceImpl implements UserService {
         // 현재는 User로만 회원가입 할 수 있도록
         // 만약 강사인 경우 추후 관리자 승인 요청 및 승인하는 화면에서 처리될 예정
         UserRole defaultRole = userRoleRepository.findByName("USER")
-                .orElseThrow(() -> new CustomException("Default role not found"));
+                .orElseThrow(() -> new CustomException(UserErrorCode.DEFAULT_ROLE_NOT_FOUND.getMessage()));
 
         // 프론트에서 받아온 채널역할의 문자열을 코드값으로 변경
         int channelType = ChannelType.fromName(request.getType()).getCode();
@@ -75,11 +77,11 @@ public class UserServiceImpl implements UserService {
     public GetLoginResponse login(LoginRequest request) {
         // 이메일이 존재하는지 확인
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new CustomException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new CustomException(UserErrorCode.EMAIL_NOT_FOUND.getMessage()));
 
         // 사용자게 입력받은 비밀번호와 이메일에 해당하는 복호화된 비밀번호를 비교
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new CustomException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(UserErrorCode.PASSWORD_NOT_MATCH.getMessage());
         }
 
         String password = passwordEncoder.encode(user.getPassword());
