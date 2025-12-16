@@ -41,6 +41,17 @@ public class Organization extends BaseEntity {
     @Column(name = "status", nullable = false)
     private int status;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "is_online") // 0: 모두 1: 온라인 2: 오프라인
+    private int isOnline;
+
+    @Column(name = "webpage")
+    private String webpage;
+
+    @Column(name = "lead_image")
+    private String leadImage;
     public void update( String name, String addressCode, String addressDetail, String tel ){
         if( name != null ) this.name = name;
         if( addressCode != null ) this.addressCode = addressCode;

@@ -1,6 +1,13 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.LectureRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,4 +20,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Integer>, LectureRepositoryCustom {
+  List<Lecture> findAllByOrganizationId( int organizationId );
 }
