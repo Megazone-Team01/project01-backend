@@ -5,11 +5,14 @@ import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.RoomErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
+import com.mzcteam01.mzcproject01be.domains.user.repository.QUserOrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 
 @Slf4j
@@ -26,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final QUserOrganizationRepository qUserOrganizationRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -90,5 +96,18 @@ public class UserServiceImpl implements UserService {
         return new GetLoginResponse(user.getId(),
                 user.getEmail(),
                 user.getName());
+    }
+
+    @Override
+    @Transactional
+    public List<AdminGetUserResponse> list(GetUserRequest request) {
+        return userRepository.findAll().stream().map(AdminGetUserResponse::of).toList();
+    }
+
+    @Override
+    @Transactional
+    public void delete(int id, int deletedBy) {
+        User user = userRepository.findById( id ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
+        user.delete();
     }
 }
