@@ -8,33 +8,17 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.LectureRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /*
 * SearchType = 1 (최신순)
 * SearchType = 2 (날짜순)
+* SearchType = 3 (인기순) // 개발 예정
 * */
 
 @Repository
-public interface LectureRepository extends JpaRepository<Lecture, Integer> {
-    @Query("select ol from OfflineLecture ol " +
-            "order by " +
-            "CASE when coalesce(:SearchType, 1) = 1 then ol.createdAt end desc, "+
-            "CASE WHEN coalesce(:SearchType, 1) = 2 THEN ol.createdAt END ASC")
-    Page<OfflineLecture> findAllOfflineLecture(
-            @Param("SearchType") Integer SearchType,
-            Pageable pageable);
-
-    @Query("select ol from OnlineLecture ol " +
-            "order by " +
-            "CASE when coalesce(:SearchType, 1) = 1 then ol.createdAt end desc, "+
-            "CASE WHEN coalesce(:SearchType, 1) = 2 THEN ol.createdAt END ASC")
-    Page<OnlineLecture> findAllOnlineLecture(
-            @Param("SearchType") Integer SearchType,
-            Pageable pageable);
-
-    List<Lecture> findAllByOrganizationId( int organizationId );
+public interface LectureRepository extends JpaRepository<Lecture, Integer>, LectureRepositoryCustom {
+  List<Lecture> findAllByOrganizationId( int organizationId );
 }
