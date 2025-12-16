@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.organization.controller;
 
+import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
@@ -58,10 +60,57 @@ public class OrganizationController {
 
     @GetMapping("/status/{status}")
     @Operation( summary = "특정 상태의 기관들 목록을 조회" )
-    public ResponseEntity<List<AdminGetOrganizationResponse>> findAllOrganizationStatus(
+    public ResponseEntity<List<GetOrganizationResponse>> findAllOrganizationStatus(
             @PathVariable int status
     ){
-        //return ResponseEntity.ok( service.findAllByStatus( status ) );
-        return null;
+        GetOrganizationRequest request = new GetOrganizationRequest();
+        request.setStatusCode( status );
+        return ResponseEntity.ok( service.list( request ) );
+    }
+
+    @PatchMapping("/{id}")
+    @Operation( summary = "특정 기관 정보 업데이트" )
+    public ResponseEntity<Void> updateOrganization(
+            @PathVariable Integer id,
+            @ModelAttribute UpdateOrganizationRequest request
+    ){
+        service.update( id, request );
+        return ResponseEntity.ok().body( null );
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation( summary = "특정 기관 삭제" )
+    public ResponseEntity<Void> deleteOrganization(
+            @PathVariable Integer id,
+            @RequestParam int deletedBy
+    ){
+        service.delete( id, deletedBy );
+        return ResponseEntity.ok().body( null );
+    }
+
+    @PostMapping("/create")
+    @Operation( summary = "기관 생성" )
+    public ResponseEntity<Void> createOrganization(
+            @ModelAttribute CreateOrganizationRequest request
+    ){
+        service.create( request );
+        return ResponseEntity.ok().body( null );
+    }
+
+    @PostMapping( "/{id}/apporve" )
+    @Operation( summary = "기관 승인" )
+    public ResponseEntity<Void> approveOrganization(
+            @PathVariable Integer id
+    ){
+        service.approve( id );
+        return ResponseEntity.ok().body( null );
+    }
+    @PostMapping( "/{id}/reject" )
+    @Operation( summary = "기관 반려" )
+    public ResponseEntity<Void> rejectOrganization(
+            @PathVariable Integer id
+    ){
+        service.reject( id );
+        return ResponseEntity.ok().body( null );
     }
 }
