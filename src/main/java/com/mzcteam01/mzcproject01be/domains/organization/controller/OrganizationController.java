@@ -43,7 +43,8 @@ public class OrganizationController {
     public ResponseEntity<List<GetOrganizationTeacherResponse>> findAllTeachersInOrganization(
             @PathVariable int organizationId
     ){
-        return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
+        //return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
+        return null;
     }
 
     @GetMapping( "/{organizationId}/lectures")
@@ -51,7 +52,8 @@ public class OrganizationController {
     public ResponseEntity<List<GetOrganizationLectureResponse>> findAllLecturesInOrganization(
             @PathVariable int organizationId
     ){
-        return ResponseEntity.ok( service.findOrganizationLecture( organizationId ) );
+        //return ResponseEntity.ok( service.findOrganizationLecture( organizationId ) );
+        return null;
     }
 
     @GetMapping("/status/{status}")
@@ -59,6 +61,7 @@ public class OrganizationController {
     public ResponseEntity<List<AdminGetOrganizationResponse>> findAllOrganizationStatus(
             @PathVariable int status
     ){
-        return ResponseEntity.ok( service.findAllByStatus( status ) );
+        //return ResponseEntity.ok( service.findAllByStatus( status ) );
+        return null;
     }
 }

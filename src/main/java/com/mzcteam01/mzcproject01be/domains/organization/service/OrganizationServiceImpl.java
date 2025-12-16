@@ -3,7 +3,9 @@ package com.mzcteam01.mzcproject01be.domains.organization.service;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.OrganizationErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
@@ -63,8 +65,15 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     @Override
+    public List<GetOrganizationResponse> list( GetOrganizationRequest request ) {
+        return List.of();
+    }
+
+    @Override
     public AdminGetOrganizationResponse findById( int id ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()) );
         return AdminGetOrganizationResponse.of( organization );
     }
+
+
 }
