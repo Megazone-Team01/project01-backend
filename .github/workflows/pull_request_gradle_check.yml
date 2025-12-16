@@ -1,0 +1,28 @@
+name : PR Test and Gradle Check to develop
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v4
+
+      - name: JDK 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: gradlew 권한 부여
+        run: chmod +x ./gradlew
+
+        # MySQL 테스트
+        #- name: Mysql start & test
+
+      - name: Gradle Check
+        run : ./gradlew build -x test
