@@ -21,8 +21,5 @@ jobs:
       - name: gradlew 권한 부여
         run: chmod +x ./gradlew
 
-        # MySQL 테스트
-        #- name: Mysql start & test
-
       - name: Gradle Check
         run : ./gradlew build -x test
