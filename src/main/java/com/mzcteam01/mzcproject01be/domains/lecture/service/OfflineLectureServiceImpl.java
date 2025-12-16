@@ -6,8 +6,9 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureRespo
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.QOfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OfflineLectureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OfflineLectureServiceImpl implements OfflineLectureService {
 
-    private final LectureRepository lectureRepository;
     private final OfflineLectureRepository offlineLectureRepository;
+    private final QOfflineLectureRepository qOfflineLectureRepository;
 
     @Override
     public LectureOfflineDetailResponse findLecture(int id) {
@@ -37,7 +38,7 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
 
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return  lectureRepository.findOfflineLectures(searchType, pageRequest)
+        return qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -46,7 +47,7 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
     @Override
     public LectureOfflineListResponse getAllLectures(Integer searchType, int page) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OfflineLecture> offline = lectureRepository.findOfflineLectures(searchType, pageRequest);
+        Page<OfflineLecture> offline = qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest);
         return LectureOfflineListResponse.of(offline);
     }
 

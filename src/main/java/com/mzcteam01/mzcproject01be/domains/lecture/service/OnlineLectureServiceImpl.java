@@ -6,8 +6,8 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureRespo
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineListResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OnlineLectureService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.List;
 public class OnlineLectureServiceImpl implements OnlineLectureService {
 
     private final OnlineLectureRepository onlineLectureRepository;
-    private final LectureRepository lectureRepository;
+    private final QOnlineLectureRepository qOnlineLectureRepository;
 
     @Override
     public LectureOnlineDetailResponse findLecture(int id) {
@@ -37,7 +37,7 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     @Override
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return lectureRepository.findOnlineLectures(searchType, pageRequest)
+        return qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -47,7 +47,7 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     @Override
     public LectureOnlineListResponse getAllLectures(Integer searchType, int page) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OnlineLecture> onlineLecture = lectureRepository.findOnlineLectures(searchType, pageRequest);
+        Page<OnlineLecture> onlineLecture = qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest);
         return LectureOnlineListResponse.of(onlineLecture);
     }
 

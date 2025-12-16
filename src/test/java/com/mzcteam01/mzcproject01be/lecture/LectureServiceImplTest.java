@@ -1,7 +1,6 @@
 package com.mzcteam01.mzcproject01be.lecture;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.repository.LectureRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
