@@ -20,5 +20,6 @@ springdoc:
   api-docs:
     path: /api-docs
 
-
+file:
+  path: ${UPLOAD_FILE_PATH:src/main/resources/files}
 
