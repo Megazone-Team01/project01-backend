@@ -5,7 +5,7 @@ on:
     branches: [ "develop" ]
 
 env:
-  IMAGE_NAME: project01-backend
+  IMAGE_NAME: LinkEd
 
 jobs:
   build-and-push:
