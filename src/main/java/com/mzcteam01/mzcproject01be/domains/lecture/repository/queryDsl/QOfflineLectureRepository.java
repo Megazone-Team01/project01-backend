@@ -1,6 +1,9 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl;
 
+
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
+import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.mzcteam01.mzcproject01be.domains.lecture.entity.QOfflineLecture.offlineLecture;
 
@@ -18,6 +22,22 @@ import static com.mzcteam01.mzcproject01be.domains.lecture.entity.QOfflineLectur
 @Repository
 public class QOfflineLectureRepository {
     private final JPAQueryFactory queryFactory;
+    QOrganization organization = QOrganization.organization;
+    QUser user = QUser.user;
+
+    public Optional<OfflineLecture> findById(int id){
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(offlineLecture)
+                        .join(offlineLecture.teacher, user).fetchJoin()
+                        .join(offlineLecture.organization, organization).fetchJoin()
+                        .where(
+                                offlineLecture.id.eq(id)
+                        )
+                        .fetchOne()
+        );
+    }
+
 
     public Page<OfflineLecture> findOfflineLectures(Integer SearchType, Pageable pageable) {
 
