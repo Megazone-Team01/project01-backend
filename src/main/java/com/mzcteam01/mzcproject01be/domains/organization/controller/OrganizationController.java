@@ -97,7 +97,7 @@ public class OrganizationController {
         return ResponseEntity.ok().body( null );
     }
 
-    @PostMapping( "/{id}/apporve" )
+    @PostMapping( "/{id}/approve" )
     @Operation( summary = "기관 승인" )
     public ResponseEntity<Void> approveOrganization(
             @PathVariable Integer id
