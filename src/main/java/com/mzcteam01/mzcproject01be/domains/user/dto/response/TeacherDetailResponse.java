@@ -5,8 +5,6 @@ import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @Builder
 public class TeacherDetailResponse {
@@ -16,9 +14,10 @@ public class TeacherDetailResponse {
     private String email;
     private int type;
     private String typeName;
-    private List<String> lectureNames;
+    //TODO : Lecture쪽에서 조회 메서드 추가 후 적용
+    //private List<String> lectureNames;
 
-    public static TeacherDetailResponse from(User teacher, List<String> lectureNames) {
+    public static TeacherDetailResponse from(User teacher) {
         ChannelType channelType = ChannelType.fromCode(teacher.getType());
 
         return TeacherDetailResponse.builder()
@@ -27,7 +26,7 @@ public class TeacherDetailResponse {
                 .email(teacher.getEmail())
                 .type(teacher.getType())
                 .typeName(channelType.getDescription())
-                .lectureNames(lectureNames)
+                //.lectureNames(lectureNames)
                 .build();
     }
 }
