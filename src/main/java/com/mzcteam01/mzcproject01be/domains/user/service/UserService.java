@@ -15,4 +15,7 @@ public interface UserService {
     // 로그인
     public GetLoginResponse login(LoginRequest request);
 
+    // 리프레시 토큰 저장
+//    public void saveRefreshToken(int userId, String refreshToken);
+
 }

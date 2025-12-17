@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.config;
 
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
 import com.mzcteam01.mzcproject01be.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +26,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final UserRoleRepository userRoleRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(userRoleRepository);
+        return new JwtAuthenticationFilter(userRoleRepository, userRepository);
     }
 
     @Bean
