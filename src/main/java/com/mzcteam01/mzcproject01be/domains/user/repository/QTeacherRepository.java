@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -38,4 +39,20 @@ public class QTeacherRepository {
     }
 
     // 선생님 상세 정보 조회
+    public Optional<User> findByTeacherId(int teacherId) {
+        QUser user = QUser.user;
+        QUserRole userRole = QUserRole.userRole;
+
+        User teacher = query
+                .selectFrom(user)
+                .join(user.role, userRole).fetchJoin()
+                .where(
+                        user.id.eq(teacherId),
+                        userRole.name.eq("TEACHER"),
+                        user.deletedAt.isNull()
+                )
+                .fetchOne();
+
+        return Optional.ofNullable(teacher);
+    }
 }

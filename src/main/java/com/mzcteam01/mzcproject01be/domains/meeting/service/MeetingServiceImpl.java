@@ -15,6 +15,7 @@ import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherListResponse;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.QTeacherRepository;
@@ -143,6 +144,15 @@ public class MeetingServiceImpl implements MeetingService {
         }
 
         return responseList;
+    }
+
+    @Override
+    public TeacherDetailResponse getTeacherDetails(int teacherId) {
+        User teacher = qTeacherRepository.findByTeacherId(teacherId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.TEACHER_NOT_FOUND.LOGIN_FAILED.getMessage()));
+
+        return TeacherDetailResponse.from(teacher);
+
     }
 
 
