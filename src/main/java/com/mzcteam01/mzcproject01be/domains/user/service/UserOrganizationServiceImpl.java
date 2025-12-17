@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import ch.qos.logback.core.spi.ErrorCodes;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.common.exception.OrganizationErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
@@ -63,6 +64,19 @@ public class UserOrganizationServiceImpl implements UserOrganizationService {
         );
         return qUserOrganizationRepository.list(
                 null, null, null, teacherRole, null
+        ).stream().map( AdminGetUserOrganizationResponse::of ).toList();
+    }
+
+    @Override
+    public List<AdminGetUserOrganizationResponse> findAllTeacherByOrganizationId(int organizationId) {
+        UserRole teacherRole = userRoleRepository.findByName( "TEACHER" ).orElseThrow(
+                () -> new CustomException(UserErrorCode.DEFAULT_ROLE_NOT_FOUND.getMessage())
+        );
+        Organization organization = organizationRepository.findById( organizationId ).orElseThrow(
+                () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage())
+        );
+        return qUserOrganizationRepository.list(
+                null, null, null, teacherRole, organization
         ).stream().map( AdminGetUserOrganizationResponse::of ).toList();
     }
 

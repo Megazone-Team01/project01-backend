@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.common.base.category.service;
 
+import com.mzcteam01.mzcproject01be.common.base.category.dto.response.CategoryResponse;
 import com.mzcteam01.mzcproject01be.common.base.category.entity.Category;
 import com.mzcteam01.mzcproject01be.common.base.category.repository.CategoryRepository;
 import com.mzcteam01.mzcproject01be.common.exception.CategoryErrorCode;
@@ -67,13 +68,22 @@ public class CategoryService {
     }
 
     // Category Code -> Category Layer
-    public List<String> categoryCodeToLayer( String categoryCode ){
+    public List<Category> categoryCodeToLayer( String categoryCode ){
         String[] categoryLayer = categoryCode.split("");
-        List<String> result = new ArrayList<>();
+        List<Category> result = new ArrayList<>();
         for( String layer : categoryLayer ){
-            String categoryName = categoryRepository.findByCode( layer ).orElseThrow( () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage()) ).getName();
+            Category categoryName = categoryRepository.findByCode( layer ).orElseThrow( () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage()) );
             result.add( categoryName );
         }
         return result;
     }
+
+
+    public List<CategoryResponse> findChildCategory( Integer parentId ){
+        if( parentId == null ) return categoryRepository.findAllByParentIsNull().stream()
+                .map( CategoryResponse::of ).toList();
+        else return categoryRepository.findAllByParentId( parentId ).stream()
+                .map( CategoryResponse::of ).toList();
+    }
+
 }

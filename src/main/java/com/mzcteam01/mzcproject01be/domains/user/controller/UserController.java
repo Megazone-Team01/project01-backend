@@ -60,4 +60,12 @@ public class UserController {
         return ResponseEntity.ok( userOrganizationService.findAllTeacher() );
     }
 
+    @GetMapping("/teacher/organization/{id}")
+    @Operation( summary = "특정 기관의 선생님 조회" )
+    public ResponseEntity<List<AdminGetUserOrganizationResponse>> getOrganizationTeacherById(
+            @PathVariable Integer id
+    ){
+        return ResponseEntity.ok( userOrganizationService.findAllByOrganizationId( id ) );
+    }
+
 }

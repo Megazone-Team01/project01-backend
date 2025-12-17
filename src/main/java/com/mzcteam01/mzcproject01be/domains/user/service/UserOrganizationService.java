@@ -11,4 +11,5 @@ public interface UserOrganizationService {
     public List<AdminGetUserOrganizationResponse> findAllByOrganizationId(int organizationId );
     public List<AdminGetUserOrganizationResponse> findAllByUserId( int userId );
     public List<AdminGetUserOrganizationResponse> findAllTeacher();
+    public List<AdminGetUserOrganizationResponse> findAllTeacherByOrganizationId( int organizationId );
 }
