@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @SuperBuilder
 @Table(name = "offline_lecture")
+@ToString
 public class OfflineLecture extends Lecture {
 
     @Column(name = "max_num", nullable = false)

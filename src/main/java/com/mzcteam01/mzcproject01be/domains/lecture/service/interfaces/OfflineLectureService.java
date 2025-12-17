@@ -8,5 +8,4 @@ public interface OfflineLectureService extends LectureFacadeService<
         OfflineLecture,
         LectureOfflineDetailResponse,
         LectureOfflineListResponse> {
-
 }
