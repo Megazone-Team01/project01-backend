@@ -57,6 +57,13 @@ public class QOfflineLectureRepository {
 
     }
 
+    public List<OfflineLecture> findOfflineLectureTeacherById(int id) {
+        return queryFactory
+                .selectFrom(offlineLecture)
+                .where(offlineLecture.teacher.id.eq(id))
+                .fetch();
+    }
+
     private OrderSpecifier<?> getCreatedOrder(
             Integer searchType,
             ComparableExpressionBase<?> createdAt

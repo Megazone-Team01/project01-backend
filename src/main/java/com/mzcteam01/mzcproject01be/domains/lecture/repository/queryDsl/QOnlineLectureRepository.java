@@ -53,6 +53,13 @@ public class QOnlineLectureRepository {
         return new PageImpl<>(online, pageable, total == null ? 0L : total);
     }
 
+    public List<OnlineLecture> findOnlineLectureNamesByTeacherId(int id) {
+        return queryFactory
+                .selectFrom(onlineLecture)
+                .where(onlineLecture.teacher.id.eq(id))
+                .fetch();
+    }
+
     private OrderSpecifier<?> getCreatedOrder(
             Integer searchType,
             ComparableExpressionBase<?> createdAt
