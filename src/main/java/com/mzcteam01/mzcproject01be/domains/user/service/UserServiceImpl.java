@@ -101,7 +101,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public List<AdminGetUserResponse> list(GetUserRequest request) {
-        return userRepository.findAll().stream().map(AdminGetUserResponse::of).toList();
+        List<User> result = userRepository.findAll();
+        System.out.println( request.getType() );
+        if( request.getUserRole() != null ){
+            result = result.stream().filter( user ->
+                user.getRole() == request.getUserRole()
+            ).toList();
+        }
+        if( request.getType() != null ){
+            result = result.stream().filter( user ->
+                user.getType().equals(request.getType())
+            ).toList();
+        }
+        return result.stream().map(AdminGetUserResponse::of).toList();
     }
 
     @Override
