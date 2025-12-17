@@ -1,9 +1,11 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
+import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetMeetingResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOfflineMeetingResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOnlineMeetingResponse;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.Meeting;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.OfflineMeeting;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.OnlineMeeting;
@@ -155,5 +157,38 @@ public class MeetingServiceImpl implements MeetingService {
 
     }
 
+    @Override
+    public List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status) {
+
+        userRepository.findById(studentId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+
+        List<MyMeetingListResponse> result = new ArrayList<>();
+
+        switch (channelType) {
+            // 전체 조회: 온라인 + 오프라인
+            case ALL -> {
+                List<OnlineMeeting> onlineMeetings = qOnlineMeetingRepository.findByStudentId(studentId, status);
+                List<OfflineMeeting> offlineMeetings = qOfflineMeetingRepository.findByStudentId(studentId, status);
+
+                onlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOnline(meeting)));
+                offlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOffline(meeting)));
+
+                result.sort((a, b) -> b.getStartAt().compareTo(a.getStartAt()));
+            }
+            // 온라인만 조회
+            case ONLINE -> {
+                List<OnlineMeeting> onlineMeetings = qOnlineMeetingRepository.findByStudentId(studentId, status);
+                onlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOnline(meeting)));
+            }
+            // 오프라인만 조회
+            case OFFLINE -> {
+                List<OfflineMeeting> offlineMeetings = qOfflineMeetingRepository.findByStudentId(studentId, status);
+                offlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOffline(meeting)));
+            }
+        }
+
+        return result;
+    }
 
 }
