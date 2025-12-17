@@ -23,3 +23,8 @@ springdoc:
 file:
   path: ${UPLOAD_FILE_PATH:src/main/resources/files}
 
+jwt:
+  access-token-expiration-minutes: 10    # Access Token 만료분
+  refresh-token-expiration-days: 180     # Refresh Token 만료일
+  secret-key: "BdangfDdFdjfb3246fscZsccxSfg356FSDHRfedg"   # JWT 서명용 비밀키
+

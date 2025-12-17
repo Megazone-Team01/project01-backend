@@ -7,10 +7,8 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/user")
 @RestController
@@ -30,5 +28,14 @@ public class UserController {
         GetLoginResponse user = userService.login(loginRequest);
         return ResponseEntity.ok().body(user);
     }
+
+//    @GetMapping("/my")
+//    public ResponseEntity<UserDto> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+//        // userDetails 에서 현재 로그인한 사용자 ID 가져오기
+//        Long userId = userDetails.getId();
+//
+//        UserDto user = userService.getUserById(userId);
+//        return ResponseEntity.ok(user);
+//    }
 
 }
