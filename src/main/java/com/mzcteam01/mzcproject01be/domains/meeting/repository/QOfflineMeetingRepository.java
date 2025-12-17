@@ -38,4 +38,24 @@ public class QOfflineMeetingRepository {
                 .fetch();
         return results;
     }
+
+    public List<OfflineMeeting> findByStudentId(int studentId, Integer status) {
+        QOfflineMeeting offlineMeeting = QOfflineMeeting.offlineMeeting;
+
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(offlineMeeting.deletedAt.isNull());
+        where.and(offlineMeeting.student.id.eq(studentId));
+
+        if (status != null) {
+            where.and(offlineMeeting.status.eq(status));
+        }
+
+        return query
+                .selectFrom(offlineMeeting)
+                .join(offlineMeeting.teacher).fetchJoin()
+                .leftJoin(offlineMeeting.room).fetchJoin()
+                .where(where)
+                .orderBy(offlineMeeting.startAt.desc())
+                .fetch();
+    }
 }
