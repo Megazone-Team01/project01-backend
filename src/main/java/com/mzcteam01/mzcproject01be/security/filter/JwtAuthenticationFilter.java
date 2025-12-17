@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        if (method.equalsIgnoreCase("OPTIONS") || path.equals("/api/v1/user/sign") || path.equals("/api/v1/user/login") || path.startsWith("/api/v1/refresh")) {
+        if (method.equalsIgnoreCase("OPTIONS") || path.equals("/api/v1/user/signup") || path.equals("/api/v1/user/login") || path.startsWith("/api/v1/refresh")) {
             return true;
         }
         return false;

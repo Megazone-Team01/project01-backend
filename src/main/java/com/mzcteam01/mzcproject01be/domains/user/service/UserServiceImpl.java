@@ -51,10 +51,11 @@ public class UserServiceImpl implements UserService {
         String password = passwordEncoder.encode(request.getPassword());
 
 
-        // 현재는 User로만 회원가입 할 수 있도록
-        // 만약 강사인 경우 추후 관리자 승인 요청 및 승인하는 화면에서 처리될 예정
-        UserRole defaultRole = userRoleRepository.findByName("USER")
-                .orElseThrow(() -> new CustomException(UserErrorCode.DEFAULT_ROLE_NOT_FOUND.getMessage()));
+        // 학생, 강사 중 선택하여 회원가입 가능
+        // 추후 강사는 오프라인 조직에 가입하고자하는 경우 대표선생님의 승인이 필요
+        // 다만, 온라인 조직은 승인 대기 없이 바로 조직에 가입.
+        UserRole role = userRoleRepository.findByName(request.getRole())
+                .orElseThrow(() -> new CustomException(UserErrorCode.ROLE_NOT_FOUND.getMessage()));
 
         // 프론트에서 받아온 채널역할의 문자열을 코드값으로 변경
         int channelType = ChannelType.fromName(request.getType()).getCode();
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
                 .password(password)
                 .name(request.getName())
                 .phone(request.getPhone())
-                .role(defaultRole)
+                .role(role)
                 .addressCode(request.getAddressCode())
                 .type(channelType)
                 .build();
