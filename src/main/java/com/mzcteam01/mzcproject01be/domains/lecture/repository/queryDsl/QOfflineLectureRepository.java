@@ -57,10 +57,11 @@ public class QOfflineLectureRepository {
 
     }
 
-    public List<OfflineLecture> findOfflineLectureTeacherById(int id) {
+    public List<String> findOfflineLectureTeacherById(int teacherId) {
         return queryFactory
-                .selectFrom(offlineLecture)
-                .where(offlineLecture.teacher.id.eq(id))
+                .select(offlineLecture.name)
+                .from(offlineLecture)
+                .where(offlineLecture.teacher.id.eq(teacherId))
                 .fetch();
     }
 

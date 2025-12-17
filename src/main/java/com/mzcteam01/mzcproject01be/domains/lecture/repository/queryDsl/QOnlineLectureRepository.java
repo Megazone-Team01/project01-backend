@@ -53,10 +53,11 @@ public class QOnlineLectureRepository {
         return new PageImpl<>(online, pageable, total == null ? 0L : total);
     }
 
-    public List<OnlineLecture> findOnlineLectureNamesByTeacherId(int id) {
+    public List<String> findOnlineLectureNamesByTeacherId(int teacherId) {
         return queryFactory
-                .selectFrom(onlineLecture)
-                .where(onlineLecture.teacher.id.eq(id))
+                .select(onlineLecture.name)
+                .from(onlineLecture)
+                .where(onlineLecture.teacher.id.eq(teacherId))
                 .fetch();
     }
 
