@@ -91,7 +91,7 @@ public class OrganizationController {
     @PostMapping("/create")
     @Operation( summary = "기관 생성" )
     public ResponseEntity<Void> createOrganization(
-            @ModelAttribute CreateOrganizationRequest request
+            @RequestBody CreateOrganizationRequest request
     ){
         service.create( request );
         return ResponseEntity.ok().body( null );

@@ -12,6 +12,6 @@ import lombok.Setter;
 @Setter
 public class GetUserRequest {
     private String searchString;
-    private UserRole userRole;
+    private String userRole;
     private Integer type;
 }

@@ -3,9 +3,11 @@ package com.mzcteam01.mzcproject01be.domains.user.controller;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
+import com.mzcteam01.mzcproject01be.domains.user.service.UserOrganizationService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserOrganizationService userOrganizationService;
 
     @PostMapping("/signup")
     public ResponseEntity<GetUserResponse> signup(@RequestBody CreateUserRequest createUserRequest) {
@@ -49,6 +52,12 @@ public class UserController {
     ){
         userService.delete( id, deletedBy );
         return ResponseEntity.ok().body( null );
+    }
+
+    @GetMapping("/teacher/organization")
+    @Operation( summary = "모든 기관의 선생님 조회" )
+    public ResponseEntity<List<AdminGetUserOrganizationResponse>> getOrganizationTeacher(){
+        return ResponseEntity.ok( userOrganizationService.findAllTeacher() );
     }
 
 }

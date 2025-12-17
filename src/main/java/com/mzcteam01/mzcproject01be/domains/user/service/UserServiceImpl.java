@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
         System.out.println( request.getType() );
         if( request.getUserRole() != null ){
             result = result.stream().filter( user ->
-                user.getRole() == request.getUserRole()
+                    user.getRole().getName().equals( request.getUserRole() )
             ).toList();
         }
         if( request.getType() != null ){

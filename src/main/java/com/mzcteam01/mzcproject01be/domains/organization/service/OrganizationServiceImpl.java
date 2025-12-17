@@ -30,6 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     @Transactional
     public void create( CreateOrganizationRequest request ) {
+        System.out.println( request.getOwnerId() );
         User owner = userRepository.findById( request.getOwnerId() ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
         Organization organization = Organization.builder()
                 .name( request.getName() )
@@ -41,6 +42,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                 .isOnline( request.getIsOnline() )
                 .description( request.getDescription() )
                 .status( 0 )
+                .createdBy( request.getOwnerId() )
                 .build();
         organizationRepository.save( organization );
     }
