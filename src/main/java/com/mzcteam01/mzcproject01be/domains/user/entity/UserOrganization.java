@@ -40,4 +40,9 @@ public class UserOrganization extends BaseEntity {
     @Column(name = "expired_at", nullable = false)
     private LocalDateTime expiredAt;
 
+
+    // 업데이트 메소드
+    public void update(int status) {
+        if( status != 0 ) this.status = status;
+    }
 }

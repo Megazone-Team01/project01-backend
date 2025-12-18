@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
@@ -20,5 +21,8 @@ public interface UserService {
 
     // 조직 가입 요청한 강사조회
     public List<GetApproveOrganizationResponse> approveOrganization(int id);
+
+    // 조직 가입 처리(승인, 거절)
+    public void updateStatusUserOrganization(UpdateStatusUserOrganizationRequest request);
 
 }

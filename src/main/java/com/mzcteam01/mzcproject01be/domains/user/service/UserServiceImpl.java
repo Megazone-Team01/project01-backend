@@ -1,10 +1,10 @@
 package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
-import com.mzcteam01.mzcproject01be.common.exception.CustomException;
-import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
@@ -12,6 +12,7 @@ import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import com.mzcteam01.mzcproject01be.domains.user.repository.QUserOrganizationRepository;
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserOrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
 import com.mzcteam01.mzcproject01be.security.util.JwtUtil;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final QUserOrganizationRepository qUserOrganizationRepository;
+    private final UserOrganizationRepository userOrganizationRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -132,11 +134,24 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(UserErrorCode.USER_ORGANIZATION_NOT_FOUND.getMessage());
         }
 
+        // UserOrganization 객체 전체를 DTO로 변환
         List<GetApproveOrganizationResponse> responseList = requests.stream()
-                .map(userOrganization -> GetApproveOrganizationResponse.of(userOrganization.getUser()))
+                .map(GetApproveOrganizationResponse::of)
                 .toList();
 
         return responseList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updateStatusUserOrganization(UpdateStatusUserOrganizationRequest request) {
+        int userOrganizationId = request.getUserOrganizationId();
+        int status = request.getStatus();
+
+        UserOrganization userOrganization = userOrganizationRepository.findById(userOrganizationId)
+                                                .orElseThrow(() -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()));
+
+        userOrganization.update(status);
 
     }
 }
