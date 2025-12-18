@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.common.base.category.service;
 
+import com.mzcteam01.mzcproject01be.common.base.category.dto.request.CreateCategoryRequest;
 import com.mzcteam01.mzcproject01be.common.base.category.dto.response.CategoryResponse;
 import com.mzcteam01.mzcproject01be.common.base.category.entity.Category;
 import com.mzcteam01.mzcproject01be.common.base.category.repository.CategoryRepository;
@@ -18,19 +19,20 @@ import java.util.Map;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public void create( Integer parentId, String code, String name, String description ){
+    public void create(CreateCategoryRequest request ){
         Category.CategoryBuilder builder = Category.builder();
-        if( parentId != null ){
-            Category parent = categoryRepository.findById( parentId ).orElseThrow(
+        if( request.getParentId() != null ){
+            Category parent = categoryRepository.findById( request.getParentId() ).orElseThrow(
                     () -> new CustomException(CategoryErrorCode.CATEGORY_IS_ROOT.getMessage())
             );
             builder.parent( parent );
         }
-        categoryRepository.findByCode( code ).orElseThrow(
-                () -> new CustomException( CategoryErrorCode.CATEGORY_CODE_ALREADY_EXIST.getMessage() )
-        );
-        builder.code( code );
-        builder.name( name ).description( description );
+        Category existed = categoryRepository.findByCode( request.getCode() ).orElse( null );
+        if( existed != null ) throw new CustomException( CategoryErrorCode.CATEGORY_CODE_ALREADY_EXIST.getMessage());
+
+        builder.code( request.getCode() );
+        builder.name( request.getName() ).description( request.getDescription() )
+                .createdBy(1);
         categoryRepository.save( builder.build() );
     }
 
