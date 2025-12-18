@@ -3,12 +3,17 @@ package com.mzcteam01.mzcproject01be.domains.user.controller;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetMyResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequestMapping("/api/v1/user")
 @RestController
@@ -29,13 +34,25 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-//    @GetMapping("/my")
-//    public ResponseEntity<UserDto> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-//        // userDetails 에서 현재 로그인한 사용자 ID 가져오기
-//        Long userId = userDetails.getId();
+    @GetMapping("/my")
+    public ResponseEntity<GetMyResponse> getMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+        int id = authUser.getId();
+        GetMyResponse my = userService.getMyInfo(id);
+        return ResponseEntity.ok().body(my);
+    }
+
+//    @PutMapping("/my")
+//    public ResponseEntity<GetMyResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+//        int id = authUser.getId();
+//        GetMyResponse my = userService.putMyInfo(id);
+//        return ResponseEntity.ok().body(my);
+//    }
 //
-//        UserDto user = userService.getUserById(userId);
-//        return ResponseEntity.ok(user);
+//    @DeleteMapping("/my")
+//    public ResponseEntity<Map<String,String>> deleteMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+//        int id = authUser.getId();
+//        userService.deleteMyInfo(id);
+//        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","회원 탈퇴되었습니다."));
 //    }
 
 }

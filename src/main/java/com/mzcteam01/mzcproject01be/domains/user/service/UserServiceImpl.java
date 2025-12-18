@@ -6,13 +6,16 @@ import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetMyResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import com.mzcteam01.mzcproject01be.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,4 +120,37 @@ public class UserServiceImpl implements UserService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    // 마이페이지 조회
+    @Override
+    public GetMyResponse getMyInfo(int id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+
+        return GetMyResponse.of(user);
+    }
+
+    // 마이페이지 수정
+//    @Override
+//    @Transactional(readOnly = false)
+//    public GetMyResponse getMyInfo(int id){
+//
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+//
+//        return GetMyResponse.of(user);
+//    }
+
+    // 회원 탈퇴
+//    @Override
+//    @Transactional(readOnly = false)
+//    public void deleteMyInfo(int id){
+//
+//        userRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+//
+//        userRepository.deleteById(id);
+//    }
+
 }
