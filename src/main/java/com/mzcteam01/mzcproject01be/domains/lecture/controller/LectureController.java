@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectureRequest;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,15 @@ public class LectureController {
             @RequestParam(required = false) Integer status
     ) {
         return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline, status ) );
+    }
+
+    @GetMapping("/{id}/{isOnline}")
+    @Operation( summary = "강의 상세 조회" )
+    public ResponseEntity<AdminGetLectureDetailResponse> getLectureById(
+            @PathVariable int id,
+            @PathVariable int isOnline
+    ){
+        return ResponseEntity.ok( lectureFacade.getLectureDetail( id, isOnline == 1) );
     }
 
     @PostMapping()

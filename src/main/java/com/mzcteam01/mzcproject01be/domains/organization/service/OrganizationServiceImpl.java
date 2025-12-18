@@ -3,9 +3,13 @@ package com.mzcteam01.mzcproject01be.domains.organization.service;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.OrganizationErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
@@ -13,11 +17,14 @@ import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.QOrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserOrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,6 +33,9 @@ public class OrganizationServiceImpl implements OrganizationService{
     private final OrganizationRepository organizationRepository;
     private final QOrganizationRepository qOrganizationRepository;
     private final UserRepository userRepository;
+    private final UserOrganizationRepository userOrganizationRepository;
+    private final OnlineLectureRepository onlineLectureRepository;
+    private final OfflineLectureRepository offlineLectureRepository;
 
     @Override
     @Transactional
@@ -98,6 +108,59 @@ public class OrganizationServiceImpl implements OrganizationService{
     public AdminGetOrganizationResponse findById( int id ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()) );
         return AdminGetOrganizationResponse.of( organization );
+    }
+
+    @Override
+    @Transactional
+    public AdminGetOrganizationDetailResponse getDetailById(int id) {
+        Organization organization = organizationRepository.findById( id ).orElseThrow(
+                () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage())
+        );
+        List<Lecture> lectures = new ArrayList<>();
+        lectures.addAll( getAllOfflineLectureByOrganizationId( id ) );
+        lectures.addAll( getAllOnlineLectureByOrganizationId( id ) );
+        List<String> lectureResult = lectures.stream().map( Lecture::getName ).toList();
+
+        List<String> students = new ArrayList<>();
+        List<String> teachers = new ArrayList<>();
+
+        List<UserOrganization> userOrganizations = userOrganizationRepository.findAllByOrganizationId( id );
+        for( UserOrganization userOrganization : userOrganizations ) {
+            User user = userOrganization.getUser();
+            if( user.getRole().getName().equals("TEACHER") ) teachers.add( user.getName() );
+            else if( user.getRole().getName().equals("STUDENT") ) students.add( user.getName() );
+        }
+
+        return AdminGetOrganizationDetailResponse.of( organization, lectureResult, students, teachers );
+    }
+
+    private List<Lecture> getAllOnlineLectureByOrganizationId( int organizationId ) {
+        // UserOrganization에서 소속된 Teacher 목록 조회
+        List<UserOrganization> teachers = userOrganizationRepository.findAllByOrganizationId( organizationId );
+        // Teacher들이 만든 Online Lecture 조회
+        List<Lecture> result = new ArrayList<>();
+        for( UserOrganization teacher : teachers ) {
+            if( teacher.getUser().getRole().getName().equals( "TEACHER" ) ){
+                int teacherId = teacher.getUser().getId();
+                List<Lecture> lectures = onlineLectureRepository.findAllByTeacherId( teacherId );
+                result.addAll( lectures );
+            }
+        }
+        return result;
+    }
+    private List<Lecture> getAllOfflineLectureByOrganizationId( int organizationId ) {
+// UserOrganization에서 소속된 Teacher 목록 조회
+        List<UserOrganization> teachers = userOrganizationRepository.findAllByOrganizationId( organizationId );
+        // Teacher들이 만든 Offline Lecture 조회
+        List<Lecture> result = new ArrayList<>();
+        for( UserOrganization teacher : teachers ) {
+            if( teacher.getUser().getRole().getName().equals( "TEACHER" ) ){
+                int teacherId = teacher.getUser().getId();
+                List<Lecture> lectures = offlineLectureRepository.findAllByTeacherId( teacherId );
+                result.addAll( lectures );
+            }
+        }
+        return result;
     }
 
 

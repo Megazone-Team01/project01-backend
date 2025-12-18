@@ -3,10 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.organization.controller;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
-import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationLectureResponse;
-import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationTeacherResponse;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.organization.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -112,5 +109,13 @@ public class OrganizationController {
     ){
         service.reject( id );
         return ResponseEntity.ok().body( null );
+    }
+
+    @GetMapping("/{id}/detail")
+    @Operation( summary = "세부 정보 조회", description = "상세 정보 조회")
+    public ResponseEntity<AdminGetOrganizationDetailResponse> findDetailById(
+            @PathVariable int id
+    ){
+        return ResponseEntity.ok( service.getDetailById( id ) );
     }
 }

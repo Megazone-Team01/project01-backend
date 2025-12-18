@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectureRequest;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
@@ -163,5 +164,24 @@ public class LectureFacade {
         List<Lecture> offline = offlineRepository.findAllByTeacherId( teacherId );
         result.addAll(offline);
         return result;
+    }
+
+    @Transactional
+    public AdminGetLectureDetailResponse getLectureDetail(int id, boolean isOnline) {
+        if( isOnline ){
+            OnlineLecture lecture = onlineRepository.findById( id ).orElseThrow(
+                    () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
+            );
+            return AdminGetLectureDetailResponse.ofOnline( lecture );
+        }
+        else {
+            OfflineLecture lecture = offlineRepository.findById( id ).orElseThrow(
+                    () -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage())
+            );
+            String day = dayRepository.findByValue( lecture.getDay() ).orElseThrow(
+                    () -> new CustomException(DayErrorCode.DAY_NOT_FOUND.getMessage())
+            ).getName();
+            return AdminGetLectureDetailResponse.ofOffline( lecture, day );
+        }
     }
 }
