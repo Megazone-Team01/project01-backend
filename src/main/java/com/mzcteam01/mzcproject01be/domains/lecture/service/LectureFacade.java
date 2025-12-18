@@ -40,7 +40,7 @@ public class LectureFacade {
     private final DayRepository dayRepository;
 
     @Transactional
-    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline ) {
+    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status ) {
         List<AdminGetLectureResponse> results = new ArrayList<>();
         if( isOnline == null ) isOnline = 0;
 
@@ -51,6 +51,9 @@ public class LectureFacade {
         if( isOnline != 1 ){
             List<OfflineLecture> offlineLectures = offlineRepository.findAll();
             for( OfflineLecture offlineLecture : offlineLectures ) results.add( AdminGetLectureResponse.of( offlineLecture, false ) );
+        }
+        if( status != null ){
+            return onlineRepository.findAllByStatus( status ).stream().map( lecture -> AdminGetLectureResponse.of( lecture, true ) ).toList();
         }
 
         return results;
@@ -111,5 +114,21 @@ public class LectureFacade {
             offlineRepository.save( lecture );
         }
         else throw new CustomException(LectureErrorCode.LECTURE_TYPE_ERROR.getMessage());
+    }
+
+    @Transactional
+    public void approve( int id ){
+        OnlineLecture onlineLecture = onlineRepository.findById( id ).orElseThrow(
+                () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
+        );
+        onlineLecture.updateStatus(1);
+    }
+
+    @Transactional
+    public void reject( int id ){
+        OnlineLecture onlineLecture = onlineRepository.findById( id ).orElseThrow(
+                () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
+        );
+        onlineLecture.updateStatus(-1);
     }
 }

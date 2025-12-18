@@ -21,9 +21,10 @@ public class LectureController {
     @GetMapping("/filter")
     @Operation( summary = "강의 조회" )
     public ResponseEntity<List<AdminGetLectureResponse>> getAllLectures(
-            @RequestParam(required = false) Integer isOnline
+            @RequestParam(required = false) Integer isOnline,
+            @RequestParam(required = false) Integer status
     ) {
-        return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline ) );
+        return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline, status ) );
     }
 
     @PostMapping()
@@ -32,6 +33,24 @@ public class LectureController {
         @RequestBody AdminCreateLectureRequest request
     ){
         lectureFacade.create( request );
+        return ResponseEntity.ok( null );
+    }
+
+    @PostMapping("/approve/{id}")
+    @Operation( summary = "강의 승인" )
+    public ResponseEntity<Void> approveLecture(
+            @PathVariable Integer id
+    ){
+        lectureFacade.approve( id );
+        return ResponseEntity.ok( null );
+    }
+
+    @PostMapping("/reject/{id}")
+    @Operation( summary = "강의 반려" )
+    public ResponseEntity<Void> rejectLecture(
+            @PathVariable Integer id
+    ){
+        lectureFacade.reject( id );
         return ResponseEntity.ok( null );
     }
 

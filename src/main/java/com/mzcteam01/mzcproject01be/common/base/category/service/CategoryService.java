@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.common.exception.CategoryErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     public void create(CreateCategoryRequest request ){
         Category.CategoryBuilder builder = Category.builder();
         if( request.getParentId() != null ){
@@ -36,6 +38,7 @@ public class CategoryService {
         categoryRepository.save( builder.build() );
     }
 
+    @Transactional
     public void update( int categoryId, String name, String description ){
         Category category = categoryRepository.findById( categoryId ).orElseThrow(
                 () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
@@ -43,6 +46,7 @@ public class CategoryService {
         category.update( name, description );
     }
 
+    @Transactional
     public void delete( int categoryId, int deletedBy ){
         Category category = categoryRepository.findById( categoryId ).orElseThrow(
                 () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
