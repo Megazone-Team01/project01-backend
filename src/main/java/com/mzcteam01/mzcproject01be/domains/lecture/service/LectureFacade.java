@@ -9,6 +9,7 @@ import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectureRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
@@ -18,6 +19,8 @@ import com.mzcteam01.mzcproject01be.domains.organization.repository.Organization
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
 import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserLecture;
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,7 @@ public class LectureFacade {
     private final FileRepository fileRepository;
     private final RoomRepository roomRepository;
     private final DayRepository dayRepository;
+    private final UserLectureRepository userLectureRepository;
 
     @Transactional
     public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status ) {
@@ -130,5 +134,34 @@ public class LectureFacade {
                 () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
         );
         onlineLecture.updateStatus(-1);
+    }
+
+    @Transactional
+    public List<Lecture> getAllLearningLecture( int studentId ){
+        List<UserLecture> lectures = userLectureRepository.findAllByUserId( studentId );
+        List<Lecture> result = new ArrayList<>();
+        for( UserLecture userLecture : lectures ){
+            if( userLecture.getIsOnline() == 1 ){
+                Lecture lecture = onlineRepository.findById( userLecture.getLectureId() ).orElseThrow(
+                        () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
+                );
+                result.add( lecture );
+            }
+            else if( userLecture.getIsOnline() == 2 ){
+                Lecture lecture = offlineRepository.findById( userLecture.getLectureId() ).orElseThrow(
+                        () -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage())
+                );
+                result.add( lecture );
+            }
+        }
+        return result;
+    }
+
+    @Transactional
+    public List<Lecture> getAllTeachingLecture( int teacherId ){
+        List<Lecture> result = onlineRepository.findAllByTeacherId( teacherId );
+        List<Lecture> offline = offlineRepository.findAllByTeacherId( teacherId );
+        result.addAll(offline);
+        return result;
     }
 }

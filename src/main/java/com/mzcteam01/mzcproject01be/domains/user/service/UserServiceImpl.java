@@ -4,15 +4,22 @@ import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.RoomErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import com.mzcteam01.mzcproject01be.domains.user.repository.QUserOrganizationRepository;
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserOrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,6 +42,9 @@ public class UserServiceImpl implements UserService {
     private final QUserOrganizationRepository qUserOrganizationRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LectureFacade lectureFacade;
+    private final OrganizationRepository organizationRepository;
+    private final UserOrganizationRepository userOrganizationRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -121,5 +132,23 @@ public class UserServiceImpl implements UserService {
     public void delete(int id, int deletedBy) {
         User user = userRepository.findById( id ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
         user.delete();
+    }
+
+    @Override
+    @Transactional
+    public AdminGetUserDetailResponse getUserDetailById(int id) {
+        // User 정보 조회
+        User user = userRepository.findById( id ).orElseThrow(
+                () -> new CustomException( UserErrorCode.USER_NOT_FOUND.getMessage())
+        );
+        // Lecture 정보 조회
+        List<Lecture> lectures = null;
+        if( user.getRole().getName().equals("TEACHER")) lectures = lectureFacade.getAllTeachingLecture( id );
+        else if( user.getRole().getName().equals("STUDENT")) lectures = lectureFacade.getAllLearningLecture( id );
+        else lectures = new ArrayList<>();
+        // Organization 정보 조회
+        List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId( id );
+        // Response 객체 생성
+        return AdminGetUserDetailResponse.of( user, lectures, organizations );
     }
 }

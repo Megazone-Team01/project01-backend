@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
@@ -24,5 +25,6 @@ public interface UserService {
 
     // 사용자 삭제
     void delete( int id, int deletedBy );
+    AdminGetUserDetailResponse getUserDetailById( int id );
 
 }

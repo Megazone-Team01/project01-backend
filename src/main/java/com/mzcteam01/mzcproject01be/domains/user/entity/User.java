@@ -59,6 +59,9 @@ public class User {
     @Column( name = "deleted_at" )
     private LocalDateTime deletedAt;
 
+    @Column( name = "profile_img", nullable = true )
+    private String profileImg;
+
     public void update( String phone, String addressCode, String addressDetail, Integer type ){
         if( phone != null ) this.phone = phone;
         if( addressCode != null ) this.addressCode = addressCode;

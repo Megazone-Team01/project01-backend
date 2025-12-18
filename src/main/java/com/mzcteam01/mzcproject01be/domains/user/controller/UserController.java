@@ -3,10 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.user.controller;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserOrganizationService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +39,14 @@ public class UserController {
             @ModelAttribute GetUserRequest request
     ) {
         return ResponseEntity.ok( userService.list( request ) );
+    }
+
+    @GetMapping("/{id}")
+    @Operation( summary = "특정 사용자 상세 조회 API" )
+    public ResponseEntity<AdminGetUserDetailResponse> getUserDetailById(
+            @PathVariable Integer id
+    ){
+        return ResponseEntity.ok( userService.getUserDetailById(id) );
     }
 
     @DeleteMapping("/{id}")
