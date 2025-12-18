@@ -31,6 +31,9 @@ public class AdminGetLectureDetailResponse {
     private Integer status;
     private Integer fileId;
     private String fileUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     public static AdminGetLectureDetailResponse ofOnline( OnlineLecture lecture ){
         return AdminGetLectureDetailResponse.builder()
@@ -47,12 +50,15 @@ public class AdminGetLectureDetailResponse {
                 .fileId(lecture.getFile().getId())
                 .fileUrl(lecture.getFile().getUrl())
                 .status(lecture.getStatus())
+                .createdAt(lecture.getCreatedAt())
+                .updatedAt(lecture.getUpdatedAt())
+                .deletedAt(lecture.getDeletedAt())
                 .build();
     }
     public static AdminGetLectureDetailResponse ofOffline( OfflineLecture lecture, String day ){
         return AdminGetLectureDetailResponse.builder()
                 .id( lecture.getId() )
-                .isOnline( true )
+                .isOnline( false )
                 .name( lecture.getName() )
                 .organizationName( lecture.getOrganization().getName() )
                 .teacherName( lecture.getTeacher().getName() )
@@ -65,6 +71,9 @@ public class AdminGetLectureDetailResponse {
                 .roomName( lecture.getRoom().getName() )
                 .startTimeAt(lecture.getStartTimeAt())
                 .endTimeAt(lecture.getEndTimeAt())
+                .createdAt(lecture.getCreatedAt())
+                .updatedAt(lecture.getUpdatedAt())
+                .deletedAt(lecture.getDeletedAt())
                 .day( day )
                 .build();
     }
