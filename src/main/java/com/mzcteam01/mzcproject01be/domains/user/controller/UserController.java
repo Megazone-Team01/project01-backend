@@ -42,9 +42,9 @@ public class UserController {
 //    }
 
     @GetMapping("/approveOrganization")
-//    public ResponseEntity<GetApproveOrganization> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
-    public ResponseEntity<Integer> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
+    public ResponseEntity<GetApproveOrganization> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
+        GetApproveOrganization user = userService.approveOrganization(authUser);
         return ResponseEntity.ok(id);
     }
 }

@@ -2,8 +2,10 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +17,7 @@ public interface UserService {
     // 로그인
     public GetLoginResponse login(LoginRequest request);
 
-    // 리프레시 토큰 저장
-//    public void saveRefreshToken(int userId, String refreshToken);
+    // 조직 가입 요청한 강사조회
+    public GetApproveOrganization approveOrganization(AuthUser auth);
 
 }

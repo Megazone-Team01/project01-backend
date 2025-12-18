@@ -5,12 +5,14 @@ import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import com.mzcteam01.mzcproject01be.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -116,5 +118,10 @@ public class UserServiceImpl implements UserService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public GetApproveOrganization approveOrganization(AuthUser authUser) {
+
     }
 }
