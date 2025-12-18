@@ -2,8 +2,12 @@ package com.mzcteam01.mzcproject01be.domains.file.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.FileErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
+import com.mzcteam01.mzcproject01be.domains.file.dto.response.FileResponse;
 import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ import java.util.Map;
 public class FileService {
     private final FileRepository fileRepository;
     private final UserRepository userRepository;
+    private final OnlineLectureRepository onlineLectureRepository;
 
     // Stage 환경에서는 경로가 변경되어야 함 -> FE에서 조회 필요
     @Value("${file.path}")
@@ -87,5 +92,14 @@ public class FileService {
         } catch (IOException e) {
             throw new CustomException( FileErrorCode.FILE_DELETE_ERROR.getMessage() );
         }
+    }
+
+    @Transactional
+    public FileResponse getFileWithLecture( int lectureId ){
+        OnlineLecture lecture = onlineLectureRepository.findById( lectureId ).orElseThrow(
+                () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
+        );
+        File file = lecture.getFile();
+        return FileResponse.of( file, lecture );
     }
 }
