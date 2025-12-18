@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
@@ -105,7 +105,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Map<String, Object> claims = ex.getClaims(); // 만료 토큰에서도 claims 가져오기
             int id = (Integer) claims.get("id");
 
-            User user = userRepository.findById(id)
+            User user = userRepository.findByIdWithRole(id)
                     .orElseThrow(() -> new CustomJwtException(JwtErrorCode.INVALID_AUTH));
 
             // Refresh Token 만료 확인 : JWT토큰이 만료되었습니다.
@@ -124,9 +124,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 새 Access Token 발급 (10분 만료)
             String newAccessToken = JwtUtil.generateToken(newClaims, 10);
+            log.info("New access token: {}", newAccessToken);
 
             // 새 토큰을 Response Header에 추가
             response.setHeader("Authorization", "Bearer " + newAccessToken);
+            response.setHeader("Access-Control-Expose-Headers", "Authorization"); // 이거 필수!
 
             // 인증 객체를 SecurityContext에 세팅
             AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getName(), user.getRole().getName());
