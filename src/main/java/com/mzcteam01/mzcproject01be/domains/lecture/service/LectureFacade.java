@@ -2,6 +2,8 @@ package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.common.base.category.entity.Category;
 import com.mzcteam01.mzcproject01be.common.base.category.service.CategoryService;
+import com.mzcteam01.mzcproject01be.common.base.day.entity.Day;
+import com.mzcteam01.mzcproject01be.common.base.day.repository.DayRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class LectureFacade {
     private final CategoryService categoryService;
     private final FileRepository fileRepository;
     private final RoomRepository roomRepository;
+    private final DayRepository dayRepository;
 
     @Transactional
     public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline ) {
@@ -73,6 +77,9 @@ public class LectureFacade {
                     .description( request.getDescription() )
                     .status( 0 )
                     .file( file )
+                    .startAt( request.getStartAt() )
+                    .endAt( request.getEndAt() )
+                    .createdBy(teacher.getId())
                     .build();
             onlineRepository.save( lecture );
         }
@@ -80,6 +87,12 @@ public class LectureFacade {
             Room room = roomRepository.findById( request.getRoomId() ).orElseThrow(
                     () -> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage())
             );
+            Day dayValue = dayRepository.findByName( request.getDayValue() )
+                    .orElseThrow( () -> new CustomException( DayErrorCode.DAY_NOT_FOUND.getMessage()) );
+            String[] startTimeSplitter = request.getStartTimeAt().split(":");
+            String[] endTimeSplitter = request.getEndTimeAt().split(":");
+            String startTime = startTimeSplitter[0] + startTimeSplitter[1];
+            String endTime = endTimeSplitter[0] + endTimeSplitter[1];
             OfflineLecture lecture = OfflineLecture.builder()
                     .name(request.getName())
                     .organization( organization )
@@ -88,9 +101,12 @@ public class LectureFacade {
                     .description( request.getDescription() )
                     .maxNum( request.getMaxNum() )
                     .room( room )
-                    .startTimeAt( request.getStartTimeAt() )
-                    .endTimeAt( request.getEndTimeAt() )
-                    .day( request.getDayValue() )
+                    .startAt( request.getStartAt() )
+                    .endAt( request.getEndAt() )
+                    .startTimeAt( startTime )
+                    .endTimeAt( endTime )
+                    .day( dayValue.getValue() )
+                    .createdBy(teacher.getId())
                     .build();
             offlineRepository.save( lecture );
         }
