@@ -6,12 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@SuperBuilder
 @Table(name = "day")
 public class Day extends BaseEntity {
 
