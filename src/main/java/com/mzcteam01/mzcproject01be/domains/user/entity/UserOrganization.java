@@ -30,6 +30,10 @@ public class UserOrganization extends BaseEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
+    // 조직 가입 요청 상태 : -1(거절), 0(대기), 1(승인)
+    @Column(name = "status", nullable = false)
+    private int status;
+
     @Column(name = "registered_at", nullable = false)
     private LocalDateTime registeredAt;
 

@@ -2,9 +2,12 @@ package com.mzcteam01.mzcproject01be.domains.user.controller;
 
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
+import com.mzcteam01.mzcproject01be.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,4 +41,10 @@ public class UserController {
 //        return ResponseEntity.ok(user);
 //    }
 
+    @GetMapping("/approveOrganization")
+//    public ResponseEntity<GetApproveOrganization> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
+    public ResponseEntity<Integer> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
+        int id = authUser.getId();
+        return ResponseEntity.ok(id);
+    }
 }
