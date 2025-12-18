@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         );
 
         // AccessToken, RefreshToken 생성
-        String accessToken = jwtUtil.generateToken(claims, 2); // 10분
+        String accessToken = jwtUtil.generateToken(claims, 10); // 10분
         String refreshToken = jwtUtil.generateToken(claims, 180 * 24 * 60); // 180일
 
         // DB에 RefreshToken 저장
