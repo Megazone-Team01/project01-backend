@@ -7,12 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "organization")
 public class Organization extends BaseEntity {
 
@@ -52,11 +53,16 @@ public class Organization extends BaseEntity {
 
     @Column(name = "lead_image")
     private String leadImage;
-    public void update( String name, String addressCode, String addressDetail, String tel ){
+
+    public void update( String name, String addressCode, String addressDetail, String tel, String homepage,
+                        Integer type, String description ){
         if( name != null ) this.name = name;
         if( addressCode != null ) this.addressCode = addressCode;
         if( addressDetail != null ) this.addressDetail = addressDetail;
         if( tel != null ) this.tel = tel;
+        if( homepage != null ) this.webpage = homepage;
+        if( type != null ) this.isOnline = type;
+        if( description != null ) this.description = description;
     }
 
     public void updateStatus( boolean isApprove ){

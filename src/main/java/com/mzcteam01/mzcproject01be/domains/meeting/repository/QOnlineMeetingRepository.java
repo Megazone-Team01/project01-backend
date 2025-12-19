@@ -38,4 +38,23 @@ public class QOnlineMeetingRepository {
                 .fetch();
         return results;
     }
+
+    public List<OnlineMeeting> findByStudentId(int studentId, Integer status) {
+        QOnlineMeeting onlineMeeting = QOnlineMeeting.onlineMeeting;
+
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(onlineMeeting.deletedAt.isNull());
+        where.and(onlineMeeting.student.id.eq(studentId));
+
+        if (status != null) {
+            where.and(onlineMeeting.status.eq(status));
+        }
+
+        return query
+                .selectFrom(onlineMeeting)
+                .join(onlineMeeting.teacher).fetchJoin()
+                .where(where)
+                .orderBy(onlineMeeting.startAt.desc())
+                .fetch();
+    }
 }

@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.security.util;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
@@ -9,8 +10,10 @@ import com.mzcteam01.mzcproject01be.common.exception.CustomJwtException;
 import com.mzcteam01.mzcproject01be.common.exception.JwtErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
@@ -56,7 +59,8 @@ public class JwtUtil {
         } catch (MalformedJwtException e) {
             throw new CustomJwtException(JwtErrorCode.MALFORMED_TOKEN);
         } catch (ExpiredJwtException e) {
-            throw new CustomJwtException(JwtErrorCode.EXPIRED_TOKEN);
+            log.info("token expired");
+            throw e;
         } catch (InvalidClaimException e) {
             throw new CustomJwtException(JwtErrorCode.INVALID_CLAIM);
         } catch (io.jsonwebtoken.JwtException e) { // 서명 검증 실패 등
