@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
     private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
+    private final RelatedEntityChecker relatedEntityChecker;
 
     @Override
     @Transactional(readOnly = false)
@@ -162,6 +164,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(int id, int deletedBy) {
         User user = userRepository.findById( id ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
+        if( !relatedEntityChecker.relatedUserCheck( id ) ) throw new CustomException( CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
         user.delete();
     }
 

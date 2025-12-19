@@ -6,6 +6,7 @@ import com.mzcteam01.mzcproject01be.common.base.day.entity.Day;
 import com.mzcteam01.mzcproject01be.common.base.day.repository.DayRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.common.utils.CategoryConverter;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectureRequest;
@@ -46,6 +47,7 @@ public class LectureFacade {
     private final UserLectureRepository userLectureRepository;
 
     private final CategoryConverter categoryConverter;
+    private final RelatedEntityChecker relatedEntityChecker;
 
     @Transactional
     public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status ) {
@@ -70,7 +72,7 @@ public class LectureFacade {
     }
 
     @Transactional
-    public void create( AdminCreateLectureRequest request ) {
+    public void create( AdminCreateLectureRequest request, int createdBy ) {
         User teacher = userRepository.findById( request.getTeacherId() ).orElseThrow(
                 () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage())
         );
@@ -93,7 +95,7 @@ public class LectureFacade {
                     .file( file )
                     .startAt( request.getStartAt() )
                     .endAt( request.getEndAt() )
-                    .createdBy(teacher.getId())
+                    .createdBy( createdBy )
                     .build();
             onlineRepository.save( lecture );
         }
@@ -121,7 +123,7 @@ public class LectureFacade {
                     .startTimeAt( startTime )
                     .endTimeAt( endTime )
                     .day( dayValue.getValue() )
-                    .createdBy(teacher.getId())
+                    .createdBy( createdBy )
                     .build();
             offlineRepository.save( lecture );
         }
@@ -129,7 +131,7 @@ public class LectureFacade {
     }
 
     @Transactional
-    public void approve( int id ){
+    public void approve( int id, int updatedBy ){
         OnlineLecture onlineLecture = onlineRepository.findById( id ).orElseThrow(
                 () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
         );
@@ -137,7 +139,7 @@ public class LectureFacade {
     }
 
     @Transactional
-    public void reject( int id ){
+    public void reject( int id, int updatedBy ){
         OnlineLecture onlineLecture = onlineRepository.findById( id ).orElseThrow(
                 () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
         );
@@ -189,6 +191,24 @@ public class LectureFacade {
                     () -> new CustomException(DayErrorCode.DAY_NOT_FOUND.getMessage())
             ).getName();
             return AdminGetLectureDetailResponse.ofOffline( lecture, day, categoryConverter.fullCodeToLayer(lecture.getCategory()) );
+        }
+    }
+
+    @Transactional
+    public void delete( int id, int deletedBy, boolean isOnline ){
+        if( isOnline ){
+            OnlineLecture lecture = onlineRepository.findById( id ).orElseThrow(
+                    () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
+            );
+            if( !relatedEntityChecker.relatedOnlineLectureChecker( id ) ) throw new CustomException(CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
+            lecture.delete( deletedBy );
+        }
+        else {
+            OfflineLecture lecture = offlineRepository.findById( id ).orElseThrow(
+                    () -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage())
+            );
+            if( !relatedEntityChecker.relatedOfflineLectureChecker( id ) ) throw new CustomException(CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
+            lecture.delete( deletedBy );
         }
     }
 }

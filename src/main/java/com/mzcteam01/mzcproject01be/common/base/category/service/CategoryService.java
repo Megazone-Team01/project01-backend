@@ -6,6 +6,7 @@ import com.mzcteam01.mzcproject01be.common.base.category.entity.Category;
 import com.mzcteam01.mzcproject01be.common.base.category.repository.CategoryRepository;
 import com.mzcteam01.mzcproject01be.common.exception.CategoryErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final RelatedEntityChecker relatedEntityChecker;
 
     @Transactional
-    public void create(CreateCategoryRequest request ){
+    public void create(CreateCategoryRequest request, int createdBy ){
         Category.CategoryBuilder builder = Category.builder();
         if( request.getParentId() != null ){
             Category parent = categoryRepository.findById( request.getParentId() ).orElseThrow(
@@ -34,7 +36,7 @@ public class CategoryService {
 
         builder.code( request.getCode() );
         builder.name( request.getName() ).description( request.getDescription() )
-                .createdBy(1);
+                .createdBy( createdBy );
         categoryRepository.save( builder.build() );
     }
 
@@ -44,14 +46,6 @@ public class CategoryService {
                 () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
         );
         category.update( name, description );
-    }
-
-    @Transactional
-    public void delete( int categoryId, int deletedBy ){
-        Category category = categoryRepository.findById( categoryId ).orElseThrow(
-                () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
-        );
-        category.delete( deletedBy );
     }
 
     // 상하위 관계 없이 모두 조회
@@ -90,6 +84,15 @@ public class CategoryService {
                 .map( CategoryResponse::of ).toList();
         else return categoryRepository.findAllByParentId( parentId ).stream()
                 .map( CategoryResponse::of ).toList();
+    }
+
+    @Transactional
+    public void delete( int id, int deletedBy ){
+        Category category = categoryRepository.findById( id ).orElseThrow(
+                () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
+        );
+        if( relatedEntityChecker.relatedCategoryChecker( id ) ) throw new CustomException( CategoryErrorCode.CATEGORY_IS_ROOT.getMessage() );
+        category.delete( deletedBy );
     }
 
 }

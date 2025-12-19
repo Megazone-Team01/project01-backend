@@ -4,10 +4,12 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectu
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,27 +42,41 @@ public class LectureController {
     @PostMapping()
     @Operation( summary = "강의 생성" )
     public ResponseEntity<Void> createLecture(
-        @RequestBody AdminCreateLectureRequest request
+        @RequestBody AdminCreateLectureRequest request,
+        @AuthenticationPrincipal AuthUser authUser
     ){
-        lectureFacade.create( request );
+        lectureFacade.create( request, authUser.getId() );
         return ResponseEntity.ok( null );
     }
 
     @PostMapping("/approve/{id}")
     @Operation( summary = "강의 승인" )
     public ResponseEntity<Void> approveLecture(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        lectureFacade.approve( id );
+        lectureFacade.approve( id, authUser.getId() );
         return ResponseEntity.ok( null );
     }
 
     @PostMapping("/reject/{id}")
     @Operation( summary = "강의 반려" )
     public ResponseEntity<Void> rejectLecture(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        lectureFacade.reject( id );
+        lectureFacade.reject( id, authUser.getId() );
+        return ResponseEntity.ok( null );
+    }
+
+    @DeleteMapping( "/{id}" )
+    @Operation( summary = "강의 삭제" )
+    public ResponseEntity<Void> deleteLecture(
+            @PathVariable Integer id,
+            @RequestParam Integer isOnline,
+            @AuthenticationPrincipal AuthUser authUser
+    ){
+        lectureFacade.delete( id, authUser.getId(), isOnline == 1 );
         return ResponseEntity.ok( null );
     }
 

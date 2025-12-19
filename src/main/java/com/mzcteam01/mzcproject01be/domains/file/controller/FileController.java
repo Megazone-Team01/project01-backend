@@ -2,11 +2,13 @@ package com.mzcteam01.mzcproject01be.domains.file.controller;
 
 import com.mzcteam01.mzcproject01be.domains.file.dto.response.FileResponse;
 import com.mzcteam01.mzcproject01be.domains.file.service.FileService;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,18 +26,18 @@ public class FileController {
     @Operation( summary = "파일 업로드 API", description = "fileUrl: 해당 파일을 볼 수 있는 경로, fileId: File 엔티티 ID")
     public ResponseEntity<Map<String, Object>> upload(
             @RequestParam MultipartFile file,
-            @RequestParam Integer uploaderId
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        return ResponseEntity.ok( fileService.uploadFiles( file, uploaderId ) );
+        return ResponseEntity.ok( fileService.uploadFiles( file, authUser.getId() ) );
     }
 
     @DeleteMapping("/{id}")
     @Operation( summary = "파일 삭제" )
     public ResponseEntity<Map<String, String>> delete(
             @PathVariable Integer id,
-            @RequestParam Integer deletedBy
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        fileService.deleteFile( id, deletedBy );
+        fileService.deleteFile( id, authUser.getId() );
         return ResponseEntity.ok( Map.of("status", "성공" ) );
     }
 

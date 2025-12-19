@@ -1,8 +1,10 @@
 package com.mzcteam01.mzcproject01be.domains.organization.service;
 
+import com.mzcteam01.mzcproject01be.common.exception.CommonErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.OrganizationErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
@@ -37,9 +39,11 @@ public class OrganizationServiceImpl implements OrganizationService{
     private final OnlineLectureRepository onlineLectureRepository;
     private final OfflineLectureRepository offlineLectureRepository;
 
+    private final RelatedEntityChecker relatedEntityChecker;
+
     @Override
     @Transactional
-    public void create( CreateOrganizationRequest request ) {
+    public void create( CreateOrganizationRequest request, int createdBy ) {
         System.out.println( request.getOwnerId() );
         User owner = userRepository.findById( request.getOwnerId() ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
         Organization organization = Organization.builder()
@@ -52,14 +56,14 @@ public class OrganizationServiceImpl implements OrganizationService{
                 .isOnline( request.getIsOnline() )
                 .description( request.getDescription() )
                 .status( 0 )
-                .createdBy( request.getOwnerId() )
+                .createdBy( createdBy )
                 .build();
         organizationRepository.save( organization );
     }
 
     @Override
     @Transactional
-    public void update(int id, UpdateOrganizationRequest request ){
+    public void update(int id, UpdateOrganizationRequest request, int updatedBy ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException("해당하는 아카데미가 존재하지 않습니다") );
         organization.update(
                 request.getName(),
@@ -74,14 +78,14 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Override
     @Transactional
-    public void approve( int organizationId ){
+    public void approve( int organizationId, int updatedBy ){
         Organization organization = organizationRepository.findById( organizationId ).orElseThrow( () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()) );
         organization.updateStatus( true );
     }
 
     @Override
     @Transactional
-    public void reject( int organizationId ){
+    public void reject( int organizationId, int updatedBy ){
         Organization organization = organizationRepository.findById( organizationId ).orElseThrow( () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()) );
         organization.updateStatus( false );
     }
@@ -90,6 +94,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Transactional
     public void delete( int id, int deletedBy ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()) );
+        if( !relatedEntityChecker.relatedOrganizationCheck( id ) ) throw new CustomException(CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
         organization.delete( deletedBy );
     }
 

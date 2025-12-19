@@ -66,9 +66,9 @@ public class UserController {
     @Operation( summary = "사용자 삭제 API" )
     public ResponseEntity<Void> deleteUser(
             @PathVariable Integer id,
-            @RequestParam Integer deletedBy
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        userService.delete( id, deletedBy );
+        userService.delete( id, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
 

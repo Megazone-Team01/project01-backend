@@ -11,6 +11,7 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public interface UserService {
     List<AdminGetUserResponse> list(GetUserRequest request );
 
     // 사용자 삭제
+    @Transactional
     void delete( int id, int deletedBy );
     AdminGetUserDetailResponse getUserDetailById( int id );
     // 리프레시 토큰 저장

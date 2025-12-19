@@ -26,6 +26,7 @@ public class AdminGetLectureResponse {
     private LocalDateTime endAt;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 
     public static AdminGetLectureResponse of(Lecture lecture, boolean isOnline, List<String> categoryLayer ) {
         return AdminGetLectureResponse.builder()
@@ -41,6 +42,7 @@ public class AdminGetLectureResponse {
                 .endAt( lecture.getEndAt() )
                 .description(lecture.getDescription())
                 .createdAt(lecture.getCreatedAt())
+                .deletedAt(lecture.getDeletedAt())
                 .build();
     }
 }
