@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.CategoryConverter;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
@@ -22,13 +23,14 @@ import java.util.List;
 public class OfflineLectureServiceImpl implements OfflineLectureService {
 
     private final QOfflineLectureRepository qOfflineLectureRepository;
+    private final CategoryConverter categoryConverter;
 
     @Override
     public LectureOfflineDetailResponse findLecture(int id) {
         OfflineLecture offlineLecture = qOfflineLectureRepository.findById(id)
                 .orElseThrow(() -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage()));
 
-        return LectureOfflineDetailResponse.of(offlineLecture);
+        return LectureOfflineDetailResponse.of(offlineLecture, categoryConverter.fullCodeToLayer(offlineLecture.getCategory()));
     }
 
 

@@ -6,6 +6,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class AdminGetLectureDetailResponse {
     private String name;
     private String organizationName;
     private String teacherName;
-    private String category;
+    private List<String> category;
     private int price;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
@@ -35,14 +36,14 @@ public class AdminGetLectureDetailResponse {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-    public static AdminGetLectureDetailResponse ofOnline( OnlineLecture lecture ){
+    public static AdminGetLectureDetailResponse ofOnline( OnlineLecture lecture, List<String> categoryLayer ){
         return AdminGetLectureDetailResponse.builder()
                 .id( lecture.getId() )
                 .isOnline( true )
                 .name( lecture.getName() )
                 .organizationName( lecture.getOrganization().getName() )
                 .teacherName( lecture.getTeacher().getName() )
-                .category(lecture.getCategory())
+                .category(categoryLayer)
                 .price(lecture.getPrice())
                 .startAt(lecture.getStartAt())
                 .endAt(lecture.getEndAt())
@@ -55,14 +56,14 @@ public class AdminGetLectureDetailResponse {
                 .deletedAt(lecture.getDeletedAt())
                 .build();
     }
-    public static AdminGetLectureDetailResponse ofOffline( OfflineLecture lecture, String day ){
+    public static AdminGetLectureDetailResponse ofOffline( OfflineLecture lecture, String day, List<String> categoryLayer  ){
         return AdminGetLectureDetailResponse.builder()
                 .id( lecture.getId() )
                 .isOnline( false )
                 .name( lecture.getName() )
                 .organizationName( lecture.getOrganization().getName() )
                 .teacherName( lecture.getTeacher().getName() )
-                .category(lecture.getCategory())
+                .category(categoryLayer)
                 .price(lecture.getPrice())
                 .startAt(lecture.getStartAt())
                 .endAt(lecture.getEndAt())

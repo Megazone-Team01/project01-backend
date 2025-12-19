@@ -5,6 +5,7 @@ import com.mzcteam01.mzcproject01be.common.base.category.service.CategoryService
 import com.mzcteam01.mzcproject01be.common.base.day.entity.Day;
 import com.mzcteam01.mzcproject01be.common.base.day.repository.DayRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
+import com.mzcteam01.mzcproject01be.common.utils.CategoryConverter;
 import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectureRequest;
@@ -44,6 +45,8 @@ public class LectureFacade {
     private final DayRepository dayRepository;
     private final UserLectureRepository userLectureRepository;
 
+    private final CategoryConverter categoryConverter;
+
     @Transactional
     public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status ) {
         List<AdminGetLectureResponse> results = new ArrayList<>();
@@ -51,14 +54,16 @@ public class LectureFacade {
 
         if( isOnline != 2 ) {
             List<OnlineLecture> onlineLectures = onlineRepository.findAll();
-            for( OnlineLecture onlineLecture : onlineLectures ) results.add( AdminGetLectureResponse.of( onlineLecture, true ) );
+            for( OnlineLecture onlineLecture : onlineLectures ) {
+                results.add( AdminGetLectureResponse.of( onlineLecture, true, categoryConverter.fullCodeToLayer( onlineLecture.getCategory() ) ) );
+            }
         }
         if( isOnline != 1 ){
             List<OfflineLecture> offlineLectures = offlineRepository.findAll();
-            for( OfflineLecture offlineLecture : offlineLectures ) results.add( AdminGetLectureResponse.of( offlineLecture, false ) );
+            for( OfflineLecture offlineLecture : offlineLectures ) results.add( AdminGetLectureResponse.of( offlineLecture, false, categoryConverter.fullCodeToLayer( offlineLecture.getCategory() ) ) );
         }
         if( status != null ){
-            return onlineRepository.findAllByStatus( status ).stream().map( lecture -> AdminGetLectureResponse.of( lecture, true ) ).toList();
+            return onlineRepository.findAllByStatus( status ).stream().map( lecture -> AdminGetLectureResponse.of( lecture, true, categoryConverter.fullCodeToLayer( lecture.getCategory() ) ) ).toList();
         }
 
         return results;
@@ -77,11 +82,12 @@ public class LectureFacade {
             File file = fileRepository.findById( request.getFileId() ).orElseThrow(
                     () -> new CustomException(FileErrorCode.FILE_NOT_FOUND.getMessage())
             );
+            String categoryFullCode = categoryConverter.singleToFullCode( request.getCategory() );
             OnlineLecture lecture = OnlineLecture.builder()
                     .name(request.getName())
                     .organization( organization )
                     .teacher( teacher )
-                    .category( request.getCategory() )
+                    .category( categoryFullCode )
                     .description( request.getDescription() )
                     .status( 0 )
                     .file( file )
@@ -101,11 +107,12 @@ public class LectureFacade {
             String[] endTimeSplitter = request.getEndTimeAt().split(":");
             String startTime = startTimeSplitter[0] + startTimeSplitter[1];
             String endTime = endTimeSplitter[0] + endTimeSplitter[1];
+            String categoryFullCode = categoryConverter.singleToFullCode( request.getCategory() );
             OfflineLecture lecture = OfflineLecture.builder()
                     .name(request.getName())
                     .organization( organization )
                     .teacher( teacher )
-                    .category( request.getCategory() )
+                    .category( categoryFullCode )
                     .description( request.getDescription() )
                     .maxNum( request.getMaxNum() )
                     .room( room )
@@ -172,7 +179,7 @@ public class LectureFacade {
             OnlineLecture lecture = onlineRepository.findById( id ).orElseThrow(
                     () -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage())
             );
-            return AdminGetLectureDetailResponse.ofOnline( lecture );
+            return AdminGetLectureDetailResponse.ofOnline( lecture, categoryConverter.fullCodeToLayer(lecture.getCategory()) );
         }
         else {
             OfflineLecture lecture = offlineRepository.findById( id ).orElseThrow(
@@ -181,7 +188,7 @@ public class LectureFacade {
             String day = dayRepository.findByValue( lecture.getDay() ).orElseThrow(
                     () -> new CustomException(DayErrorCode.DAY_NOT_FOUND.getMessage())
             ).getName();
-            return AdminGetLectureDetailResponse.ofOffline( lecture, day );
+            return AdminGetLectureDetailResponse.ofOffline( lecture, day, categoryConverter.fullCodeToLayer(lecture.getCategory()) );
         }
     }
 }
