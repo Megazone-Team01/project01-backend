@@ -1,6 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.repository;
 
-import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
@@ -16,6 +16,22 @@ import java.util.List;
 @Repository
 public class QUserOrganizationRepository {
     private final JPAQueryFactory query;
+
+    public List<UserOrganization> findActiveByUserAndOwner(int userId) {
+        QUserOrganization qUserOrganization = QUserOrganization.userOrganization;
+        QOrganization qOrganization = QOrganization.organization;
+
+        return query
+                .select(qUserOrganization)
+                .from(qUserOrganization)
+                .join(qUserOrganization.organization, qOrganization)
+                .where(qOrganization.owner.id.eq(userId),
+                        qUserOrganization.status.eq(0),
+                        qUserOrganization.deletedAt.isNull()
+                )
+                .fetch();
+    }
+
 
     public List<UserOrganization> list(
             String searchString,

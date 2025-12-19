@@ -7,12 +7,16 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
+import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
@@ -31,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 
@@ -48,6 +53,8 @@ public class UserServiceImpl implements UserService {
     private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
+    private final QUserOrganizationRepository qUserOrganizationRepository;
+    private final UserOrganizationRepository userOrganizationRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -67,10 +74,11 @@ public class UserServiceImpl implements UserService {
         String password = passwordEncoder.encode(request.getPassword());
 
 
-        // 현재는 User로만 회원가입 할 수 있도록
-        // 만약 강사인 경우 추후 관리자 승인 요청 및 승인하는 화면에서 처리될 예정
-        UserRole defaultRole = userRoleRepository.findByName("USER")
-                .orElseThrow(() -> new CustomException(UserErrorCode.DEFAULT_ROLE_NOT_FOUND.getMessage()));
+        // 학생, 강사 중 선택하여 회원가입 가능
+        // 추후 강사는 오프라인 조직에 가입하고자하는 경우 대표선생님의 승인이 필요
+        // 다만, 온라인 조직은 승인 대기 없이 바로 조직에 가입.
+        UserRole role = userRoleRepository.findByName(request.getRole())
+                .orElseThrow(() -> new CustomException(UserErrorCode.ROLE_NOT_FOUND.getMessage()));
 
         // 프론트에서 받아온 채널역할의 문자열을 코드값으로 변경
         int channelType = ChannelType.fromName(request.getType()).getCode();
@@ -81,7 +89,7 @@ public class UserServiceImpl implements UserService {
                 .password(password)
                 .name(request.getName())
                 .phone(request.getPhone())
-                .role(defaultRole)
+                .role(role)
                 .addressCode(request.getAddressCode())
                 .type(channelType)
                 .build();
@@ -115,7 +123,7 @@ public class UserServiceImpl implements UserService {
         );
 
         // AccessToken, RefreshToken 생성
-        String accessToken = jwtUtil.generateToken(claims, 2); // 10분
+        String accessToken = jwtUtil.generateToken(claims, 10); // 10분
         String refreshToken = jwtUtil.generateToken(claims, 180 * 24 * 60); // 180일
 
         // DB에 RefreshToken 저장
@@ -175,5 +183,65 @@ public class UserServiceImpl implements UserService {
         List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId( id );
         // Response 객체 생성
         return AdminGetUserDetailResponse.of( user, lectures, organizations );
+    // 마이페이지 조회
+    @Override
+    public GetProfileResponse getProfileInfo(int id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+
+        return GetProfileResponse.of(user);
+    }
+
+    // 마이페이지 수정
+//    @Override
+//    @Transactional(readOnly = false)
+//    public GetMyResponse getMyInfo(int id){
+//
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+//
+//        return GetMyResponse.of(user);
+//    }
+
+    // 회원 탈퇴
+//    @Override
+//    @Transactional(readOnly = false)
+//    public void deleteMyInfo(int id){
+//
+//        userRepository.findById(id)
+//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+//
+//        userRepository.deleteById(id);
+//    }
+
+    @Override
+    public List<GetApproveOrganizationResponse> approveOrganization(int id) {
+        // ownerId가 소유자인 조직 중 status=0(가입요청 상태)인 모든 UserOrganization 조회
+        List<UserOrganization> requests = qUserOrganizationRepository.findActiveByUserAndOwner(id);
+
+        if (requests.isEmpty()) {
+            throw new CustomException(UserErrorCode.USER_ORGANIZATION_NOT_FOUND.getMessage());
+        }
+
+        // UserOrganization 객체 전체를 DTO로 변환
+        List<GetApproveOrganizationResponse> responseList = requests.stream()
+                .map(GetApproveOrganizationResponse::of)
+                .toList();
+
+        return responseList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updateStatusUserOrganization(UpdateStatusUserOrganizationRequest request) {
+        int userOrganizationId = request.getUserOrganizationId();
+        int status = request.getStatus();
+
+        UserOrganization userOrganization = userOrganizationRepository.findById(userOrganizationId)
+                                                .orElseThrow(() -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()));
+
+        userOrganization.update(status);
+
     }
 }
