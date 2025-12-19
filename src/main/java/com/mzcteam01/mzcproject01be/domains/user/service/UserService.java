@@ -26,5 +26,7 @@ public interface UserService {
     // 사용자 삭제
     void delete( int id, int deletedBy );
     AdminGetUserDetailResponse getUserDetailById( int id );
+    // 리프레시 토큰 저장
+//    public void saveRefreshToken(int userId, String refreshToken);
 
 }

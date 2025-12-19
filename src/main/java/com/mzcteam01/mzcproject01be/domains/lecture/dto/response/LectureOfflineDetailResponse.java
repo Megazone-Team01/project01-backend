@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,21 +15,29 @@ import lombok.NoArgsConstructor;
 public class LectureOfflineDetailResponse {
     private String name;
     private String description;
+    private String teacherName;
+    private String organizationName;
+    private String organizationDescription;
+    private String category;
     private int price;
     private int day;
-    private int max_num;
-    private String start_time;
-    private String end_time;
+    private int maxNum;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
 
-    public static LectureOfflineDetailResponse of(OfflineLecture  offline){
+    public static LectureOfflineDetailResponse of(OfflineLecture offline){
         return LectureOfflineDetailResponse.builder()
                 .name(offline.getName())
+                .teacherName(offline.getTeacher().getName())
+                .organizationName(offline.getOrganization().getName())
+                .organizationDescription(offline.getOrganization().getDescription())
+                .day(offline.getDay())
+                .category(offline.getCategory())
+                .maxNum(offline.getMaxNum())
                 .description(offline.getDescription())
                 .price(offline.getPrice())
-                .day(offline.getDay())
-                .max_num(offline.getMaxNum())
-                .start_time(offline.getStartTimeAt())
-                .end_time(offline.getEndTimeAt())
+                .startAt(offline.getStartAt())
+                .endAt(offline.getEndAt())
                 .build();
     }
 

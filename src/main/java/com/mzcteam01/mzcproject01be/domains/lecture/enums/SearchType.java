@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public enum SearchType {
-    Lately(1,"최신순"),
-//    Popularity(2, "인기순"),
-    Older(2, "날짜순");
+    LATELY(1,"최신순"),
+    OLDER(2, "날짜순"),
+    POPULARITY(3, "인기순");
 
     private final int code;
     private final String categorys;

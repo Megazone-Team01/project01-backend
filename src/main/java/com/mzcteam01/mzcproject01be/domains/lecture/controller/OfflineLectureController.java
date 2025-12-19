@@ -40,7 +40,7 @@ public class OfflineLectureController {
         try {
             SearchType searchType = searchTypeCode != null ?
                     SearchType.fromCode(searchTypeCode)
-                    : SearchType.Lately;
+                    : SearchType.LATELY;
 
             log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
             LectureOfflineListResponse response = lectureService.offline().getAllLectures(searchType.getCode(), page);

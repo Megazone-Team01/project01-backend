@@ -61,6 +61,10 @@ public class User {
 
     @Column( name = "profile_img", nullable = true )
     private String profileImg;
+    // 리프레시 토큰을 위한 리프레시 토큰과 리프레시 토큰 만료일 컬럼
+    private String refreshToken;
+
+    private LocalDateTime refreshTokenExpireAt;
 
     public void update( String phone, String addressCode, String addressDetail, Integer type ){
         if( phone != null ) this.phone = phone;
@@ -71,4 +75,10 @@ public class User {
     }
 
     public void delete(){ this.deletedAt = LocalDateTime.now(); }
+
+    // 리프레시 토큰을 위한 업데이트
+    public void updateRefreshToken(String token, LocalDateTime expireAt) {
+        this.refreshToken = token;
+        this.refreshTokenExpireAt = expireAt;
+    }
 }
