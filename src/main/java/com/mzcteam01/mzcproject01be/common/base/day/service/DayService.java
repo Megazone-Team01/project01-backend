@@ -21,7 +21,7 @@ public class DayService {
     public void create( String name, int value ){
         Day temp = dayRepository.findByValue( value ).orElse(null);
         if( temp != null ) throw new CustomException(DayErrorCode.DAY_VALUE_ALREADY_EXIST.getMessage());
-        Day day = Day.builder().name(name).value(value).build();
+        Day day = Day.builder().name(name).value(value).createdBy(1).build();
         dayRepository.save(day);
     }
 

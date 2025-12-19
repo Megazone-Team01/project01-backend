@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.user.repository;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,9 @@ public class QUserOrganizationRepository {
     public List<UserOrganization> list(
             String searchString,
             LocalDateTime registered,
-            LocalDateTime expired
+            LocalDateTime expired,
+            UserRole role,
+            Organization organization
     ){
         QUserOrganization userOrganization = QUserOrganization.userOrganization;
 
@@ -47,6 +50,10 @@ public class QUserOrganizationRepository {
             // 추가 수정 필요
         }
 
+        if( role != null ) where.and(userOrganization.user.role.eq(role));
+
+        if( organization != null ) where.and( userOrganization.organization.eq(organization) );
+
         if( registered != null ) where.and( userOrganization.registeredAt.after( registered ) );
 
         if( expired != null ) where.and( userOrganization.expiredAt.before( expired ) );
@@ -56,7 +63,7 @@ public class QUserOrganizationRepository {
                 .from( userOrganization )
                 .where( where )
                 .fetch();
-
+        System.out.println( results.size() );
         return results;
     }
 }

@@ -6,12 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetOrganizationRequest {
-    private Integer ownerId;
-    private Integer statusCode;
+@Setter
+public class CreateOrganizationRequest
+{
     private String name;
+    private String webpage;
+    private Integer ownerId;
+    private String tel;
+    private String addressCode;
+    private String addressDetail;
     private Integer isOnline;
+    private String description;
 }

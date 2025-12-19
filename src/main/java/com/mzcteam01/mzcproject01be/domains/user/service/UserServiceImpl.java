@@ -1,9 +1,18 @@
 package com.mzcteam01.mzcproject01be.domains.user.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
+import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserDetailResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
@@ -23,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +46,12 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final QUserOrganizationRepository qUserOrganizationRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LectureFacade lectureFacade;
+    private final OrganizationRepository organizationRepository;
+    private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
     private final QUserOrganizationRepository qUserOrganizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
@@ -127,6 +142,47 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    @Transactional
+    public List<AdminGetUserResponse> list(GetUserRequest request) {
+        List<User> result = userRepository.findAll();
+        System.out.println( request.getType() );
+        if( request.getUserRole() != null ){
+            result = result.stream().filter( user ->
+                    user.getRole().getName().equals( request.getUserRole() )
+            ).toList();
+        }
+        if( request.getType() != null ){
+            result = result.stream().filter( user ->
+                user.getType().equals(request.getType())
+            ).toList();
+        }
+        return result.stream().map(AdminGetUserResponse::of).toList();
+    }
+
+    @Override
+    @Transactional
+    public void delete(int id, int deletedBy) {
+        User user = userRepository.findById( id ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
+        user.delete();
+    }
+
+    @Override
+    @Transactional
+    public AdminGetUserDetailResponse getUserDetailById(int id) {
+        // User 정보 조회
+        User user = userRepository.findById( id ).orElseThrow(
+                () -> new CustomException( UserErrorCode.USER_NOT_FOUND.getMessage())
+        );
+        // Lecture 정보 조회
+        List<Lecture> lectures = null;
+        if( user.getRole().getName().equals("TEACHER")) lectures = lectureFacade.getAllTeachingLecture( id );
+        else if( user.getRole().getName().equals("STUDENT")) lectures = lectureFacade.getAllLearningLecture( id );
+        else lectures = new ArrayList<>();
+        // Organization 정보 조회
+        List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId( id );
+        // Response 객체 생성
+        return AdminGetUserDetailResponse.of( user, lectures, organizations );
     // 마이페이지 조회
     @Override
     public GetProfileResponse getProfileInfo(int id) {
