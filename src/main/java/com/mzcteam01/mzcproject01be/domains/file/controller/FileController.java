@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.file.controller;
 
+import com.mzcteam01.mzcproject01be.domains.file.dto.response.FileResponse;
 import com.mzcteam01.mzcproject01be.domains.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,5 +38,14 @@ public class FileController {
         fileService.deleteFile( id, deletedBy );
         return ResponseEntity.ok( Map.of("status", "성공" ) );
     }
+
+    @GetMapping("/{lectureId}/lecture")
+    @Operation( summary = "파일 정보 조회" )
+    public ResponseEntity<FileResponse> getFileWithLecture(
+            @PathVariable Integer lectureId
+    ){
+        return ResponseEntity.ok( fileService.getFileWithLecture( lectureId ) );
+    }
+
 
 }

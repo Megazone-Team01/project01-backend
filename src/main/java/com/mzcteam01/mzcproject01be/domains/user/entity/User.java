@@ -59,6 +59,8 @@ public class User {
     @Column( name = "deleted_at" )
     private LocalDateTime deletedAt;
 
+    @Column( name = "profile_img", nullable = true )
+    private String profileImg;
     // 리프레시 토큰을 위한 리프레시 토큰과 리프레시 토큰 만료일 컬럼
     private String refreshToken;
 
