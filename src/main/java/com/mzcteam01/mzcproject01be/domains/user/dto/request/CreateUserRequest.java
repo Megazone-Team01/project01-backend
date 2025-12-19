@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.dto.request;
 
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,8 @@ public class CreateUserRequest {
     private String password;
     private String passwordConfirm;
 
-    // 최소한의 회원정보(이름, 전화번호, 주소[addressCode])
+    // 최소한의 회원정보(역할, 이름, 전화번호, 주소[addressCode])
+    private String role;
     private String name;
     private String phone;
     private String addressCode;
