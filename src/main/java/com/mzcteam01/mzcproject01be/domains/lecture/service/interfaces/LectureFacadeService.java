@@ -9,6 +9,6 @@ import java.util.List;
 public interface LectureFacadeService<T extends Lecture, D, L> {
     D findLecture(int id);
     List<GetLectureResponse> getTop9Lectures(Integer searchType);
-    L getAllLectures(Integer searchType, int page);
+    L getAllLectures(Integer searchType, int page, String keyword);
 }
 

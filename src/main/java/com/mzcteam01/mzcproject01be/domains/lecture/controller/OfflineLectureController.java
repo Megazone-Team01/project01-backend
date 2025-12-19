@@ -34,7 +34,9 @@ public class OfflineLectureController {
     @GetMapping("/courses")
     public ResponseEntity<LectureOfflineListResponse> offlineList(
             @RequestParam(required = false) Integer searchTypeCode,
-            @RequestParam(defaultValue = "1") int page
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String keyword
+
     ) {
 
         try {
@@ -43,7 +45,8 @@ public class OfflineLectureController {
                     : SearchType.LATELY;
 
             log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
-            LectureOfflineListResponse response = lectureService.offline().getAllLectures(searchType.getCode(), page);
+//            log.info("searchKeyword: {}", searchKeyword);
+            LectureOfflineListResponse response = lectureService.offline().getAllLectures(searchType.getCode(), page,keyword);
             return ResponseEntity.ok().body(response);
         } catch (Exception e){
             log.error("error : {}",e.getMessage());
