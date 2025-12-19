@@ -5,6 +5,7 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
@@ -36,13 +37,25 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-//    @GetMapping("/my")
-//    public ResponseEntity<UserDto> getMyInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-//        // userDetails 에서 현재 로그인한 사용자 ID 가져오기
-//        Long userId = userDetails.getId();
+    @GetMapping("/profile")
+    public ResponseEntity<GetProfileResponse> getProfileInfo(@AuthenticationPrincipal AuthUser authUser) {
+        int id = authUser.getId();
+        GetProfileResponse my = userService.getProfileInfo(id);
+        return ResponseEntity.ok().body(my);
+    }
+
+//    @PutMapping("/my")
+//    public ResponseEntity<GetMyResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+//        int id = authUser.getId();
+//        GetMyResponse my = userService.putMyInfo(id);
+//        return ResponseEntity.ok().body(my);
+//    }
 //
-//        UserDto user = userService.getUserById(userId);
-//        return ResponseEntity.ok(user);
+//    @DeleteMapping("/my")
+//    public ResponseEntity<Map<String,String>> deleteMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+//        int id = authUser.getId();
+//        userService.deleteMyInfo(id);
+//        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","회원 탈퇴되었습니다."));
 //    }
 
     // 기관 승인 요청 화면의 조회
