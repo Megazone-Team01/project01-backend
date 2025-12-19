@@ -6,8 +6,6 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureRespo
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.entity.QOfflineLecture;
-import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OfflineLectureService;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OfflineLectureServiceImpl implements OfflineLectureService {
 
-    private final OfflineLectureRepository offlineLectureRepository;
     private final QOfflineLectureRepository qOfflineLectureRepository;
 
     @Override
     public LectureOfflineDetailResponse findLecture(int id) {
-        OfflineLecture offlineLecture = offlineLectureRepository.findById(id).
-                orElseThrow(() -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage()));
+        OfflineLecture offlineLecture = qOfflineLectureRepository.findById(id)
+                .orElseThrow(() -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage()));
+
         return LectureOfflineDetailResponse.of(offlineLecture);
     }
 

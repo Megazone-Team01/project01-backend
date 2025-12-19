@@ -39,7 +39,7 @@ public class OnlineLectureController {
         try{
             SearchType searchType = searchTypeCode != null ?
                     SearchType.fromCode(searchTypeCode)
-                    : SearchType.Lately;
+                    : SearchType.LATELY;
 
             log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
             LectureOnlineListResponse response = lectureService

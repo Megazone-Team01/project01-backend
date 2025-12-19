@@ -19,6 +19,7 @@ public class AdminGetUserResponse {
     private String addressDetail;
     private String roleName;
     private String type;
+    private boolean isDeleted;
 
     public static AdminGetUserResponse of( User user ){
         return AdminGetUserResponse.builder()
@@ -30,6 +31,7 @@ public class AdminGetUserResponse {
                 .addressDetail( user.getAddressDetail() )
                 .roleName( user.getRole().getName() )
                 .type( user.getType() == 0 ? "온/오프라인" : user.getType() == 1 ? "온라인" : "오프라인" )
+                .isDeleted( user.getDeletedAt() != null )
                 .build();
     }
 }
