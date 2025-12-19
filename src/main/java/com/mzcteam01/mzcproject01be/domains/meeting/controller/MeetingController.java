@@ -5,6 +5,7 @@ import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListRe
 import com.mzcteam01.mzcproject01be.domains.meeting.service.MeetingService;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherListResponse;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,10 +37,11 @@ public class MeetingController {
 
     @GetMapping("/my")
     public ResponseEntity<List<MyMeetingListResponse>> getMyMeetings(
-            @AuthenticationPrincipal int studentId,
+            @AuthenticationPrincipal AuthUser authUser,
             @RequestParam(defaultValue = "ALL") String type,
             @RequestParam(required = false) Integer status
     ) {
+        int studentId = authUser.getId();
         ChannelType channelType = ChannelType.fromName(type);
         List<MyMeetingListResponse> meetings = meetingService.getMyMeetings(studentId, channelType, status);
         return ResponseEntity.ok(meetings);
