@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.user.repository;
 
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;

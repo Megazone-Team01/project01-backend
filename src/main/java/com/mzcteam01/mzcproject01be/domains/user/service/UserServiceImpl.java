@@ -53,8 +53,6 @@ public class UserServiceImpl implements UserService {
     private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
-    private final QUserOrganizationRepository qUserOrganizationRepository;
-    private final UserOrganizationRepository userOrganizationRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -171,18 +169,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public AdminGetUserDetailResponse getUserDetailById(int id) {
         // User 정보 조회
-        User user = userRepository.findById( id ).orElseThrow(
-                () -> new CustomException( UserErrorCode.USER_NOT_FOUND.getMessage())
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage())
         );
         // Lecture 정보 조회
         List<Lecture> lectures = null;
-        if( user.getRole().getName().equals("TEACHER")) lectures = lectureFacade.getAllTeachingLecture( id );
-        else if( user.getRole().getName().equals("STUDENT")) lectures = lectureFacade.getAllLearningLecture( id );
+        if (user.getRole().getName().equals("TEACHER")) lectures = lectureFacade.getAllTeachingLecture(id);
+        else if (user.getRole().getName().equals("STUDENT")) lectures = lectureFacade.getAllLearningLecture(id);
         else lectures = new ArrayList<>();
         // Organization 정보 조회
-        List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId( id );
+        List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId(id);
         // Response 객체 생성
-        return AdminGetUserDetailResponse.of( user, lectures, organizations );
+        return AdminGetUserDetailResponse.of(user, lectures, organizations);
+    }
+
     // 마이페이지 조회
     @Override
     public GetProfileResponse getProfileInfo(int id) {

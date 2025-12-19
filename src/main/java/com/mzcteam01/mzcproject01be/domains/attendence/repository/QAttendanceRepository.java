@@ -2,7 +2,6 @@ package com.mzcteam01.mzcproject01be.domains.attendence.repository;
 
 import com.mzcteam01.mzcproject01be.domains.attendence.entity.Attendance;
 import com.mzcteam01.mzcproject01be.domains.attendence.entity.QAttendance;
-import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class QAttendenceRepository {
+public class QAttendanceRepository {
     private final JPAQueryFactory query;
 
     public List<Attendance> list(
