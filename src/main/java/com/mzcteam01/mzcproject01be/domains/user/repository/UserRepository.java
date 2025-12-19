@@ -15,4 +15,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     // Refresh Token으로 유저 찾기
     Optional<User> findByRefreshToken(String refreshToken);
+
+    // user를 찾을 때 role도 가져오도록
+    @Query("SELECT u FROM User u JOIN FETCH u.role WHERE u.id = :id")
+    Optional<User> findByIdWithRole(@Param("id") Integer id);
 }
