@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetMyResponse {
+public class GetProfileResponse {
     private int id;
     private String name;
     private String email;
@@ -25,8 +25,8 @@ public class GetMyResponse {
         return value == null ? "" : value;
     }
 
-    public static GetMyResponse of( User user ){
-        return GetMyResponse.builder()
+    public static GetProfileResponse of(User user ){
+        return GetProfileResponse.builder()
                 .id( user.getId() )
                 .name( user.getName() )
                 .email( user.getEmail() )

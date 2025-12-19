@@ -48,7 +48,7 @@ public class JwtUtil {
 
         try {
             // 비밀키 : 토큰 위변조 확인
-            SecretKey secretKey = Keys.hmacShaKeyFor(JwtUtil.key.getBytes(StandardCharsets.UTF_8));
+            SecretKey secretKey = Keys.hmacShaKeyFor(JwtUtil.key.getBytes("utf-8"));
 
             claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey)
@@ -59,17 +59,12 @@ public class JwtUtil {
         } catch (MalformedJwtException e) {
             throw new CustomJwtException(JwtErrorCode.MALFORMED_TOKEN);
         } catch (ExpiredJwtException e) {
-
-            log.info("4Asdasd");
-            throw e;
+            throw new CustomJwtException(JwtErrorCode.EXPIRED_TOKEN);
         } catch (InvalidClaimException e) {
-            log.info("1Asdasd");
             throw new CustomJwtException(JwtErrorCode.INVALID_CLAIM);
         } catch (io.jsonwebtoken.JwtException e) { // 서명 검증 실패 등
-            log.info("Asdasd");
             throw new CustomJwtException(JwtErrorCode.JWT_ERROR);
         } catch (Exception e) {
-            log.info("A2sdasd");
             throw new CustomJwtException(JwtErrorCode.GENERAL_ERROR);
         }
 

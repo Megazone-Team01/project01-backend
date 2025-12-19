@@ -3,7 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetMyResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public interface UserService {
     public GetLoginResponse login(LoginRequest request);
 
     // 마이페이지 조회
-    public GetMyResponse getMyInfo(int id);
+    public GetProfileResponse getProfileInfo(int id);
 
 //    // 마이페이지 수정
 //    public GetMyResponse putMyInfo(int id);

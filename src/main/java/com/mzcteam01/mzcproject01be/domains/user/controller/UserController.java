@@ -3,17 +3,14 @@ package com.mzcteam01.mzcproject01be.domains.user.controller;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetMyResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RequestMapping("/api/v1/user")
 @RestController
@@ -34,10 +31,10 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @GetMapping("/my")
-    public ResponseEntity<GetMyResponse> getMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+    @GetMapping("/profile")
+    public ResponseEntity<GetProfileResponse> getProfileInfo(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
-        GetMyResponse my = userService.getMyInfo(id);
+        GetProfileResponse my = userService.getProfileInfo(id);
         return ResponseEntity.ok().body(my);
     }
 
