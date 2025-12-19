@@ -20,14 +20,19 @@ public class GetMyResponse {
     private String roleName;
     private String type;
 
+    // 널처리
+    private static String nvl(String value) {
+        return value == null ? "" : value;
+    }
+
     public static GetMyResponse of( User user ){
         return GetMyResponse.builder()
                 .id( user.getId() )
                 .name( user.getName() )
                 .email( user.getEmail() )
-                .phone( user.getPhone() )
-                .addressCode( user.getAddressCode() )
-                .addressDetail( user.getAddressDetail() )
+                .phone( nvl(user.getPhone()) )
+                .addressCode(nvl(user.getAddressCode()))
+                .addressDetail(nvl(user.getAddressDetail()))
                 .roleName( user.getRole().getName() )
                 .type( user.getType() == 0 ? "온/오프라인" : user.getType() == 1 ? "온라인" : "오프라인" )
                 .build();

@@ -53,7 +53,7 @@ public class ApiRefreshController {
 //        log.info("claims: {}", claims);
 
         // 새로운 Access Token 생성 (10분)
-        String newAccessToken = jwtUtil.generateToken(claims, 1);
+        String newAccessToken = jwtUtil.generateToken(claims, 10);
 //        log.info("리프레시로 새로 발급된 Access Token: {}", newAccessToken); //  여기서 새 토큰 확인
 
         // Refresh Token 만료 임박 시 갱신 (180일)
