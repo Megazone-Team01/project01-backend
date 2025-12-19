@@ -9,6 +9,8 @@ public enum UserErrorCode {
     EMAIL_ALREADY_EXISTS("이미 존재하는 이메일입니다."),
     EMAIL_NOT_FOUND("존재하지 않는 이메일입니다."),
     DEFAULT_ROLE_NOT_FOUND("기본 사용자 권한을 찾을 수 없습니다."),
+    USER_ORGANIZATION_NOT_FOUND("기관에 가입한 강사가 없습니다."),
+    ROLE_NOT_FOUND("사용자 역할을 찾을 수 없습니다."),
     LOGIN_FAILED("로그인에 실패하였습니다.");
 
     private final String message;
