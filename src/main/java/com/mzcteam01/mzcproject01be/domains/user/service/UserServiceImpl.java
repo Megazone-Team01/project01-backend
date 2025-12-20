@@ -189,8 +189,17 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
-
-        return GetProfileResponse.of(user);
+        // Lecture 정보 조회
+        List<Lecture> lectures = null;
+        if (user.getRole().getName().equals("TEACHER")) lectures = lectureFacade.getAllTeachingLecture(id);
+        else if (user.getRole().getName().equals("STUDENT")) lectures = lectureFacade.getAllLearningLecture(id);
+        else lectures = new ArrayList<>();
+        // Organization 정보 조회
+        List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId(id);
+        log.info("{}",id);
+        log.info(organizations.get(0).toString());
+        // Response 객체 생성
+        return GetProfileResponse.of(user, lectures, organizations);
     }
 
     // 마이페이지 수정

@@ -54,6 +54,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/user/signup", "/api/v1/user/login", "/api/v1/refresh", "/api/v1/lecture/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                // 주소 api만 허용
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'self'; frame-src 'self' https://postcode.map.daum.net;")
+                        )
+                )
 
                 // JWT 필터 등록 (추가)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
