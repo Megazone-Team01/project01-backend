@@ -35,8 +35,8 @@ public class User {
     @Column(name = "phone", nullable = false, length = 11)
     private String phone;
 
-    @Column(name = "address_code", length = 5)
-    private String addressCode;
+    @Column(name = "address", columnDefinition = "Text")
+    private String address;
 
     @Column(name = "address_detail", columnDefinition = "Text")
     private String addressDetail;
@@ -68,7 +68,7 @@ public class User {
 
     public void update( String phone, String addressCode, String addressDetail, Integer type ){
         if( phone != null ) this.phone = phone;
-        if( addressCode != null ) this.addressCode = addressCode;
+        if( address != null ) this.address = address;
         if( addressDetail != null ) this.addressDetail = addressDetail;
         if( type != null ) this.type = type;
         this.updatedAt = LocalDateTime.now();
