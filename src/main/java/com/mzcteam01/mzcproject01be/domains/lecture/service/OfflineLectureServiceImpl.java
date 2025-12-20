@@ -36,16 +36,16 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
 
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest)
+        return qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest,null)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
     }
 
     @Override
-    public LectureOfflineListResponse getAllLectures(Integer searchType, int page) {
+    public LectureOfflineListResponse getAllLectures(Integer searchType, int page, String keyword) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OfflineLecture> offline = qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest);
+        Page<OfflineLecture> offline = qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest, keyword);
         return LectureOfflineListResponse.of(offline);
     }
 

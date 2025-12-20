@@ -33,18 +33,19 @@ public class OnlineLectureController {
     @GetMapping("/courses")
     public ResponseEntity<LectureOnlineListResponse> onlineList(
             @RequestParam(required = false) Integer searchTypeCode,
-            @RequestParam(defaultValue = "1") int page
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String keyword
     ) {
 
         try{
             SearchType searchType = searchTypeCode != null ?
                     SearchType.fromCode(searchTypeCode)
                     : SearchType.LATELY;
-
+            log.info("Controller.Online.onlineList keyword!!: {}",keyword);
             log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
             LectureOnlineListResponse response = lectureService
                     .online()
-                    .getAllLectures(searchType.getCode(), page);
+                    .getAllLectures(searchType.getCode(), page, keyword);
 
             return ResponseEntity.ok().body(response);
         } catch (CustomException e) {

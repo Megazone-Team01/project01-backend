@@ -35,7 +35,7 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     @Override
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest)
+        return qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest,null)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -43,9 +43,9 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     }
 
     @Override
-    public LectureOnlineListResponse getAllLectures(Integer searchType, int page) {
+    public LectureOnlineListResponse getAllLectures(Integer searchType, int page, String keyword) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OnlineLecture> onlineLecture = qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest);
+        Page<OnlineLecture> onlineLecture = qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest,keyword);
         return LectureOnlineListResponse.of(onlineLecture);
     }
 
