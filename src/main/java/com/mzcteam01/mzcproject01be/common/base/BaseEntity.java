@@ -5,6 +5,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,6 +31,7 @@ public abstract class BaseEntity {
     @Column( name = "deleted_at" )
     private LocalDateTime deletedAt;
 
+    @Setter
     @Column( name = "created_by", nullable = false, updatable = false )
     protected Integer createdBy;
 
@@ -43,4 +45,9 @@ public abstract class BaseEntity {
         this.deletedBy = deletedBy;
         this.deletedAt = LocalDateTime.now();
     }
+
+    public void createdBy( int createdBy ) {
+        this.createdBy = createdBy;
+    }
+
 }

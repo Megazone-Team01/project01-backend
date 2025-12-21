@@ -1,10 +1,13 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl;
 
 
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.UserStatusResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,14 @@ public class QOfflineLectureRepository {
     QOrganization organization = QOrganization.organization;
     QUser user = QUser.user;
 
+    public UserStatusResponse status(int userId){
+        return queryFactory
+                .select(Projections.constructor(UserStatusResponse.class, organization.status))
+                .from(user)
+                .join(organization).on(user.id.eq(organization.owner.id))
+                .fetchFirst();
+    }
+
     public Optional<OfflineLecture> findById(int id){
         return Optional.ofNullable(
                 queryFactory
@@ -39,10 +50,11 @@ public class QOfflineLectureRepository {
     }
 
 
-    public Page<OfflineLecture> findOfflineLectures(Integer SearchType, Pageable pageable) {
+    public Page<OfflineLecture> findOfflineLectures(Integer SearchType, Pageable pageable, String keyword) {
 
         List<OfflineLecture> offline  = queryFactory
                 .selectFrom(offlineLecture)
+                .where(keywordContains(keyword))
                 .orderBy(getCreatedOrder(SearchType, offlineLecture.createdAt))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -73,4 +85,12 @@ public class QOfflineLectureRepository {
                 createdAt.desc() :
                 createdAt.asc();
     }
+    private BooleanExpression keywordContains(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return null;
+        }
+        return offlineLecture.name.containsIgnoreCase(keyword);
+
+    }
+
 }

@@ -4,9 +4,11 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 import static com.mzcteam01.mzcproject01be.domains.lecture.entity.QOnlineLecture.onlineLecture;
 
+@Slf4j
 @RequiredArgsConstructor
 @Repository
 public class QOnlineLectureRepository {
@@ -37,9 +40,11 @@ public class QOnlineLectureRepository {
         );
     }
 
-    public Page<OnlineLecture> findOnlineLectures(Integer SearchType, Pageable pageable) {
+    public Page<OnlineLecture> findOnlineLectures(Integer SearchType, Pageable pageable,String keyword) {
+        log.info("findOnlineLectures start: "+keyword);
         List<OnlineLecture> online = queryFactory
                 .selectFrom(onlineLecture)
+                .where(keywordContains(keyword))
                 .orderBy(getCreatedOrder(SearchType, onlineLecture.createdAt))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -69,4 +74,12 @@ public class QOnlineLectureRepository {
                 createdAt.desc() :
                 createdAt.asc();
     }
+
+    private BooleanExpression keywordContains(String keyword){
+        if(keyword == null || keyword.trim().isEmpty()){
+            return null;
+        }
+        return onlineLecture.name.containsIgnoreCase(keyword);
+    }
+
 }
