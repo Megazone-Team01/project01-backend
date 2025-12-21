@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class LectureFacade {
     private final DayService dayService;
 
     @Transactional
-    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status ) {
+    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status, String sortBy ) {
         List<AdminGetLectureResponse> results = new ArrayList<>();
         if( isOnline == null ) isOnline = 0;
 
@@ -75,7 +76,13 @@ public class LectureFacade {
         if( status != null ){
             return onlineRepository.findAllByStatus( status ).stream().map( lecture -> AdminGetLectureResponse.of( lecture, true, categoryConverter.fullCodeToLayer( lecture.getCategory() ) ) ).toList();
         }
-
+        if( sortBy != null ){
+            if( sortBy.equals("RECENT") ){
+                results = results.stream().filter( lect ->
+                        lect.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1))
+                ).toList();
+            }
+        }
         return results;
     }
 

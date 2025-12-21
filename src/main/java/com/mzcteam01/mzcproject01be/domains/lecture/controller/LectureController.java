@@ -26,9 +26,10 @@ public class LectureController {
     @Operation( summary = "강의 조회" )
     public ResponseEntity<List<AdminGetLectureResponse>> getAllLectures(
             @RequestParam(required = false) Integer isOnline,
-            @RequestParam(required = false) Integer status
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) String sortBy
     ) {
-        return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline, status ) );
+        return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline, status, sortBy ) );
     }
 
     @GetMapping("/{id}/{isOnline}")

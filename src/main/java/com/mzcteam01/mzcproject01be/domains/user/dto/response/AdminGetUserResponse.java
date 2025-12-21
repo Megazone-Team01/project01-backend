@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +22,7 @@ public class AdminGetUserResponse {
     private String roleName;
     private String type;
     private boolean isDeleted;
+    private LocalDateTime createdAt;
 
     public static AdminGetUserResponse of( User user ){
         return AdminGetUserResponse.builder()
@@ -32,6 +35,7 @@ public class AdminGetUserResponse {
                 .roleName( user.getRole().getName() )
                 .type( user.getType() == 0 ? "온/오프라인" : user.getType() == 1 ? "온라인" : "오프라인" )
                 .isDeleted( user.getDeletedAt() != null )
+                .createdAt( user.getCreatedAt() )
                 .build();
     }
 }

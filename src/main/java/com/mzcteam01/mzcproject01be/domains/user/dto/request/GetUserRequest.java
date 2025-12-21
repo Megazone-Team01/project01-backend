@@ -14,4 +14,5 @@ public class GetUserRequest {
     private String searchString;
     private String userRole;
     private Integer type;
+    private String sortBy;
 }
