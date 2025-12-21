@@ -33,6 +33,8 @@ public interface MeetingService {
 
     CreateMeetingResponse createMeeting(int studentId, CreateMeetingRequest request);
 
+    void cancelMeeting(int studentId, int meetingId, boolean isOnline);
+
     List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status);
 
 }

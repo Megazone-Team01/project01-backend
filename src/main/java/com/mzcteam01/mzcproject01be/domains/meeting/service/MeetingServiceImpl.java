@@ -264,6 +264,38 @@ public class MeetingServiceImpl implements MeetingService {
         return result;
     }
 
+    @Override
+    @Transactional
+    public void cancelMeeting(int studentId, int meetingId, boolean isOnline) {
+        if (isOnline) {
+            OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getStudent().getId() != studentId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            if (meeting.getStatus() == 1) {
+                throw new CustomException(MeetingErrorCode.CANNOT_CANCEL_APPROVED.getMessage());
+            }
+
+            meeting.delete(studentId);
+        } else {
+            OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getStudent().getId() != studentId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            if (meeting.getStatus() == 1) {
+                throw new CustomException(MeetingErrorCode.CANNOT_CANCEL_APPROVED.getMessage());
+            }
+
+            meeting.delete(studentId);
+        }
+    }
+
 //    @Override
 //    public AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date) {
 //        // 선생님 존재 여부 확인
@@ -340,5 +372,6 @@ public class MeetingServiceImpl implements MeetingService {
         // 오프라인 미팅 중복 체크
         return qOfflineMeetingRepository.existsByTeacherIdAndTimeRange(teacherId, startAt, endAt);
     }
+
 
 }
