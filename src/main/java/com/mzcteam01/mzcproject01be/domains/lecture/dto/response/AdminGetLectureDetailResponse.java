@@ -28,7 +28,7 @@ public class AdminGetLectureDetailResponse {
     private String roomName;
     private String startTimeAt;
     private String endTimeAt;
-    private String day;
+    private List<String> day;
     private Integer status;
     private Integer fileId;
     private String fileUrl;
@@ -56,7 +56,7 @@ public class AdminGetLectureDetailResponse {
                 .deletedAt(lecture.getDeletedAt())
                 .build();
     }
-    public static AdminGetLectureDetailResponse ofOffline( OfflineLecture lecture, String day, List<String> categoryLayer  ){
+    public static AdminGetLectureDetailResponse ofOffline( OfflineLecture lecture, List<String> day, List<String> categoryLayer  ){
         return AdminGetLectureDetailResponse.builder()
                 .id( lecture.getId() )
                 .isOnline( false )

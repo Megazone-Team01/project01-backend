@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateOrganizationRequest {
-    private String name;
     private String homepage;
     private String tel;
     private String addressCode;

@@ -66,7 +66,6 @@ public class OrganizationServiceImpl implements OrganizationService{
     public void update(int id, UpdateOrganizationRequest request, int updatedBy ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException("해당하는 아카데미가 존재하지 않습니다") );
         organization.update(
-                request.getName(),
                 request.getAddressCode(),
                 request.getAddressDetail(),
                 request.getTel(),

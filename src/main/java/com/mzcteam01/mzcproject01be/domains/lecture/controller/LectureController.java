@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminCreateLectureRequest;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.AdminUpdateLectureRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
@@ -77,6 +78,17 @@ public class LectureController {
             @AuthenticationPrincipal AuthUser authUser
     ){
         lectureFacade.delete( id, authUser.getId(), isOnline == 1 );
+        return ResponseEntity.ok( null );
+    }
+
+    @PatchMapping("/{id}")
+    @Operation( summary = "강의 수정" )
+    public ResponseEntity<Void> updateLecture(
+            @RequestBody AdminUpdateLectureRequest request,
+            @PathVariable Integer id,
+            @AuthenticationPrincipal AuthUser authUser
+    ){
+        lectureFacade.updateLecture( id, request.isOnline(), request, authUser.getId() );
         return ResponseEntity.ok( null );
     }
 

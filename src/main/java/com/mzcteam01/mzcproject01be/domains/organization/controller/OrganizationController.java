@@ -71,7 +71,7 @@ public class OrganizationController {
     @Operation( summary = "특정 기관 정보 업데이트" )
     public ResponseEntity<Void> updateOrganization(
             @PathVariable Integer id,
-            @ModelAttribute UpdateOrganizationRequest request,
+            @RequestBody UpdateOrganizationRequest request,
             @AuthenticationPrincipal AuthUser authUser
     ){
         service.update( id, request, authUser.getId() );

@@ -10,4 +10,5 @@ import java.util.List;
 public interface OfflineLectureRepository extends JpaRepository<OfflineLecture, Integer> {
     List<Lecture> findAllByTeacherId(int teacherId );
     List<Lecture> findAllByOrganizationId(int organizationId );
+    List<OfflineLecture> findAllByNameAndOrganizationIdAndTeacherId( String name, int organizationId, int teacherId );
 }

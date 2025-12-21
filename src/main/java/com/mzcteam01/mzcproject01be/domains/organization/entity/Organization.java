@@ -54,9 +54,8 @@ public class Organization extends BaseEntity {
     @Column(name = "lead_image")
     private String leadImage;
 
-    public void update( String name, String addressCode, String addressDetail, String tel, String homepage,
+    public void update( String addressCode, String addressDetail, String tel, String homepage,
                         Integer type, String description ){
-        if( name != null ) this.name = name;
         if( addressCode != null ) this.addressCode = addressCode;
         if( addressDetail != null ) this.addressDetail = addressDetail;
         if( tel != null ) this.tel = tel;
