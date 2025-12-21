@@ -1,10 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOfflineMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOnlineMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherListResponse;
 import org.springframework.stereotype.Service;
@@ -33,5 +31,8 @@ public interface MeetingService {
 
     TeacherDetailResponse getTeacherDetails(int teacherId);
 
+    CreateMeetingResponse createMeeting(int studentId, CreateMeetingRequest request);
+
     List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status);
+
 }
