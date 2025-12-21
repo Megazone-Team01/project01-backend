@@ -7,16 +7,8 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
-import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
@@ -33,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 
@@ -262,37 +253,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    // 마이페이지 조회
-    @Override
-    public GetProfileResponse getProfileInfo(int id) {
-
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
-
-        return GetProfileResponse.of(user);
-    }
-
-    // 마이페이지 수정
-//    @Override
-//    @Transactional(readOnly = false)
-//    public GetMyResponse getMyInfo(int id){
-//
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
-//
-//        return GetMyResponse.of(user);
-//    }
-
-    // 회원 탈퇴
-//    @Override
-//    @Transactional(readOnly = false)
-//    public void deleteMyInfo(int id){
-//
-//        userRepository.findById(id)
-//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
-//
-//        userRepository.deleteById(id);
-//    }
 
     @Override
     public List<GetApproveOrganizationResponse> approveOrganization(int id) {
