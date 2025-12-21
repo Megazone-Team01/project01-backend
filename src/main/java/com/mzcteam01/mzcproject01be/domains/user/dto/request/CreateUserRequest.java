@@ -17,10 +17,10 @@ public class CreateUserRequest {
     private String password;
     private String passwordConfirm;
 
-    // 최소한의 회원정보(역할, 이름, 전화번호, 주소[addressCode])
+    // 최소한의 회원정보(역할, 이름, 전화번호, 주소[address])
     private String role;
     private String name;
     private String phone;
-    private String addressCode;
+    private String address;
     private String type;
 }

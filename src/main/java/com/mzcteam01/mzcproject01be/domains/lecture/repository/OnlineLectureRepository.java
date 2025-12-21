@@ -10,4 +10,5 @@ public interface OnlineLectureRepository extends JpaRepository<OnlineLecture, In
     List<OnlineLecture> findAllByStatus( int status );
     List<Lecture> findAllByTeacherId(int teacherId );
     List<OnlineLecture> findAllByOrganizationId( int organizationId );
+    List<Lecture> findAllLectureByOrganizationId( int organizationId );
 }

@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class GetOrganizationResponse {
     private int id;
     private String name;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private String tel;
     private String ownerName;
@@ -31,7 +31,7 @@ public class GetOrganizationResponse {
         return GetOrganizationResponse.builder()
                 .id(organization.getId())
                 .name(organization.getName())
-                .addressCode(organization.getAddressCode())
+                .address(organization.getAddress())
                 .tel(organization.getTel())
                 .ownerName(organization.getOwner().getName())
                 .description( organization.getDescription())

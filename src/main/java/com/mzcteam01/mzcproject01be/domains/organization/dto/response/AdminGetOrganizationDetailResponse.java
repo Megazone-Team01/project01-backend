@@ -14,7 +14,7 @@ import java.util.List;
 public class AdminGetOrganizationDetailResponse {
     private int id;
     private String name;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private String tel;
     private Integer ownerId;
@@ -39,7 +39,7 @@ public class AdminGetOrganizationDetailResponse {
         return AdminGetOrganizationDetailResponse.builder()
                 .name(organization.getName())
                 .id(organization.getId())
-                .addressCode(organization.getAddressCode())
+                .address(organization.getAddress())
                 .addressDetail(organization.getAddressDetail())
                 .tel(organization.getTel())
                 .ownerId(organization.getOwner().getId())

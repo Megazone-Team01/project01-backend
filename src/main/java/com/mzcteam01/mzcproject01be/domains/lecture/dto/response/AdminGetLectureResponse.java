@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class AdminGetLectureResponse {
     private int id;
-    private boolean isOnline;
+    private Boolean isOnline;
     private String name;
     private int organizationId;
     private String organizationName;
@@ -28,7 +28,7 @@ public class AdminGetLectureResponse {
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
-    public static AdminGetLectureResponse of(Lecture lecture, boolean isOnline, List<String> categoryLayer ) {
+    public static AdminGetLectureResponse of(Lecture lecture, Boolean isOnline, List<String> categoryLayer ) {
         return AdminGetLectureResponse.builder()
                 .id( lecture.getId() )
                 .isOnline( isOnline )

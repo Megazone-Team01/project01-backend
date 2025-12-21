@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class UpdateOrganizationRequest {
     private String homepage;
     private String tel;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private Integer type;
     private String description;

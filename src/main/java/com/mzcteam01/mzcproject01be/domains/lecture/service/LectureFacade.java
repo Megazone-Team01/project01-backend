@@ -199,6 +199,20 @@ public class LectureFacade {
     }
 
     @Transactional
+    public List<Lecture> getAllLecturesByOrganizationId( int organizationId ){
+        List<Lecture> results = onlineRepository.findAllLectureByOrganizationId( organizationId );
+        List<Lecture> offlineLectures = offlineRepository.findAllByOrganizationId( organizationId );
+        List<String> existed = new ArrayList<>();
+        for( Lecture lecture : offlineLectures ){
+            if( !existed.contains( lecture.getName() ) ){
+                results.add( lecture );
+                existed.add( lecture.getName() );
+            }
+        }
+        return results;
+    }
+
+    @Transactional
     public AdminGetLectureDetailResponse getLectureDetail(int id, boolean isOnline) {
         if( isOnline ){
             OnlineLecture lecture = onlineRepository.findById( id ).orElseThrow(

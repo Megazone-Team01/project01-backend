@@ -4,10 +4,13 @@ import com.mzcteam01.mzcproject01be.common.exception.CommonErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.OrganizationErrorCode;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.CategoryConverter;
 import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
@@ -40,6 +43,8 @@ public class OrganizationServiceImpl implements OrganizationService{
     private final OfflineLectureRepository offlineLectureRepository;
 
     private final RelatedEntityChecker relatedEntityChecker;
+    private final LectureFacade lectureFacade;
+    private final CategoryConverter categoryConverter;
 
     @Override
     @Transactional
@@ -51,7 +56,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                 .webpage( request.getWebpage() )
                 .owner( owner )
                 .tel( request.getTel() )
-                .addressCode( request.getAddressCode() )
+                .address( request.getAddress() )
                 .addressDetail( request.getAddressDetail() )
                 .isOnline( request.getIsOnline() )
                 .description( request.getDescription() )
@@ -66,7 +71,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     public void update(int id, UpdateOrganizationRequest request, int updatedBy ){
         Organization organization = organizationRepository.findById( id ).orElseThrow( () -> new CustomException("해당하는 아카데미가 존재하지 않습니다") );
         organization.update(
-                request.getAddressCode(),
+                request.getAddress(),
                 request.getAddressDetail(),
                 request.getTel(),
                 request.getHomepage(),
@@ -136,6 +141,15 @@ public class OrganizationServiceImpl implements OrganizationService{
         }
 
         return AdminGetOrganizationDetailResponse.of( organization, lectureResult, students, teachers );
+    }
+
+    @Override
+    public List<AdminGetLectureResponse> findLecturesByOrganizationId(int id) {
+        List<Lecture> lectures = lectureFacade.getAllLecturesByOrganizationId( id );
+        return lectures.stream().map( lecture -> {
+            List<String> categoryLayer = categoryConverter.fullCodeToLayer( lecture.getCategory() );
+            return AdminGetLectureResponse.of( lecture, null, categoryLayer );
+        }).toList();
     }
 
     private List<Lecture> getAllOnlineLectureByOrganizationId( int organizationId ) {

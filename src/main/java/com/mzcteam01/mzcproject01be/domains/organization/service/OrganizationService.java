@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.organization.service;
 
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
@@ -20,4 +21,6 @@ public interface OrganizationService {
     List<GetOrganizationResponse> list( GetOrganizationRequest request );
     AdminGetOrganizationResponse findById( int id );
     AdminGetOrganizationDetailResponse getDetailById( int id );
+
+    List<AdminGetLectureResponse> findLecturesByOrganizationId( int id );
 }
