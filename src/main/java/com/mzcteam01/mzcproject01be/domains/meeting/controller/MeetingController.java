@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.meeting.controller;
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.ApproveMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.RejectMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.CreateMeetingResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.service.MeetingService;
@@ -96,6 +97,21 @@ public class MeetingController {
         meetingService.approveMeeting(teacherId, meetingId, isOnline, request);
         return ResponseEntity.ok(Map.of("message", "상담이 승인되었습니다."));
     }
+
+    @PatchMapping("/{meetingId}/reject")
+    @Operation(summary = "상담 반려", description = "선생님이 상담을 반려함")
+    public ResponseEntity<Map<String, String>> rejectMeeting(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable int meetingId,
+            @RequestParam boolean isOnline,
+            @RequestBody RejectMeetingRequest request
+    ) {
+        int teacherId = authUser.getId();
+        meetingService.rejectMeeting(teacherId, meetingId, isOnline, request.getReason());
+        return ResponseEntity.ok(Map.of("message", "상담이 반려되었습니다."));
+    }
+
+
 
 
 }
