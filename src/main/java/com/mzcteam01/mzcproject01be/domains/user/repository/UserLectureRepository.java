@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UserLectureRepository extends JpaRepository<UserLecture, Integer> {
     List<UserLecture> findAllByUserId(int userId);
+    boolean existsByUserIdAndLectureId(int userId, int lectureId);
+    UserLecture findByUserIdAndLectureId(int userId, int lectureId);
 }

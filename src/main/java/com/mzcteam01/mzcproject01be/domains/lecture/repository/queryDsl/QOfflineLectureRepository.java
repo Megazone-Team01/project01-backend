@@ -1,10 +1,12 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl;
 
 
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.UserStatusResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,6 +27,14 @@ public class QOfflineLectureRepository {
     private final JPAQueryFactory queryFactory;
     QOrganization organization = QOrganization.organization;
     QUser user = QUser.user;
+
+    public UserStatusResponse status(int userId){
+        return queryFactory
+                .select(Projections.constructor(UserStatusResponse.class, organization.status))
+                .from(user)
+                .join(organization).on(user.id.eq(organization.owner.id))
+                .fetchFirst();
+    }
 
     public Optional<OfflineLecture> findById(int id){
         return Optional.ofNullable(

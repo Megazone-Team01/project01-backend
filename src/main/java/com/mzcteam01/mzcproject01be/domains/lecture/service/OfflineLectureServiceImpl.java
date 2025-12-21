@@ -2,12 +2,17 @@ package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
+import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.UserStatusResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OfflineLectureService;
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,6 +28,9 @@ import java.util.List;
 public class OfflineLectureServiceImpl implements OfflineLectureService {
 
     private final QOfflineLectureRepository qOfflineLectureRepository;
+    private final OfflineLectureRepository offlineLectureRepository;
+    private final UserRepository userRepository;
+    private final UserLectureRepository userLectureRepository;
 
     @Override
     public LectureOfflineDetailResponse findLecture(int id) {
