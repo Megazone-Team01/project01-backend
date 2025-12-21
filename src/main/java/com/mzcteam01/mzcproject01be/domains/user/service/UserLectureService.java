@@ -68,9 +68,16 @@ public class UserLectureService {
         userLecture.update( expiredAt );
     }
 
-    public void delete( int userLectureId, int deletedBy ){
-        UserLecture userLecture = userLectureRepository.findById( userLectureId ).orElseThrow( () -> new CustomException("해당 강의 등록이 존재하지 않습니다" ) );
-        userLecture.delete( deletedBy );
+    public void delete( int userId, int lectureId, boolean isOnline){
+        log.info("userLectureId {}", lectureId);
+        UserLecture userLecture = userLectureRepository.findByUserIdAndLectureId(  userId, lectureId );
+        if( userLecture == null ){
+            if (!isOnline) throw new LectureException(LectureErrorCode.OFFLINE_NOT_FOUND);
+            else throw new LectureException(LectureErrorCode.ONLINE_NOT_FOUND);
+        }
+        log.info("userId {}", userId);
+        userLecture.delete( userId );
+        userLectureRepository.save(userLecture);
     }
 
     public List<AdminGetUserLectureResponse> findAll(){

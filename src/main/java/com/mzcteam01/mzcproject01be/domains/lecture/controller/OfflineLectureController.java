@@ -99,4 +99,19 @@ public class OfflineLectureController {
 
     }
 
+    @DeleteMapping("{offlineId}")
+    public ResponseEntity<?> delete(
+            @PathVariable int offlineId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication
+    ){
+        log.info("✅ offlineId: {}, offline.lecture.delete" , offlineId);
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        int userId = authUser.getId();
+
+        userLectureService.delete(userId, offlineId, false);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

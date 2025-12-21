@@ -96,4 +96,19 @@ public class OnlineLectureController {
       userLectureService.create(userId, onlineId, true, LocalDateTime.now());
       return ResponseEntity.status(HttpStatus.CREATED).build();
   }
+
+    @DeleteMapping("{onlineId}")
+    public ResponseEntity<?> delete(
+            @PathVariable int onlineId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication
+    ){
+        log.info("✅ onlineId: {}, online.lecture.delete" , onlineId);
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        int userId = authUser.getId();
+
+        userLectureService.delete(userId, onlineId, true);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
