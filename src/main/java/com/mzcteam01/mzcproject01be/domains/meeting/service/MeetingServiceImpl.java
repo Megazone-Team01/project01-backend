@@ -328,6 +328,11 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     @Transactional
     public void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason) {
+        // 반려 사유 필수 검증
+        if (reason == null || reason.isBlank()) {
+            throw new CustomException(MeetingErrorCode.REJECT_REASON_REQUIRED.getMessage());
+        }
+
         if (isOnline) {
             OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
                     .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
@@ -336,7 +341,7 @@ public class MeetingServiceImpl implements MeetingService {
                 throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
             }
 
-            meeting.reject();
+            meeting.reject(reason);
         } else {
             OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
                     .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
@@ -345,7 +350,7 @@ public class MeetingServiceImpl implements MeetingService {
                 throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
             }
 
-            meeting.reject();
+            meeting.reject(reason);
         }
     }
 
