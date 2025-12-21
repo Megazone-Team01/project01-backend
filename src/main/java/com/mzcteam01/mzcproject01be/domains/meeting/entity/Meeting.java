@@ -47,6 +47,9 @@ public abstract class Meeting extends BaseEntity {
     @Column(name = "status", nullable = false)
     protected int status;
 
+    @Column(name = "reject_reason", nullable = false)
+    private String rejectReason;
+
     public void update(String name, LocalDateTime startAt, LocalDateTime endAt) {
         if( name != null ) this.name = name;
         if( startAt != null ) this.startAt = startAt;
@@ -57,8 +60,9 @@ public abstract class Meeting extends BaseEntity {
         this.status = 1;
     }
 
-    public void reject() {
+    public void reject(String reason) {
         this.status = -1;
+        this.rejectReason = reason;
     }
 
     public void setCreatedBy(int userId) {
