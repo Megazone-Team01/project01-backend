@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.ApproveMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailResponse;
@@ -36,5 +37,8 @@ public interface MeetingService {
     void cancelMeeting(int studentId, int meetingId, boolean isOnline);
 
     List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status);
+
+    void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request);
+
 
 }

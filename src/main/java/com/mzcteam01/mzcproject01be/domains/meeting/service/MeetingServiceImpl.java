@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.*;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.ApproveMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.Meeting;
@@ -293,6 +294,34 @@ public class MeetingServiceImpl implements MeetingService {
             }
 
             meeting.delete(studentId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request) {
+        if (isOnline) {
+            OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            if (request.getLocation() == null || request.getLocation().isBlank()) {
+                throw new CustomException(MeetingErrorCode.LOCATION_REQUIRED.getMessage());
+            }
+
+            meeting.approve(request.getLocation());
+        } else {
+            OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            meeting.approve();
         }
     }
 
