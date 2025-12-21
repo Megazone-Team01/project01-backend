@@ -1,19 +1,17 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
-import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.LectureRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.UserEnrolledResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
-import com.mzcteam01.mzcproject01be.domains.user.entity.UserLecture;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserLectureService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -82,7 +79,7 @@ public class OfflineLectureController {
     }
 
     @PostMapping("/{offlineId}")
-    public ResponseEntity<?> apply(
+    public ResponseEntity<UserEnrolledResponse> apply(
             @PathVariable int offlineId,
             @AuthenticationPrincipal UserDetails userDetails,
             Authentication authentication
@@ -95,7 +92,7 @@ public class OfflineLectureController {
         int userId = authUser.getId();
 
         userLectureService.create(userId, offlineId, false, LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserEnrolledResponse.of(true));
 
     }
 

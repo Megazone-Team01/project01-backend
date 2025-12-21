@@ -76,8 +76,7 @@ public class UserLectureService {
             else throw new LectureException(LectureErrorCode.ONLINE_NOT_FOUND);
         }
         log.info("userId {}", userId);
-        userLecture.delete( userId );
-        userLectureRepository.save(userLecture);
+        userLectureRepository.delete( userLecture );
     }
 
     public List<AdminGetUserLectureResponse> findAll(){

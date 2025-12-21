@@ -27,7 +27,6 @@ import java.util.List;
 public class OnlineLectureController {
 
     private final LectureService lectureService;
-    private final UserService userService;
     private final UserLectureService userLectureService;
 
 
@@ -81,7 +80,7 @@ public class OnlineLectureController {
   }
 
   @PostMapping("{onlineId}")
-    public ResponseEntity<?> apply(
+    public ResponseEntity<UserEnrolledResponse> apply(
           @PathVariable int onlineId,
           @AuthenticationPrincipal UserDetails userDetails,
           Authentication authentication
@@ -94,13 +93,12 @@ public class OnlineLectureController {
       int userId = authUser.getId();
 
       userLectureService.create(userId, onlineId, true, LocalDateTime.now());
-      return ResponseEntity.status(HttpStatus.CREATED).build();
+      return ResponseEntity.status(HttpStatus.CREATED).body(UserEnrolledResponse.of(true));
   }
 
     @DeleteMapping("{onlineId}")
     public ResponseEntity<?> delete(
             @PathVariable int onlineId,
-            @AuthenticationPrincipal UserDetails userDetails,
             Authentication authentication
     ){
         log.info("✅ onlineId: {}, online.lecture.delete" , onlineId);
