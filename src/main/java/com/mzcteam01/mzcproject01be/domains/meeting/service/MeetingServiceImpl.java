@@ -325,6 +325,32 @@ public class MeetingServiceImpl implements MeetingService {
         }
     }
 
+    @Override
+    @Transactional
+    public void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason) {
+        if (isOnline) {
+            OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            meeting.reject();
+        } else {
+            OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            meeting.reject();
+        }
+    }
+
+
+
 //    @Override
 //    public AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date) {
 //        // 선생님 존재 여부 확인

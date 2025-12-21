@@ -40,5 +40,6 @@ public interface MeetingService {
 
     void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request);
 
+    void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason);
 
 }
