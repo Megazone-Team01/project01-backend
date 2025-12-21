@@ -1,15 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.user.service;
 
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserDetailResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.*;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,16 +21,16 @@ public interface UserService {
     // 사용자 삭제
     void delete( int id, int deletedBy );
     AdminGetUserDetailResponse getUserDetailById( int id );
-    // 리프레시 토큰 저장
-//    public void saveRefreshToken(int userId, String refreshToken);
+
     // 마이페이지 조회
     public GetProfileResponse getProfileInfo(int id);
 
-//    // 마이페이지 수정
-//    public GetMyResponse putMyInfo(int id);
-//
-//    // 마이페이지 탈퇴
-//    public void deleteMyInfo(int id);
+    // 마이페이지 수정
+    public GetProfileUpdateResponse updateProfileInfo(int id, UpdateUserRequest request);
+
+    // 회원 탈퇴
+    public void deleteUserInfo(int id);
+
     // 조직 가입 요청한 강사조회
     public List<GetApproveOrganizationResponse> approveOrganization(int id);
 

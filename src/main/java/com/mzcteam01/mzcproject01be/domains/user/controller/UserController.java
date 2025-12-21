@@ -1,13 +1,10 @@
 package com.mzcteam01.mzcproject01be.domains.user.controller;
 
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserOrganizationService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
@@ -92,15 +89,33 @@ public class UserController {
         return ResponseEntity.ok().body(my);
     }
 
-//    @PutMapping("/my")
-//    public ResponseEntity<GetMyResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser) {
-//        int id = authUser.getId();
-//        GetMyResponse my = userService.putMyInfo(id);
-//        return ResponseEntity.ok().body(my);
-//    }
-//
-//        UserDto user = userService.getUserById(userId);
-//        return ResponseEntity.ok(user);
-//    }
+    @PutMapping("/profile")
+    public ResponseEntity<GetProfileUpdateResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser,
+                                                        @RequestBody UpdateUserRequest request) {
+        int id = authUser.getId();
+        GetProfileUpdateResponse my = userService.updateProfileInfo(id, request);
+        return ResponseEntity.ok().body(my);
+    }
 
+    @DeleteMapping("/profile")
+    public ResponseEntity<Map<String,String>> deleteMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+        int id = authUser.getId();
+        userService.deleteUserInfo(id);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","회원 탈퇴되었습니다."));
+    }
+
+    // 기관 승인 요청 화면의 조회
+    @GetMapping("/approveOrganization")
+    public ResponseEntity<List<GetApproveOrganizationResponse>> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
+        int id = authUser.getId();
+        List<GetApproveOrganizationResponse> users = userService.approveOrganization(id);
+        return ResponseEntity.ok(users);
+    }
+
+    // 기관 승인 요청 화면의 승인, 거절 처리
+    @PatchMapping("/approveOrganization")
+    public ResponseEntity<Map<String,String>> updateStatus(@RequestBody UpdateStatusUserOrganizationRequest request) {
+        userService.updateStatusUserOrganization(request);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","처리 완료하였습니다."));
+    }
 }

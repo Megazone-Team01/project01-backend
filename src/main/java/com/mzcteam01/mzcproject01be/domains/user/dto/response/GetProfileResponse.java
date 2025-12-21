@@ -20,6 +20,7 @@ public class GetProfileResponse {
     private String email;
     private String phone;
     private String addressCode;
+    private String address;
     private String addressDetail;
     private String roleName;
     private String type;
@@ -42,6 +43,7 @@ public class GetProfileResponse {
                 .email( user.getEmail() )
                 .phone( nvl(user.getPhone()) )
                 .addressCode( nvl(user.getAddressCode()) )
+                .address( nvl(user.getAddress()) )
                 .addressDetail( nvl(user.getAddressDetail()) )
                 .roleName( user.getRole().getName() )
                 .type( user.getType() == 0 ? "All" : user.getType() == 1 ? "ONLINE" : "OFFLINE" )

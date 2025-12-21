@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.user.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -38,6 +39,10 @@ public class User {
     @Column(name = "address_code", length = 5)
     private String addressCode;
 
+    @Column(name = "address", columnDefinition = "Text")
+    private String address;
+
+
     @Column(name = "address_detail", columnDefinition = "Text")
     private String addressDetail;
 
@@ -61,14 +66,16 @@ public class User {
 
     @Column( name = "profile_img", nullable = true )
     private String profileImg;
+
     // 리프레시 토큰을 위한 리프레시 토큰과 리프레시 토큰 만료일 컬럼
     private String refreshToken;
 
     private LocalDateTime refreshTokenExpireAt;
 
-    public void update( String phone, String addressCode, String addressDetail, Integer type ){
+    public void update( String phone, String addressCode, String address, String addressDetail, Integer type ){
         if( phone != null ) this.phone = phone;
         if( addressCode != null ) this.addressCode = addressCode;
+        if( address != null ) this.address = address;
         if( addressDetail != null ) this.addressDetail = addressDetail;
         if( type != null ) this.type = type;
         this.updatedAt = LocalDateTime.now();
@@ -80,5 +87,18 @@ public class User {
     public void updateRefreshToken(String token, LocalDateTime expireAt) {
         this.refreshToken = token;
         this.refreshTokenExpireAt = expireAt;
+    }
+
+    // 마이 페이지 업데이트
+    public void updateProfile(String name, String phone, String address, String addressDetail, String profileImg, Integer type)
+    {
+        if (name != null) { this.name = name; }
+        if (phone != null) { this.phone = phone; }
+        if (address != null) { this.address = address; }
+        if (addressDetail != null) { this.addressDetail = addressDetail; }
+        if (profileImg != null) { this.profileImg = profileImg; }
+        if (type != null) { this.type = type; }
+
+        this.updatedAt = LocalDateTime.now();
     }
 }
