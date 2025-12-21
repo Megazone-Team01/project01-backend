@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/meetings")
@@ -46,6 +47,7 @@ public class MeetingController {
     }
 
     @PostMapping
+    @Operation(summary = "상담 예약 생성", description = "학생이 선생님과의 상담을 예약함")
     public ResponseEntity<CreateMeetingResponse> createMeeting(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestBody CreateMeetingRequest request
@@ -67,6 +69,18 @@ public class MeetingController {
         ChannelType channelType = ChannelType.fromName(type);
         List<MyMeetingListResponse> meetings = meetingService.getMyMeetings(studentId, channelType, status);
         return ResponseEntity.ok(meetings);
+    }
+
+    @DeleteMapping("/{meetingId}")
+    @Operation(summary = "상담 취소", description = "학생이 본인의 상담 예약을 취소함")
+    public ResponseEntity<Map<String, String>> cancelMeeting(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable int meetingId,
+            @RequestParam boolean isOnline
+    ) {
+        int studentId = authUser.getId();
+        meetingService.cancelMeeting(studentId, meetingId, isOnline);
+        return ResponseEntity.ok(Map.of("message", "상담이 취소되었습니다."));
     }
 
 
