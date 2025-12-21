@@ -226,7 +226,13 @@ public class LectureFacade {
                     () -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage())
             );
             if( !relatedEntityChecker.relatedOfflineLectureChecker( id ) ) throw new CustomException(CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
-            lecture.delete( deletedBy );
+            List<OfflineLecture> dayLectures = offlineRepository.findAllByNameAndOrganizationIdAndTeacherId(
+                    lecture.getName(), lecture.getOrganization().getId(), lecture.getTeacher().getId()
+            );
+            for( int i=0; i<dayLectures.size(); i++ ){
+                if( i == 0 ) dayLectures.get(i).delete( deletedBy );
+                else offlineRepository.delete( dayLectures.get(i) );
+            }
         }
     }
 

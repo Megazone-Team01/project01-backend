@@ -4,6 +4,7 @@ import com.mzcteam01.mzcproject01be.common.base.day.entity.Day;
 import com.mzcteam01.mzcproject01be.common.base.day.repository.DayRepository;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.DayErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DayService {
     private final DayRepository dayRepository;
+    private final RelatedEntityChecker relatedEntityChecker;
 
     @Transactional
     public void create( String name, int value, int createdBy ){
@@ -36,12 +38,16 @@ public class DayService {
     public Map<String, Integer> findAll() {
         List<Day> days = dayRepository.findAll();
         Map<String, Integer> result = new HashMap<>();
-        for( Day day : days )result.put( day.getName(), day.getValue() );
+        for( Day day : days ){
+            if( day.getDeletedAt() == null ) result.put( day.getName(), day.getValue() );
+        }
         return result;
     }
 
+    @Transactional
     public void delete( int id, int deletedBy ){
         Day day = dayRepository.findById(id).orElseThrow( () -> new CustomException(DayErrorCode.INVALID_DAY_ACCESS.getMessage()) );
+        if( relatedEntityChecker.relatedDayChecker( id ) ) throw new CustomException( DayErrorCode.DAY_CANNOT_DELETED.getMessage() );
         day.delete( deletedBy );
     }
 
