@@ -1,10 +1,8 @@
 package com.mzcteam01.mzcproject01be.common.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum MeetingErrorCode {
     MEETING_NOT_FOUND( "존재하지 않는 면담입니다" ),
     TIME_SLOT_NOT_AVAILABLE("이미 예약된 시간대입니다."),
