@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.controller;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.CreateMeetingResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.service.MeetingService;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailResponse;
@@ -9,6 +11,7 @@ import com.mzcteam01.mzcproject01be.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,16 @@ public class MeetingController {
 
         TeacherDetailResponse teacherDetail = meetingService.getTeacherDetails(teacherId);
         return ResponseEntity.ok(teacherDetail);
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateMeetingResponse> createMeeting(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestBody CreateMeetingRequest request
+    ) {
+        int studentId = authUser.getId();
+        CreateMeetingResponse response = meetingService.createMeeting(studentId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/my")
