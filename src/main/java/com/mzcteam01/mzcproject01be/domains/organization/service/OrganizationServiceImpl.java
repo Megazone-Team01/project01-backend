@@ -104,7 +104,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Override
     public List<GetOrganizationResponse> list( GetOrganizationRequest request ) {
-        return qOrganizationRepository.list( request.getName(), request.getStatusCode(), request.getIsOnline(), request.getName(), request.getOwnerId() )
+        return qOrganizationRepository.list( request.getSearchString(), request.getStatusCode(), request.getIsOnline(), request.getName(), request.getOwnerId() )
                 .stream().map( GetOrganizationResponse::of ).toList();
     }
 

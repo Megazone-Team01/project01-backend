@@ -53,7 +53,7 @@ public class LectureFacade {
     private final DayService dayService;
 
     @Transactional
-    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status, String sortBy ) {
+    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status, String sortBy, String searchString ) {
         List<AdminGetLectureResponse> results = new ArrayList<>();
         if( isOnline == null ) isOnline = 0;
 
@@ -82,6 +82,11 @@ public class LectureFacade {
                         lect.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1))
                 ).toList();
             }
+        }
+        if( searchString != null ){
+            results = results.stream().filter( lect ->
+                    lect.getName().contains( searchString )
+            ).toList();
         }
         return results;
     }

@@ -161,6 +161,11 @@ public class UserServiceImpl implements UserService {
                 ).toList();
             }
         }
+        if( request.getSearchString() != null ){
+            result = result.stream().filter( user ->
+                    user.getName().contains( request.getSearchString() )
+            ).toList();
+        }
         return result.stream().map(AdminGetUserResponse::of).toList();
     }
 
