@@ -44,4 +44,5 @@ public class UserLecture extends BaseEntity {
     public void update( LocalDateTime expiredAt ) {
         this.expiredAt = expiredAt;
     }
+
 }

@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
     private final UserLectureRepository userLectureRepository;
     private final OnlineLectureRepository onlineLectureRepository;
     private final OfflineLectureRepository offlineLectureRepository;
+    private final RelatedEntityChecker relatedEntityChecker;
 
     @Override
     @Transactional(readOnly = false)
@@ -154,6 +157,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(int id, int deletedBy) {
         User user = userRepository.findById( id ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
+        if( !relatedEntityChecker.relatedUserCheck( id ) ) throw new CustomException( CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
         user.delete();
     }
 

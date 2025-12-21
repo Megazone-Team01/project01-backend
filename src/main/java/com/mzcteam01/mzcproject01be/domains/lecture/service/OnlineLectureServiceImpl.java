@@ -2,6 +2,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.CategoryConverter;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineListResponse;
@@ -24,18 +25,19 @@ import java.util.List;
 public class OnlineLectureServiceImpl implements OnlineLectureService {
 
     private final QOnlineLectureRepository qOnlineLectureRepository;
+    private final CategoryConverter categoryConverter;
 
     @Override
     public LectureOnlineDetailResponse findLecture(int id) {
         OnlineLecture onlineLecture = qOnlineLectureRepository.findById(id)
                 .orElseThrow(() -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage()));
-        return LectureOnlineDetailResponse.of(onlineLecture);
+        return LectureOnlineDetailResponse.of(onlineLecture, categoryConverter.fullCodeToLayer(onlineLecture.getCategory()));
     }
 
     @Override
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
         PageRequest pageRequest = PageRequest.of(0, 9);
-        return qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest)
+        return qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest,null)
                 .stream()
                 .map(GetLectureResponse::of)
                 .toList();
@@ -43,9 +45,9 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
     }
 
     @Override
-    public LectureOnlineListResponse getAllLectures(Integer searchType, int page) {
+    public LectureOnlineListResponse getAllLectures(Integer searchType, int page, String keyword) {
         PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OnlineLecture> onlineLecture = qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest);
+        Page<OnlineLecture> onlineLecture = qOnlineLectureRepository.findOnlineLectures(searchType, pageRequest,keyword);
         return LectureOnlineListResponse.of(onlineLecture);
     }
 

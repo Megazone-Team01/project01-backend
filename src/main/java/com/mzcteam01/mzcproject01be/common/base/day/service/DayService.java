@@ -18,10 +18,10 @@ public class DayService {
     private final DayRepository dayRepository;
 
     @Transactional
-    public void create( String name, int value ){
+    public void create( String name, int value, int createdBy ){
         Day temp = dayRepository.findByValue( value ).orElse(null);
         if( temp != null ) throw new CustomException(DayErrorCode.DAY_VALUE_ALREADY_EXIST.getMessage());
-        Day day = Day.builder().name(name).value(value).createdBy(1).build();
+        Day day = Day.builder().name(name).value(value).createdBy(createdBy).build();
         dayRepository.save(day);
     }
 

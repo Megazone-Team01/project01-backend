@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,10 +21,11 @@ public class AdminCreateLectureRequest {
     private Integer type;
     private Integer fileId;
     private Integer maxNum;
+    private Integer price;
     private Integer roomId;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private String startTimeAt;
     private String endTimeAt;
-    private String dayValue;
+    private List<String> dayValue;
 }
