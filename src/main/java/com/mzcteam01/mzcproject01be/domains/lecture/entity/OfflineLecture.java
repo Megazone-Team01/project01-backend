@@ -43,4 +43,5 @@ public class OfflineLecture extends Lecture {
         if( endTimeAt != null ) this.endTimeAt = endTimeAt;
         if( day != null ) this.day = day;
     }
+
 }

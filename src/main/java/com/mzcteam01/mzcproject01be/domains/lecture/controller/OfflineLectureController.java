@@ -1,18 +1,29 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.LectureRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
+import com.mzcteam01.mzcproject01be.domains.user.entity.UserLecture;
+import com.mzcteam01.mzcproject01be.domains.user.service.UserLectureService;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -21,6 +32,7 @@ import java.util.List;
 public class OfflineLectureController {
 
     private final LectureService lectureService;
+    private final UserLectureService userLectureService;
 
     @GetMapping
     public ResponseEntity<List<GetLectureResponse>> homeOffline() {
@@ -68,4 +80,23 @@ public class OfflineLectureController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/{offlineId}")
+    public ResponseEntity<?> apply(
+            @PathVariable int offlineId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication
+       ){
+
+        log.info("🔍 받은 lectureId: {}" , offlineId);
+        log.info("🔍 받은 user: {}", userDetails.getUsername());
+
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        int userId = authUser.getId();
+
+        userLectureService.create(userId, offlineId, false, LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    }
+
 }
