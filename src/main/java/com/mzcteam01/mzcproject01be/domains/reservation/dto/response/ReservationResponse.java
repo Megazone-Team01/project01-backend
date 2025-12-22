@@ -1,4 +1,4 @@
-료package com.mzcteam01.mzcproject01be.domains.reservation.dto.response;
+package com.mzcteam01.mzcproject01be.domains.reservation.dto.response;
 
 import com.mzcteam01.mzcproject01be.domains.reservation.entity.Reservation;
 import lombok.Builder;
