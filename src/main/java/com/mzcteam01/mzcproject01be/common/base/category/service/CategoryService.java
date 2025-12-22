@@ -10,7 +10,6 @@ import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

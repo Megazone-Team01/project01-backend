@@ -14,7 +14,6 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.OfflineLectureUp
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOfflineListResponse;
-import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.UserStatusResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOfflineLectureRepository;
@@ -32,16 +31,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import static org.apache.catalina.manager.StatusTransformer.formatTime;
 
 @Slf4j
 @Service

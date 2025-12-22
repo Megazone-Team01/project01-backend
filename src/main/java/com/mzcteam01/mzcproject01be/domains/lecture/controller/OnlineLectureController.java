@@ -1,13 +1,11 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
-import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.OfflineLectureUploadRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.OnlineLectureUploadRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserLectureService;
-import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

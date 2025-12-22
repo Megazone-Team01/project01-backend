@@ -33,7 +33,6 @@ public class OfflineLectureController {
 
     private final LectureService lectureService;
     private final UserLectureService userLectureService;
-    private final LectureFacade lectureFacade;
 
     @GetMapping
     public ResponseEntity<List<GetLectureResponse>> homeOffline() {

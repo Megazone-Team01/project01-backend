@@ -45,7 +45,7 @@ public class OrganizationController {
     public ResponseEntity<List<GetOrganizationTeacherResponse>> findAllTeachersInOrganization(
             @PathVariable int organizationId
     ){
-        //return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
+//        return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
         return null;
     }
 

@@ -3,7 +3,6 @@ package com.mzcteam01.mzcproject01be.lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureServiceImpl;
-import com.mzcteam01.mzcproject01be.domains.lecture.service.OfflineLectureServiceImpl;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import org.junit.jupiter.api.Test;
