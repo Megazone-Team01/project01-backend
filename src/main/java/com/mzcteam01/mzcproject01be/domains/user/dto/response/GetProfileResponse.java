@@ -45,7 +45,7 @@ public class GetProfileResponse {
                 .addressDetail( nvl(user.getAddressDetail()) )
                 .roleName( user.getRole().getName() )
                 .type( user.getType() == 0 ? "ALL" : user.getType() == 1 ? "ONLINE" : "OFFLINE" )
-                .fileUrl( nvl(user.getFile().getUrl()) )
+                .fileUrl( user.getFile() != null ? user.getFile().getUrl() : null )
                 .lectures( lecture )
                 .organizations( organization )
                 .build();

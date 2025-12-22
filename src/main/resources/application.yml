@@ -26,7 +26,7 @@ springdoc:
     path: /api-docs
 
 file:
-  path: ${UPLOAD_FILE_PATH:src/main/resources/files}
+  absolute-path: ${ABSOLUTE_FILE_PATH:C:/Users/lsj00/Desktop/Project/mzc-project01-be/src/main/resources/files/}
 
 jwt:
   access-token-expiration-minutes: 10    # Access Token 만료분

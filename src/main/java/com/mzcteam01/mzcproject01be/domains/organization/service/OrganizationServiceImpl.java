@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +151,27 @@ public class OrganizationServiceImpl implements OrganizationService{
             List<String> categoryLayer = categoryConverter.fullCodeToLayer( lecture.getCategory() );
             return AdminGetLectureResponse.of( lecture, null, categoryLayer );
         }).toList();
+    }
+
+    @Override
+    public void apply(int organizationId, int userId) {
+        Organization organization = organizationRepository.findById( organizationId ).orElseThrow(
+                () -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage())
+        );
+        User user = userRepository.findById( userId ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
+        UserOrganization applyInfo = userOrganizationRepository.findByUserIdAndOrganizationId( userId, organizationId ).orElse( null );
+        if( applyInfo != null ) throw new CustomException( UserErrorCode.USER_ALREADY_APPLIED.getMessage());
+
+        UserOrganization target = UserOrganization.builder()
+                .organization( organization )
+                .user( user )
+                .status( 0 )
+                .registeredAt( LocalDateTime.now() )
+                .expiredAt( LocalDateTime.now().plusMonths( 6L ) )
+                .createdAt( LocalDateTime.now() )
+                .createdBy( user.getId() )
+                .build();
+        userOrganizationRepository.save( target );
     }
 
     private List<Lecture> getAllOnlineLectureByOrganizationId( int organizationId ) {
