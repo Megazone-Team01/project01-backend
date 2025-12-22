@@ -2,10 +2,9 @@ package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.*;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOfflineMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOnlineMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.ApproveMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.Meeting;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.OfflineMeeting;
 import com.mzcteam01.mzcproject01be.domains.meeting.entity.OnlineMeeting;
@@ -23,13 +22,19 @@ import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.repository.QTeacherRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -43,6 +48,11 @@ public class MeetingServiceImpl implements MeetingService {
     private final QOfflineMeetingRepository qOfflineMeetingRepository;
     private final QTeacherRepository qTeacherRepository;
     private final RoomRepository roomRepository;
+
+    private static final List<String> DEFAULT_TIME_SLOTS = List.of(
+            "09:00", "10:00", "11:00", "12:00", "13:00",
+            "14:00", "15:00", "16:00", "17:00", "18:00"
+    );
 
     @Override
     @Transactional
@@ -158,6 +168,75 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
+    @Transactional
+    public CreateMeetingResponse createMeeting(int studentId, CreateMeetingRequest request) {
+
+        User student = userRepository.findById(studentId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+        User teacher = userRepository.findById(request.getTeacherId())
+                .orElseThrow(() -> new CustomException(UserErrorCode.TEACHER_NOT_FOUND.getMessage()));
+        Organization organization = organizationRepository.findById(request.getOrganizationId())
+                .orElseThrow(() -> new CustomException(OrganizationErrorCode.ORGANIZATION_NOT_FOUND.getMessage()));
+
+        if (isTimeSlotBooked(request.getTeacherId(), request.getStartAt(), request.getEndAt())) {
+            throw new CustomException(MeetingErrorCode.TIME_SLOT_NOT_AVAILABLE.getMessage());
+        }
+
+        // 온/오프라인 구분
+        if (request.isOnline()) {
+            OnlineMeeting meeting = OnlineMeeting.builder()
+                    .name(request.getName())
+                    .organization(organization)
+                    .teacher(teacher)
+                    .student(student)
+                    .startAt(request.getStartAt())
+                    .endAt(request.getEndAt())
+                    .status(0)  // 대기 상태
+                    .location(null)
+                    .build();
+            meeting.setCreatedBy(studentId);
+            onlineMeetingRepository.save(meeting);
+
+            return CreateMeetingResponse.success(
+                    meeting.getId(),
+                    request.getName(),
+                    teacher.getName(),
+                    request.getStartAt(),
+                    request.getEndAt(),
+                    true
+            );
+        } else  {
+            Room room = null;
+            if (request.getRoomId() != null) {
+                room = roomRepository.findById(request.getRoomId())
+                        .orElseThrow(() -> new CustomException(RoomErrorCode.ROOM_NOT_FOUND.getMessage()));
+            }
+
+            OfflineMeeting meeting = OfflineMeeting.builder()
+                    .name(request.getName())
+                    .organization(organization)
+                    .teacher(teacher)
+                    .student(student)
+                    .startAt(request.getStartAt())
+                    .endAt(request.getEndAt())
+                    .status(0)  // 대기 상태
+                    .room(room)
+                    .build();
+            meeting.setCreatedBy(studentId);
+            offlineMeetingRepository.save(meeting);
+
+            return CreateMeetingResponse.success(
+                    meeting.getId(),
+                    request.getName(),
+                    teacher.getName(),
+                    request.getStartAt(),
+                    request.getEndAt(),
+                    false
+            );
+        }
+    }
+
+    @Override
     public List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status) {
 
         userRepository.findById(studentId)
@@ -190,5 +269,172 @@ public class MeetingServiceImpl implements MeetingService {
 
         return result;
     }
+
+    @Override
+    @Transactional
+    public void cancelMeeting(int studentId, int meetingId, boolean isOnline) {
+        if (isOnline) {
+            OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getStudent().getId() != studentId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            if (meeting.getStatus() == 1) {
+                throw new CustomException(MeetingErrorCode.CANNOT_CANCEL_APPROVED.getMessage());
+            }
+
+            meeting.delete(studentId);
+        } else {
+            OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getStudent().getId() != studentId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            if (meeting.getStatus() == 1) {
+                throw new CustomException(MeetingErrorCode.CANNOT_CANCEL_APPROVED.getMessage());
+            }
+
+            meeting.delete(studentId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request) {
+        if (isOnline) {
+            OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            if (request.getLocation() == null || request.getLocation().isBlank()) {
+                throw new CustomException(MeetingErrorCode.LOCATION_REQUIRED.getMessage());
+            }
+
+            meeting.approve(request.getLocation());
+        } else {
+            OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            meeting.approve();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason) {
+        // 반려 사유 필수 검증
+        if (reason == null || reason.isBlank()) {
+            throw new CustomException(MeetingErrorCode.REJECT_REASON_REQUIRED.getMessage());
+        }
+
+        if (isOnline) {
+            OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            meeting.reject(reason);
+        } else {
+            OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
+                    .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
+
+            if (meeting.getTeacher().getId() != teacherId) {
+                throw new CustomException(MeetingErrorCode.NOT_YOUR_MEETING.getMessage());
+            }
+
+            meeting.reject(reason);
+        }
+    }
+
+    @Override
+    public AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date) {
+
+        qTeacherRepository.findByTeacherId(teacherId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.TEACHER_NOT_FOUND.getMessage()));
+
+        // 해당 날짜에 이미 예약된 시간대 조회
+        Set<String> bookedTimes = getBookedTimesForDate(teacherId, date);
+
+        // 시간대별 상태 생성
+        List<AvailableTimesResponse.TimeSlot> timeSlots = DEFAULT_TIME_SLOTS.stream()
+                .map(time -> {
+                    boolean isBooked = bookedTimes.contains(time);
+                    return AvailableTimesResponse.TimeSlot.builder()
+                            .time(time)
+                            .available(!isBooked)
+                            .status(isBooked ? "BOOKED" : "AVAILABLE")
+                            .build();
+                })
+                .toList();
+
+        return AvailableTimesResponse.builder()
+                .teacherId(teacherId)
+                .date(date)
+                .timeSlots(timeSlots)
+                .build();
+    }
+
+
+    // Private 헬퍼 메서드
+
+    /**
+     * 특정 날짜에 이미 예약된 시간대 목록 조회
+     */
+    private Set<String> getBookedTimesForDate(int teacherId, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+
+        Set<String> bookedTimes = new HashSet<>();
+
+        // 온라인 미팅에서 예약된 시간 조회
+        List<OnlineMeeting> onlineMeetings = qOnlineMeetingRepository
+                .findByTeacherIdAndDateRange(teacherId, startOfDay, endOfDay);
+
+        for (OnlineMeeting meeting : onlineMeetings) {
+            if (meeting.getDeletedAt() == null && meeting.getStatus() >= 0) { // 삭제되지 않고, 반려되지 않은 것
+                String timeStr = String.format("%02d:00", meeting.getStartAt().getHour());
+                bookedTimes.add(timeStr);
+            }
+        }
+
+        // 오프라인 미팅에서 예약된 시간 조회
+        List<OfflineMeeting> offlineMeetings = qOfflineMeetingRepository
+                .findByTeacherIdAndDateRange(teacherId, startOfDay, endOfDay);
+
+        for (OfflineMeeting meeting : offlineMeetings) {
+            if (meeting.getDeletedAt() == null && meeting.getStatus() >= 0) {
+                String timeStr = String.format("%02d:00", meeting.getStartAt().getHour());
+                bookedTimes.add(timeStr);
+            }
+        }
+
+        return bookedTimes;
+    }
+
+    /**
+     *  중복 예약 검증 메서드 - 특정 시간대가 이미 예약되었는지 확인
+     */
+    private boolean isTimeSlotBooked(int teacherId, LocalDateTime startAt, LocalDateTime endAt) {
+        // 온라인 미팅 중복 체크
+        boolean onlineConflict = qOnlineMeetingRepository.existsByTeacherIdAndTimeRange(teacherId, startAt, endAt);
+        if (onlineConflict) return true;
+
+        // 오프라인 미팅 중복 체크
+        return qOfflineMeetingRepository.existsByTeacherIdAndTimeRange(teacherId, startAt, endAt);
+    }
+
 
 }

@@ -21,7 +21,7 @@ public class OfflineLecture extends Lecture {
     @Min(value = 1)
     private int maxNum;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
@@ -43,4 +43,5 @@ public class OfflineLecture extends Lecture {
         if( endTimeAt != null ) this.endTimeAt = endTimeAt;
         if( day != null ) this.day = day;
     }
+
 }

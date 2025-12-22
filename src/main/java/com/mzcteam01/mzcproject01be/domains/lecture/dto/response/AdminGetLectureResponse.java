@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -14,19 +15,20 @@ import java.time.LocalDateTime;
 @Builder
 public class AdminGetLectureResponse {
     private int id;
-    private boolean isOnline;
+    private Boolean isOnline;
     private String name;
     private int organizationId;
     private String organizationName;
     private String teacherName;
-    private String category;
+    private List<String> category;
     private int price;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 
-    public static AdminGetLectureResponse of(Lecture lecture, boolean isOnline) {
+    public static AdminGetLectureResponse of(Lecture lecture, Boolean isOnline, List<String> categoryLayer ) {
         return AdminGetLectureResponse.builder()
                 .id( lecture.getId() )
                 .isOnline( isOnline )
@@ -34,12 +36,13 @@ public class AdminGetLectureResponse {
                 .organizationId( lecture.getOrganization().getId() )
                 .organizationName( lecture.getOrganization().getName() )
                 .teacherName( lecture.getTeacher().getName() )
-                .category( lecture.getCategory() )
+                .category( categoryLayer )
                 .price( lecture.getPrice() )
                 .startAt( lecture.getStartAt() )
                 .endAt( lecture.getEndAt() )
                 .description(lecture.getDescription())
                 .createdAt(lecture.getCreatedAt())
+                .deletedAt(lecture.getDeletedAt())
                 .build();
     }
 }

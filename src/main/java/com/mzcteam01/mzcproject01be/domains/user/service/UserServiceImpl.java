@@ -3,9 +3,9 @@ package com.mzcteam01.mzcproject01be.domains.user.service;
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
+import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
-import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
@@ -35,7 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 
@@ -53,6 +52,7 @@ public class UserServiceImpl implements UserService {
     private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
+    private final RelatedEntityChecker relatedEntityChecker;
 
     @Override
     @Transactional(readOnly = false)
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
                 .name(request.getName())
                 .phone(request.getPhone())
                 .role(role)
-                .addressCode(request.getAddressCode())
+                .address(request.getAddress())
                 .type(channelType)
                 .build();
 
@@ -144,7 +144,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public List<AdminGetUserResponse> list(GetUserRequest request) {
         List<User> result = userRepository.findAll();
-        System.out.println( request.getType() );
         if( request.getUserRole() != null ){
             result = result.stream().filter( user ->
                     user.getRole().getName().equals( request.getUserRole() )
@@ -155,6 +154,18 @@ public class UserServiceImpl implements UserService {
                 user.getType().equals(request.getType())
             ).toList();
         }
+        if( request.getSortBy() != null ){
+            if( request.getSortBy().equals("RECENT") ){
+                result = result.stream().filter( user ->
+                        user.getCreatedAt().isAfter( LocalDateTime.now().minusDays(1) )
+                ).toList();
+            }
+        }
+        if( request.getSearchString() != null ){
+            result = result.stream().filter( user ->
+                    user.getName().contains( request.getSearchString() )
+            ).toList();
+        }
         return result.stream().map(AdminGetUserResponse::of).toList();
     }
 
@@ -162,6 +173,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(int id, int deletedBy) {
         User user = userRepository.findById( id ).orElseThrow( () -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()) );
+        if( !relatedEntityChecker.relatedUserCheck( id ) ) throw new CustomException( CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
         user.delete();
     }
 

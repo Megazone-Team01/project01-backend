@@ -15,12 +15,12 @@ import java.time.LocalDateTime;
 public class GetOrganizationResponse {
     private int id;
     private String name;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private String tel;
     private String ownerName;
     private String description;
-    private String isOnline;
+    private Integer isOnline;
     private String imageUrl;
     private String url;
     private String category;        // 추후 카테고리 조회 작업 방향에 따라 수정
@@ -31,11 +31,11 @@ public class GetOrganizationResponse {
         return GetOrganizationResponse.builder()
                 .id(organization.getId())
                 .name(organization.getName())
-                .addressCode(organization.getAddressCode())
+                .address(organization.getAddress())
                 .tel(organization.getTel())
                 .ownerName(organization.getOwner().getName())
                 .description( organization.getDescription())
-                .isOnline( organization.getIsOnline() == 0 ? "온라인/오프라인" : organization.getIsOnline() == 1 ? "온라인" : "오프라인" )
+                .isOnline( organization.getIsOnline() )
                 .imageUrl( organization.getLeadImage() )
                 .url( organization.getWebpage() )
                 .isDeleted(organization.getDeletedBy() != null)

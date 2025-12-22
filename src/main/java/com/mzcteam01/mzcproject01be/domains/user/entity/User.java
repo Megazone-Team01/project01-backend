@@ -66,7 +66,7 @@ public class User {
 
     private LocalDateTime refreshTokenExpireAt;
 
-    public void update( String phone, String addressCode, String addressDetail, Integer type ){
+    public void update( String phone, String address, String addressDetail, Integer type ){
         if( phone != null ) this.phone = phone;
         if( address != null ) this.address = address;
         if( addressDetail != null ) this.addressDetail = addressDetail;

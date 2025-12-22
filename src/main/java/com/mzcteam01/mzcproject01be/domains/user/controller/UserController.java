@@ -66,9 +66,9 @@ public class UserController {
     @Operation( summary = "사용자 삭제 API" )
     public ResponseEntity<Void> deleteUser(
             @PathVariable Integer id,
-            @RequestParam Integer deletedBy
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        userService.delete( id, deletedBy );
+        userService.delete( id, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
 
@@ -83,7 +83,7 @@ public class UserController {
     public ResponseEntity<List<AdminGetUserOrganizationResponse>> getOrganizationTeacherById(
             @PathVariable Integer id
     ){
-        return ResponseEntity.ok( userOrganizationService.findAllByOrganizationId( id ) );
+        return ResponseEntity.ok( userOrganizationService.findAllTeacherByOrganizationId( id ) );
     }
     @GetMapping("/profile")
     public ResponseEntity<GetProfileResponse> getProfileInfo(@AuthenticationPrincipal AuthUser authUser) {

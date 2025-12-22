@@ -1,14 +1,17 @@
 package com.mzcteam01.mzcproject01be.domains.organization.controller;
 
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.AdminGetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.organization.service.OrganizationService;
+import com.mzcteam01.mzcproject01be.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,11 +51,10 @@ public class OrganizationController {
 
     @GetMapping( "/{organizationId}/lectures")
     @Operation( summary = "해당 아카데미에 소속된 강의 목록 조회" )
-    public ResponseEntity<List<GetOrganizationLectureResponse>> findAllLecturesInOrganization(
+    public ResponseEntity<List<AdminGetLectureResponse>> findAllLecturesInOrganization(
             @PathVariable int organizationId
     ){
-        //return ResponseEntity.ok( service.findOrganizationLecture( organizationId ) );
-        return null;
+        return ResponseEntity.ok( service.findLecturesByOrganizationId( organizationId ) );
     }
 
     @GetMapping("/status/{status}")
@@ -69,9 +71,10 @@ public class OrganizationController {
     @Operation( summary = "특정 기관 정보 업데이트" )
     public ResponseEntity<Void> updateOrganization(
             @PathVariable Integer id,
-            @ModelAttribute UpdateOrganizationRequest request
+            @RequestBody UpdateOrganizationRequest request,
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        service.update( id, request );
+        service.update( id, request, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
 
@@ -79,35 +82,38 @@ public class OrganizationController {
     @Operation( summary = "특정 기관 삭제" )
     public ResponseEntity<Void> deleteOrganization(
             @PathVariable Integer id,
-            @RequestParam int deletedBy
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        service.delete( id, deletedBy );
+        service.delete( id, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
 
     @PostMapping("/create")
     @Operation( summary = "기관 생성" )
     public ResponseEntity<Void> createOrganization(
-            @RequestBody CreateOrganizationRequest request
+            @RequestBody CreateOrganizationRequest request,
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        service.create( request );
+        service.create( request, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
 
     @PostMapping( "/{id}/approve" )
     @Operation( summary = "기관 승인" )
     public ResponseEntity<Void> approveOrganization(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        service.approve( id );
+        service.approve( id, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
     @PostMapping( "/{id}/reject" )
     @Operation( summary = "기관 반려" )
     public ResponseEntity<Void> rejectOrganization(
-            @PathVariable Integer id
+            @PathVariable Integer id,
+            @AuthenticationPrincipal AuthUser authUser
     ){
-        service.reject( id );
+        service.reject( id, authUser.getId() );
         return ResponseEntity.ok().body( null );
     }
 

@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class LectureRequest {
-    private String code;
-
+    private String lectureId;
+    private String lectureName;
 }

@@ -15,7 +15,7 @@ public class CreateOrganizationRequest
     private String webpage;
     private Integer ownerId;
     private String tel;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private Integer isOnline;
     private String description;

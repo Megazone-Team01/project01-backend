@@ -15,11 +15,17 @@ import java.time.LocalDateTime;
 @Table(name = "online_meeting")
 public class OnlineMeeting extends Meeting{
 
-    @Column(name = "location", nullable = false, length = 100)
+    @Column(name = "location", length = 100)
     private String location;
 
     public void update( String name, LocalDateTime startAt, LocalDateTime endAt, String location ) {
         super.update( name, startAt, endAt );
         if( location != null ) this.location = location;
     }
+
+    public void approve(String location) {
+        super.approve();
+        this.location = location;
+    }
+
 }
