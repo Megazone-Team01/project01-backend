@@ -38,13 +38,6 @@ public class GetProfileResponse {
         List<String> organization = organizations.stream().map( org -> org.getOrganization().getName()).toList();
         List<String> lecture = lectures.stream().map(Lecture::getName).toList();
 
-        // 파일 URL 변환: src/main/resources/files/... → /api/files/파일명
-        String fileUrl = "";
-        if(user.getFile() != null && user.getFile().getUrl() != null){
-            String fileName = user.getFile().getUrl().substring(user.getFile().getUrl().lastIndexOf("/") + 1);
-            fileUrl = "/api/files/" + fileName;
-        }
-
         return GetProfileResponse.builder()
                 .id( user.getId() )
                 .name( user.getName() )
@@ -56,7 +49,7 @@ public class GetProfileResponse {
                 .roleName( user.getRole().getName() )
                 .type( user.getType() == 0 ? "ALL" : user.getType() == 1 ? "ONLINE" : "OFFLINE" )
                 .profileImage( nvl(user.getProfileImg()) )
-                .fileUrl( nvl(fileUrl) )
+                .fileUrl( nvl(user.getFile().getUrl()) )
                 .lectures( lecture )
                 .organizations( organization )
                 .build();

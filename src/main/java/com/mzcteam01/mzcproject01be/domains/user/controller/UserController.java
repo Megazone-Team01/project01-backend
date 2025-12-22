@@ -90,7 +90,7 @@ public class UserController {
         int id = authUser.getId();
 
         GetProfileResponse my = userService.getProfileInfo(id);
-        log.info(my.toString());
+
         return ResponseEntity.ok().body(my);
     }
 

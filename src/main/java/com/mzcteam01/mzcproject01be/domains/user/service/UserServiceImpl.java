@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -194,20 +193,8 @@ public class UserServiceImpl implements UserService {
         // Organization 정보 조회
         List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId(id);
 
-        // 파일 URL 변환: 로컬 경로 → API URL
-        String fileUrl = null;
-        if (user.getFile() != null && user.getFile().getUrl() != null) {
-            // 파일명만 추출
-            String fileName = Paths.get(user.getFile().getUrl()).getFileName().toString();
-            // API URL로 변환
-            fileUrl = "/api/files/" + fileName;
-        }
-
-        // Response 객체 생성 (fileUrl 적용)
-        GetProfileResponse response = GetProfileResponse.of(user, lectures, organizations);
-        response.setFileUrl(fileUrl);
-
-        return response;
+        // Response 객체 생성
+        return GetProfileResponse.of(user, lectures, organizations);
     }
 
     // 마이페이지 수정
