@@ -193,6 +193,7 @@ public class MeetingServiceImpl implements MeetingService {
                     .endAt(request.getEndAt())
                     .status(0)  // 대기 상태
                     .location(null)
+                    .rejectReason("")
                     .build();
             meeting.setCreatedBy(studentId);
             onlineMeetingRepository.save(meeting);
@@ -221,6 +222,7 @@ public class MeetingServiceImpl implements MeetingService {
                     .endAt(request.getEndAt())
                     .status(0)  // 대기 상태
                     .room(room)
+                    .rejectReason("")
                     .build();
             meeting.setCreatedBy(studentId);
             offlineMeetingRepository.save(meeting);
