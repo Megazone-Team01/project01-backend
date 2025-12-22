@@ -83,7 +83,6 @@ public class UserServiceImpl implements UserService {
                 .name(request.getName())
                 .phone(request.getPhone())
                 .role(role)
-                .addressCode(request.getAddressCode())
                 .type(channelType)
                 .build();
 
