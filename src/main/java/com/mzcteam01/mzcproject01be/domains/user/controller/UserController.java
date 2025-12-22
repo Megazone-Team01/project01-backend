@@ -12,6 +12,7 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequestMapping("/api/v1/user")
 @RestController
 @RequiredArgsConstructor
@@ -82,10 +84,13 @@ public class UserController {
     ){
         return ResponseEntity.ok( userOrganizationService.findAllByOrganizationId( id ) );
     }
+
     @GetMapping("/profile")
     public ResponseEntity<GetProfileResponse> getProfileInfo(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
+
         GetProfileResponse my = userService.getProfileInfo(id);
+        log.info(my.toString());
         return ResponseEntity.ok().body(my);
     }
 

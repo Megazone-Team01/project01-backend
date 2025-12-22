@@ -21,5 +21,8 @@ public class UpdateUserRequest {
     private String profileImg;
 
 
+    private Integer fileId;
+
+
 }
 

@@ -4,11 +4,12 @@ import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
+import com.mzcteam01.mzcproject01be.domains.file.entity.File;
+import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
-import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.request.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
@@ -23,10 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 
@@ -41,13 +42,13 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final LectureFacade lectureFacade;
-    private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
     private final UserLectureRepository userLectureRepository;
     private final OnlineLectureRepository onlineLectureRepository;
     private final OfflineLectureRepository offlineLectureRepository;
     private final RelatedEntityChecker relatedEntityChecker;
+    private final FileRepository fileRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -193,8 +194,20 @@ public class UserServiceImpl implements UserService {
         // Organization 정보 조회
         List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId(id);
 
-        // Response 객체 생성
-        return GetProfileResponse.of(user, lectures, organizations);
+        // 파일 URL 변환: 로컬 경로 → API URL
+        String fileUrl = null;
+        if (user.getFile() != null && user.getFile().getUrl() != null) {
+            // 파일명만 추출
+            String fileName = Paths.get(user.getFile().getUrl()).getFileName().toString();
+            // API URL로 변환
+            fileUrl = "/api/files/" + fileName;
+        }
+
+        // Response 객체 생성 (fileUrl 적용)
+        GetProfileResponse response = GetProfileResponse.of(user, lectures, organizations);
+        response.setFileUrl(fileUrl);
+
+        return response;
     }
 
     // 마이페이지 수정
@@ -226,14 +239,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
 
+        // 파일 처리
+        File file = null;
+        if (request.getFileId() != null) {
+            file = fileRepository.findById(request.getFileId())
+                    .orElseThrow(() -> new CustomException("파일이 존재하지 않습니다."));
+        }
+
         user.updateProfile(
                 request.getName(),
                 request.getPhone().replaceAll("-", ""),
                 request.getAddress(),
                 request.getAddressDetail(),
                 request.getProfileImg(),
-                newType
-
+                newType,
+                file
         );
 
         return new GetProfileUpdateResponse(
@@ -242,7 +262,9 @@ public class UserServiceImpl implements UserService {
                 user.getAddress(),
                 user.getAddressDetail(),
                 user.getType(),
-                user.getProfileImg()
+                user.getProfileImg(),
+                user.getFile().getId(),
+                user.getFile().getUrl()
         );
     }
 

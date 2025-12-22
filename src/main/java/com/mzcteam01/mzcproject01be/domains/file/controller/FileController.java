@@ -6,12 +6,17 @@ import com.mzcteam01.mzcproject01be.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -49,5 +54,26 @@ public class FileController {
         return ResponseEntity.ok( fileService.getFileWithLecture( lectureId ) );
     }
 
+    @GetMapping("/{fileName}")
+    public ResponseEntity<Resource> getFile(@PathVariable String fileName) throws IOException {
+        // URL 디코딩 (한글/공백 파일명 대응)
+        String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
+
+        Resource resource = new ClassPathResource("files/" + decodedFileName);
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // 확장자별 Content-Type
+        MediaType mediaType;
+        if (decodedFileName.endsWith(".png")) mediaType = MediaType.IMAGE_PNG;
+        else if (decodedFileName.endsWith(".jpg") || decodedFileName.endsWith(".jpeg")) mediaType = MediaType.IMAGE_JPEG;
+        else if (decodedFileName.endsWith(".gif")) mediaType = MediaType.IMAGE_GIF;
+        else mediaType = MediaType.APPLICATION_OCTET_STREAM; // 기타 파일
+
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .body(resource);
+    }
 
 }

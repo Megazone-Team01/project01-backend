@@ -25,6 +25,7 @@ public class GetProfileResponse {
     private String roleName;
     private String type;
     private String profileImage;
+    private String fileUrl;
     private List<String> lectures;
     private List<String> organizations;
 
@@ -37,6 +38,13 @@ public class GetProfileResponse {
         List<String> organization = organizations.stream().map( org -> org.getOrganization().getName()).toList();
         List<String> lecture = lectures.stream().map(Lecture::getName).toList();
 
+        // 파일 URL 변환: src/main/resources/files/... → /api/files/파일명
+        String fileUrl = "";
+        if(user.getFile() != null && user.getFile().getUrl() != null){
+            String fileName = user.getFile().getUrl().substring(user.getFile().getUrl().lastIndexOf("/") + 1);
+            fileUrl = "/api/files/" + fileName;
+        }
+
         return GetProfileResponse.builder()
                 .id( user.getId() )
                 .name( user.getName() )
@@ -46,8 +54,9 @@ public class GetProfileResponse {
                 .address( nvl(user.getAddress()) )
                 .addressDetail( nvl(user.getAddressDetail()) )
                 .roleName( user.getRole().getName() )
-                .type( user.getType() == 0 ? "All" : user.getType() == 1 ? "ONLINE" : "OFFLINE" )
+                .type( user.getType() == 0 ? "ALL" : user.getType() == 1 ? "ONLINE" : "OFFLINE" )
                 .profileImage( nvl(user.getProfileImg()) )
+                .fileUrl( nvl(fileUrl) )
                 .lectures( lecture )
                 .organizations( organization )
                 .build();

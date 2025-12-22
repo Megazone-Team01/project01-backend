@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.user.dto.response;
 
 
+import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +20,9 @@ public class GetProfileUpdateResponse {
     private Integer type;
 
     private String profileImg;
+
+
+    private Integer fileId;
+    private String fileUrl;
 
 }
