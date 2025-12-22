@@ -58,5 +58,7 @@ public abstract class Lecture extends BaseEntity {
         if( description != null ) this.description = description;
     }
 
+    public void updateCategory( String category ) { this.category = category; }
+
 
 }

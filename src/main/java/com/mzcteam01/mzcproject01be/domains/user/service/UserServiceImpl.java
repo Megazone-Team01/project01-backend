@@ -83,6 +83,7 @@ public class UserServiceImpl implements UserService {
                 .name(request.getName())
                 .phone(request.getPhone())
                 .role(role)
+                .address(request.getAddress())
                 .type(channelType)
                 .build();
 
@@ -138,7 +139,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public List<AdminGetUserResponse> list(GetUserRequest request) {
         List<User> result = userRepository.findAll();
-        System.out.println( request.getType() );
         if( request.getUserRole() != null ){
             result = result.stream().filter( user ->
                     user.getRole().getName().equals( request.getUserRole() )
@@ -147,6 +147,18 @@ public class UserServiceImpl implements UserService {
         if( request.getType() != null ){
             result = result.stream().filter( user ->
                 user.getType().equals(request.getType())
+            ).toList();
+        }
+        if( request.getSortBy() != null ){
+            if( request.getSortBy().equals("RECENT") ){
+                result = result.stream().filter( user ->
+                        user.getCreatedAt().isAfter( LocalDateTime.now().minusDays(1) )
+                ).toList();
+            }
+        }
+        if( request.getSearchString() != null ){
+            result = result.stream().filter( user ->
+                    user.getName().contains( request.getSearchString() )
             ).toList();
         }
         return result.stream().map(AdminGetUserResponse::of).toList();

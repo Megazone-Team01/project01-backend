@@ -25,8 +25,8 @@ public class Organization extends BaseEntity {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "address_code", nullable = false, length = 5)
-    private String addressCode;
+    @Column(name = "address", nullable = false, length = 100)
+    private String address;
 
     @Lob
     @Column(name = "address_detail", nullable = false)
@@ -54,9 +54,9 @@ public class Organization extends BaseEntity {
     @Column(name = "lead_image")
     private String leadImage;
 
-    public void update( String addressCode, String addressDetail, String tel, String homepage,
+    public void update( String address, String addressDetail, String tel, String homepage,
                         Integer type, String description ){
-        if( addressCode != null ) this.addressCode = addressCode;
+        if( address != null ) this.address = address;
         if( addressDetail != null ) this.addressDetail = addressDetail;
         if( tel != null ) this.tel = tel;
         if( homepage != null ) this.webpage = homepage;

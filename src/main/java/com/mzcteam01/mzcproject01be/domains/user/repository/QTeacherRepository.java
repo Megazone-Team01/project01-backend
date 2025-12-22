@@ -32,6 +32,8 @@ public class QTeacherRepository {
                 .where(
                         userRole.name.eq("TEACHER"),
                         userOrganization.organization.id.eq(organizationId),
+                        userOrganization.status.eq(1),
+                        userOrganization.deletedAt.isNull(),
                         user.deletedAt.isNull()
                 )
                 .orderBy(user.name.asc())

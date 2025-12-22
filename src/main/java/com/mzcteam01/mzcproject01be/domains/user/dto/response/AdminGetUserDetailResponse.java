@@ -19,7 +19,7 @@ public class AdminGetUserDetailResponse {
     private String name;
     private String email;
     private String phone;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private String roleName;
     private Integer type;
@@ -38,7 +38,7 @@ public class AdminGetUserDetailResponse {
                 .name( user.getName() )
                 .email( user.getEmail() )
                 .phone( user.getPhone() )
-                .addressCode( user.getAddressCode() )
+                .address( user.getAddress() )
                 .addressDetail( user.getAddressDetail() )
                 .roleName( user.getRole().getName() )
                 .type( user.getType() )

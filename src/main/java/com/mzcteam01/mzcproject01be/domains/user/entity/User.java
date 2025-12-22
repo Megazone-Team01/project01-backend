@@ -37,7 +37,6 @@ public class User {
     @Column(name = "phone", nullable = false, length = 11)
     private String phone;
 
-
     @Column(name = "address", columnDefinition = "Text")
     private String address;
 
@@ -71,9 +70,8 @@ public class User {
 
     private LocalDateTime refreshTokenExpireAt;
 
-    public void update( String phone, String addressCode, String address, String addressDetail, Integer type ){
+    public void update( String phone, String address, String addressDetail, Integer type ){
         if( phone != null ) this.phone = phone;
-        if( addressCode != null ) this.addressCode = addressCode;
         if( address != null ) this.address = address;
         if( addressDetail != null ) this.addressDetail = addressDetail;
         if( type != null ) this.type = type;

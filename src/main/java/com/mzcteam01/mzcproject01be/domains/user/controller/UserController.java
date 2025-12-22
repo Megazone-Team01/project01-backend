@@ -82,7 +82,7 @@ public class UserController {
     public ResponseEntity<List<AdminGetUserOrganizationResponse>> getOrganizationTeacherById(
             @PathVariable Integer id
     ){
-        return ResponseEntity.ok( userOrganizationService.findAllByOrganizationId( id ) );
+        return ResponseEntity.ok( userOrganizationService.findAllTeacherByOrganizationId( id ) );
     }
 
     @GetMapping("/profile")
