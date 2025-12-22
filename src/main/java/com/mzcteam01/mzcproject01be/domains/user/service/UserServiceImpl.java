@@ -259,8 +259,8 @@ public class UserServiceImpl implements UserService {
                 user.getAddress(),
                 user.getAddressDetail(),
                 user.getType(),
-                user.getFile().getId(),
-                user.getFile().getUrl()
+                user.getFile() != null ? user.getFile().getId() : null,
+                user.getFile() != null ? user.getFile().getUrl() : ""
         );
     }
 
