@@ -113,14 +113,18 @@ public class UserController {
     @GetMapping("/approveOrganization")
     public ResponseEntity<List<GetApproveOrganizationResponse>> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
+        log.info("1111");
         List<GetApproveOrganizationResponse> users = userService.approveOrganization(id);
+        log.info("2222");
         return ResponseEntity.ok(users);
     }
 
     // 기관 승인 요청 화면의 승인, 거절 처리
     @PatchMapping("/approveOrganization")
     public ResponseEntity<Map<String,String>> updateStatus(@RequestBody UpdateStatusUserOrganizationRequest request) {
+        log.info("1111");
         userService.updateStatusUserOrganization(request);
+        log.info("2222");
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","처리 완료하였습니다."));
     }
 }
