@@ -37,12 +37,9 @@ public class User {
     @Column(name = "phone", nullable = false, length = 11)
     private String phone;
 
-    @Column(name = "address_code", length = 5)
-    private String addressCode;
 
     @Column(name = "address", columnDefinition = "Text")
     private String address;
-
 
     @Column(name = "address_detail", columnDefinition = "Text")
     private String addressDetail;
@@ -64,9 +61,6 @@ public class User {
 
     @Column( name = "deleted_at" )
     private LocalDateTime deletedAt;
-
-    @Column( name = "profile_img", nullable = true )
-    private String profileImg;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id", nullable = false)
@@ -95,13 +89,12 @@ public class User {
     }
 
     // 마이 페이지 업데이트
-    public void updateProfile(String name, String phone, String address, String addressDetail, String profileImg, Integer type, File file)
+    public void updateProfile(String name, String phone, String address, String addressDetail, Integer type, File file)
     {
         if (name != null) { this.name = name; }
         if (phone != null) { this.phone = phone; }
         if (address != null) { this.address = address; }
         if (addressDetail != null) { this.addressDetail = addressDetail; }
-        if (profileImg != null) { this.profileImg = profileImg; }
         if (type != null) { this.type = type; }
         if (file != null) {this.file = file;}
 

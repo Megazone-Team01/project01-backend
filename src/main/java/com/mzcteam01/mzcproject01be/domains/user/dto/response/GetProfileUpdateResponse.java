@@ -19,8 +19,6 @@ public class GetProfileUpdateResponse {
     private String addressDetail;
     private Integer type;
 
-    private String profileImg;
-
 
     private Integer fileId;
     private String fileUrl;

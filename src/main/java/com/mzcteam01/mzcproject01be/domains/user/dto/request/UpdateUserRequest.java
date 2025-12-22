@@ -18,8 +18,6 @@ public class UpdateUserRequest {
     private String addressDetail;
     private String type;
 
-    private String profileImg;
-
 
     private Integer fileId;
 
