@@ -100,6 +100,8 @@ public class ReservationServiceImpl implements ReservationService {
                 .endAt(request.getEndAt())
                 .build();
 
+        reservation.setCreatedBy(userId);
+
         reservationRepository.save(reservation);
 
         return ReservationResponse.from(reservation);
