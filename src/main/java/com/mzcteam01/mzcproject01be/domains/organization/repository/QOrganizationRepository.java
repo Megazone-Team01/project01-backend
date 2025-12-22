@@ -24,9 +24,8 @@ public class QOrganizationRepository {
         QOrganization organization = QOrganization.organization;
 
         BooleanBuilder where = new BooleanBuilder();
-        if( searchString != null ) {
+        if( searchString != null ) where.and( organization.name.contains( searchString ) );
 
-        }
         if( status != null ) where.and( organization.status.eq(status) );
         if( isOnline != null ) where.and( organization.isOnline.eq(isOnline) );
         if( ownerName != null ) where.and( organization.owner.name.eq(ownerName) );

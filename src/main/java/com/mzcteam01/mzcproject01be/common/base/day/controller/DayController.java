@@ -35,4 +35,14 @@ public class DayController {
         dayService.create( name, value, authUser.getId() );
         return ResponseEntity.ok( null );
     }
+
+    @DeleteMapping("/{id}")
+    @Operation( summary = "요일 삭제" )
+    public ResponseEntity<Void> deleteDay(
+            @PathVariable int id,
+            @AuthenticationPrincipal AuthUser authUser
+    ){
+        dayService.delete( id, authUser.getId() );
+        return ResponseEntity.ok( null );
+    }
 }

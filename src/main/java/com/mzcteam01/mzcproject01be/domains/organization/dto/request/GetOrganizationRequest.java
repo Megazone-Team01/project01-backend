@@ -14,4 +14,5 @@ public class GetOrganizationRequest {
     private Integer statusCode;
     private String name;
     private Integer isOnline;
+    private String searchString;
 }

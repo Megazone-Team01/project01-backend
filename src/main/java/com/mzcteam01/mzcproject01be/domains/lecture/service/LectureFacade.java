@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class LectureFacade {
     private final DayService dayService;
 
     @Transactional
-    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status ) {
+    public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status, String sortBy, String searchString ) {
         List<AdminGetLectureResponse> results = new ArrayList<>();
         if( isOnline == null ) isOnline = 0;
 
@@ -75,7 +76,18 @@ public class LectureFacade {
         if( status != null ){
             return onlineRepository.findAllByStatus( status ).stream().map( lecture -> AdminGetLectureResponse.of( lecture, true, categoryConverter.fullCodeToLayer( lecture.getCategory() ) ) ).toList();
         }
-
+        if( sortBy != null ){
+            if( sortBy.equals("RECENT") ){
+                results = results.stream().filter( lect ->
+                        lect.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1))
+                ).toList();
+            }
+        }
+        if( searchString != null ){
+            results = results.stream().filter( lect ->
+                    lect.getName().contains( searchString )
+            ).toList();
+        }
         return results;
     }
 
@@ -187,6 +199,20 @@ public class LectureFacade {
     }
 
     @Transactional
+    public List<Lecture> getAllLecturesByOrganizationId( int organizationId ){
+        List<Lecture> results = onlineRepository.findAllLectureByOrganizationId( organizationId );
+        List<Lecture> offlineLectures = offlineRepository.findAllByOrganizationId( organizationId );
+        List<String> existed = new ArrayList<>();
+        for( Lecture lecture : offlineLectures ){
+            if( !existed.contains( lecture.getName() ) ){
+                results.add( lecture );
+                existed.add( lecture.getName() );
+            }
+        }
+        return results;
+    }
+
+    @Transactional
     public AdminGetLectureDetailResponse getLectureDetail(int id, boolean isOnline) {
         if( isOnline ){
             OnlineLecture lecture = onlineRepository.findById( id ).orElseThrow(
@@ -226,7 +252,13 @@ public class LectureFacade {
                     () -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage())
             );
             if( !relatedEntityChecker.relatedOfflineLectureChecker( id ) ) throw new CustomException(CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
-            lecture.delete( deletedBy );
+            List<OfflineLecture> dayLectures = offlineRepository.findAllByNameAndOrganizationIdAndTeacherId(
+                    lecture.getName(), lecture.getOrganization().getId(), lecture.getTeacher().getId()
+            );
+            for( int i=0; i<dayLectures.size(); i++ ){
+                if( i == 0 ) dayLectures.get(i).delete( deletedBy );
+                else offlineRepository.delete( dayLectures.get(i) );
+            }
         }
     }
 

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class AdminGetOrganizationResponse {
     private int id;
     private String name;
-    private String addressCode;
+    private String address;
     private String addressDetail;
     private String tel;
     private int ownerId;
@@ -24,7 +24,7 @@ public class AdminGetOrganizationResponse {
         return AdminGetOrganizationResponse.builder()
                 .id( organization.getId() )
                 .name( organization.getName() )
-                .addressCode(organization.getAddressCode())
+                .address(organization.getAddress())
                 .addressDetail(organization.getAddressDetail())
                 .tel(organization.getTel())
                 .ownerId( organization.getOwner().getId() )
