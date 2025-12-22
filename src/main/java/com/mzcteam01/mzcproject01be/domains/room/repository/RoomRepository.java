@@ -14,4 +14,10 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
     List<Room> findAllByOrganizationId( int organizationId );
+
+    // organization_id와 deletedAt으로 필터링
+    List<Room> findAllByOrganizationIdAndDeletedAtIsNull(Integer organizationId);
+
+    // deletedAt이 NULL인 것만
+    List<Room> findAllByDeletedAtIsNull();
 }

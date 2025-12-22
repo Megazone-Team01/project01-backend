@@ -124,4 +124,9 @@ public class OrganizationController {
     ){
         return ResponseEntity.ok( service.getDetailById( id ) );
     }
+    @GetMapping("/with-rooms")
+    public ResponseEntity<List<OrganizationWithRoomsResponse>> getOrganizationsWithRooms() {
+        List<OrganizationWithRoomsResponse> data = service.getOrganizationsWithRooms();
+        return ResponseEntity.ok(data);
+    }
 }

@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces;
 
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.OnlineLectureUploadRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineListResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
@@ -10,4 +11,5 @@ public interface OnlineLectureService extends LectureFacadeService<
         LectureOnlineDetailResponse,
         LectureOnlineListResponse> {
 
+    void createOfflineLecture(OnlineLectureUploadRequest request,int userId);
 }

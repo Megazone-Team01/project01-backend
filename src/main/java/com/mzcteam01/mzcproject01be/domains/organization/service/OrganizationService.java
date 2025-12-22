@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOr
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
 
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.OrganizationWithRoomsResponse;
 
 import java.util.List;
 
@@ -23,4 +24,5 @@ public interface OrganizationService {
     AdminGetOrganizationDetailResponse getDetailById( int id );
 
     List<AdminGetLectureResponse> findLecturesByOrganizationId( int id );
+    List<OrganizationWithRoomsResponse> getOrganizationsWithRooms();
 }
