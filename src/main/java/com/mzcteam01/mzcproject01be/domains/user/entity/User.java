@@ -62,7 +62,7 @@ public class User {
     private LocalDateTime deletedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_id", nullable = false)
+    @JoinColumn(name = "file_id")
     private File file;
 
     // 리프레시 토큰을 위한 리프레시 토큰과 리프레시 토큰 만료일 컬럼

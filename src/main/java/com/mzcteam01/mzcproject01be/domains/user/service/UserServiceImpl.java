@@ -249,7 +249,6 @@ public class UserServiceImpl implements UserService {
                 request.getPhone().replaceAll("-", ""),
                 request.getAddress(),
                 request.getAddressDetail(),
-                request.getProfileImg(),
                 newType,
                 file
         );
@@ -260,7 +259,6 @@ public class UserServiceImpl implements UserService {
                 user.getAddress(),
                 user.getAddressDetail(),
                 user.getType(),
-                user.getProfileImg(),
                 user.getFile().getId(),
                 user.getFile().getUrl()
         );
