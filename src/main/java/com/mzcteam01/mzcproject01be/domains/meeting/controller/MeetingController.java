@@ -4,6 +4,7 @@ import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.ApproveMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.RejectMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AvailableTimesResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.CreateMeetingResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
 import com.mzcteam01.mzcproject01be.domains.meeting.service.MeetingService;
@@ -13,11 +14,13 @@ import com.mzcteam01.mzcproject01be.security.AuthUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +112,17 @@ public class MeetingController {
         int teacherId = authUser.getId();
         meetingService.rejectMeeting(teacherId, meetingId, isOnline, request.getReason());
         return ResponseEntity.ok(Map.of("message", "상담이 반려되었습니다."));
+    }
+
+    @GetMapping("/teachers/{teacherId}/available-times")
+    @Operation(summary = "선생님 상담 가능 시간 조회",
+            description = "특정 날짜에 선생님의 상담 가능 시간대를 조회함")
+    public ResponseEntity<AvailableTimesResponse> getAvailableTimes(
+            @PathVariable int teacherId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        AvailableTimesResponse response = meetingService.getAvailableTimes(teacherId, date);
+        return ResponseEntity.ok(response);
     }
 
 
