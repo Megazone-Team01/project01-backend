@@ -1,14 +1,14 @@
 package com.mzcteam01.mzcproject01be.domains.meeting.service;
 
 import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOfflineMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.AdminGetOnlineMeetingResponse;
-import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.MyMeetingListResponse;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.ApproveMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.request.CreateMeetingRequest;
+import com.mzcteam01.mzcproject01be.domains.meeting.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherListResponse;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,5 +33,16 @@ public interface MeetingService {
 
     TeacherDetailResponse getTeacherDetails(int teacherId);
 
+    CreateMeetingResponse createMeeting(int studentId, CreateMeetingRequest request);
+
+    void cancelMeeting(int studentId, int meetingId, boolean isOnline);
+
     List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status);
+
+    void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request);
+
+    void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason);
+
+    AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date);
+
 }

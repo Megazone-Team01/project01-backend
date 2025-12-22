@@ -45,12 +45,28 @@ public abstract class Meeting extends BaseEntity {
     // 승인여부
     // -1 (반려), 0 (대기), 1(승인)
     @Column(name = "status", nullable = false)
-    private int status;
+    protected int status;
+
+    @Column(name = "reject_reason", nullable = false)
+    private String rejectReason;
 
     public void update(String name, LocalDateTime startAt, LocalDateTime endAt) {
         if( name != null ) this.name = name;
         if( startAt != null ) this.startAt = startAt;
         if( endAt != null ) this.endAt = endAt;
+    }
+
+    public void approve() {
+        this.status = 1;
+    }
+
+    public void reject(String reason) {
+        this.status = -1;
+        this.rejectReason = reason;
+    }
+
+    public void setCreatedBy(int userId) {
+        this.createdBy = userId;
     }
 
 }

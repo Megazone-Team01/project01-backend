@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.mzcteam01.mzcproject01be.domains.meeting.entity.QOnlineMeeting.onlineMeeting;
+
 @RequiredArgsConstructor
 @Repository
 public class QOnlineMeetingRepository {
@@ -56,5 +58,40 @@ public class QOnlineMeetingRepository {
                 .where(where)
                 .orderBy(onlineMeeting.startAt.desc())
                 .fetch();
+    }
+
+
+    /**
+     * 선생님 ID와 날짜 범위로 온라인 미팅 조회
+     */
+    public List<OnlineMeeting> findByTeacherIdAndDateRange(int teacherId, LocalDateTime startAt, LocalDateTime endAt) {
+        return query
+                .selectFrom(onlineMeeting)
+                .where(
+                        onlineMeeting.teacher.id.eq(teacherId),
+                        onlineMeeting.startAt.between(startAt, endAt),
+                        onlineMeeting.deletedAt.isNull()
+                )
+                .fetch();
+    }
+
+    /**
+     * 선생님의 특정 시간대에 이미 예약이 있는지 확인 (중복 예약 방지)
+     */
+    public boolean existsByTeacherIdAndTimeRange(int teacherId, LocalDateTime startAt, LocalDateTime endAt) {
+        Long count = query
+                .select(onlineMeeting.count())
+                .from(onlineMeeting)
+                .where(
+                        onlineMeeting.teacher.id.eq(teacherId),
+                        onlineMeeting.deletedAt.isNull(),
+                        onlineMeeting.status.goe(0), // 대기(0) 또는 승인(1) 상태
+                        // 시간 겹침 체크
+                        onlineMeeting.startAt.lt(endAt),
+                        onlineMeeting.endAt.gt(startAt)
+                )
+                .fetchOne();
+
+        return count != null && count > 0;
     }
 }
