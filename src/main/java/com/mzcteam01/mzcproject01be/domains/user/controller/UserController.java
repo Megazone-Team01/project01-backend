@@ -1,13 +1,10 @@
 package com.mzcteam01.mzcproject01be.domains.user.controller;
 
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.*;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserOrganizationService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
@@ -15,6 +12,7 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequestMapping("/api/v1/user")
 @RestController
 @RequiredArgsConstructor
@@ -85,26 +84,30 @@ public class UserController {
     ){
         return ResponseEntity.ok( userOrganizationService.findAllTeacherByOrganizationId( id ) );
     }
+
     @GetMapping("/profile")
     public ResponseEntity<GetProfileResponse> getProfileInfo(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
+
         GetProfileResponse my = userService.getProfileInfo(id);
+
         return ResponseEntity.ok().body(my);
     }
 
-//    @PutMapping("/my")
-//    public ResponseEntity<GetMyResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser) {
-//        int id = authUser.getId();
-//        GetMyResponse my = userService.putMyInfo(id);
-//        return ResponseEntity.ok().body(my);
-//    }
-//
-//    @DeleteMapping("/my")
-//    public ResponseEntity<Map<String,String>> deleteMyInfo(@AuthenticationPrincipal AuthUser authUser) {
-//        int id = authUser.getId();
-//        userService.deleteMyInfo(id);
-//        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","회원 탈퇴되었습니다."));
-//    }
+    @PutMapping("/profile")
+    public ResponseEntity<GetProfileUpdateResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser,
+                                                        @RequestBody UpdateUserRequest request) {
+        int id = authUser.getId();
+        GetProfileUpdateResponse my = userService.updateProfileInfo(id, request);
+        return ResponseEntity.ok().body(my);
+    }
+
+    @DeleteMapping("/profile")
+    public ResponseEntity<Map<String,String>> deleteMyInfo(@AuthenticationPrincipal AuthUser authUser) {
+        int id = authUser.getId();
+        userService.deleteUserInfo(id);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","회원 탈퇴되었습니다."));
+    }
 
     // 기관 승인 요청 화면의 조회
     @GetMapping("/approveOrganization")

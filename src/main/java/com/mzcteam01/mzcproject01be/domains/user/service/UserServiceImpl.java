@@ -4,27 +4,19 @@ import com.mzcteam01.mzcproject01be.common.enums.ChannelType;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.UserErrorCode;
 import com.mzcteam01.mzcproject01be.common.utils.RelatedEntityChecker;
+import com.mzcteam01.mzcproject01be.domains.file.entity.File;
+import com.mzcteam01.mzcproject01be.domains.file.repository.FileRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
-import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.common.exception.*;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.CreateUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.GetUserRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.LoginRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserDetailResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.AdminGetUserResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateStatusUserOrganizationRequest;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetApproveOrganizationResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetLoginResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse;
-import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.*;
+import com.mzcteam01.mzcproject01be.domains.user.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserRole;
-import com.mzcteam01.mzcproject01be.domains.user.repository.QUserOrganizationRepository;
-import com.mzcteam01.mzcproject01be.domains.user.repository.UserOrganizationRepository;
-import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
-import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
+import com.mzcteam01.mzcproject01be.domains.user.repository.*;
 import com.mzcteam01.mzcproject01be.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,10 +41,13 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final LectureFacade lectureFacade;
-    private final OrganizationRepository organizationRepository;
     private final UserOrganizationRepository userOrganizationRepository;
     private final JwtUtil jwtUtil;
+    private final UserLectureRepository userLectureRepository;
+    private final OnlineLectureRepository onlineLectureRepository;
+    private final OfflineLectureRepository offlineLectureRepository;
     private final RelatedEntityChecker relatedEntityChecker;
+    private final FileRepository fileRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -201,31 +196,90 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+        // Lecture 정보 조회
+        List<Lecture> lectures = null;
+        if (user.getRole().getName().equals("TEACHER")) lectures = lectureFacade.getAllTeachingLecture(id);
+        else if (user.getRole().getName().equals("STUDENT")) lectures = lectureFacade.getAllLearningLecture(id);
+        else lectures = new ArrayList<>();
+        // Organization 정보 조회
+        List<UserOrganization> organizations = userOrganizationRepository.findAllByUserId(id);
 
-        return GetProfileResponse.of(user);
+        // Response 객체 생성
+        return GetProfileResponse.of(user, lectures, organizations);
     }
 
     // 마이페이지 수정
-//    @Override
-//    @Transactional(readOnly = false)
-//    public GetMyResponse getMyInfo(int id){
-//
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
-//
-//        return GetMyResponse.of(user);
-//    }
+    @Override
+    @Transactional(readOnly = false)
+    public GetProfileUpdateResponse updateProfileInfo(int id, UpdateUserRequest request){
+
+        // 회원 유형 변경 시 체크
+        List<Integer> lectureIds = userLectureRepository.findLectureIdsByUserId(id);
+        int newType = "ONLINE".equalsIgnoreCase(request.getType()) ? 1 :
+                "OFFLINE".equalsIgnoreCase(request.getType()) ? 2 : 0;
+        log.info(String.valueOf(newType));
+        // 2. 변경 로직
+        if (newType == 1) { // 온라인으로 변경
+            // lectureIds 중 오프라인 강의가 있는지 확인
+            boolean hasOfflineLecture = lectureIds.stream()
+                    .anyMatch(offlineLectureRepository::existsById);
+            if (hasOfflineLecture) {
+                throw new IllegalArgumentException("오프라인 강의를 수강 중이므로 온라인 회원으로 변경할 수 없습니다.");
+            }
+        } else if (newType == 2) { // 오프라인으로 변경
+            boolean hasOnlineLecture = lectureIds.stream()
+                    .anyMatch(onlineLectureRepository::existsById);
+            if (hasOnlineLecture) {
+                throw new IllegalArgumentException("온라인 강의를 수강 중이므로 오프라인 회원으로 변경할 수 없습니다.");
+            }
+        }
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+
+        // 파일 처리
+        File file = null;
+        if (request.getFileId() != null) {
+            file = fileRepository.findById(request.getFileId())
+                    .orElseThrow(() -> new CustomException("파일이 존재하지 않습니다."));
+        }
+
+        user.updateProfile(
+                request.getName(),
+                request.getPhone().replaceAll("-", ""),
+                request.getAddress(),
+                request.getAddressDetail(),
+                request.getProfileImg(),
+                newType,
+                file
+        );
+
+        return new GetProfileUpdateResponse(
+                user.getName(),
+                user.getPhone().replaceAll("-", ""),
+                user.getAddress(),
+                user.getAddressDetail(),
+                user.getType(),
+                user.getProfileImg(),
+                user.getFile().getId(),
+                user.getFile().getUrl()
+        );
+    }
 
     // 회원 탈퇴
-//    @Override
-//    @Transactional(readOnly = false)
-//    public void deleteMyInfo(int id){
-//
-//        userRepository.findById(id)
-//                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
-//
-//        userRepository.deleteById(id);
-//    }
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteUserInfo(int id){
+
+        userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+
+        if( !relatedEntityChecker.relatedUserCheck( id ) )
+            throw new CustomException( CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
+
+        userRepository.deleteById(id);
+    }
+
 
     @Override
     public List<GetApproveOrganizationResponse> approveOrganization(int id) {

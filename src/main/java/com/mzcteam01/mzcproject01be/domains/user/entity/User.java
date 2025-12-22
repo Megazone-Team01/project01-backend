@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.user.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.file.entity.File;
+import com.mzcteam01.mzcproject01be.domains.user.dto.request.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -59,8 +61,10 @@ public class User {
     @Column( name = "deleted_at" )
     private LocalDateTime deletedAt;
 
-    @Column( name = "profile_img", nullable = true )
-    private String profileImg;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id", nullable = false)
+    private File file;
+
     // 리프레시 토큰을 위한 리프레시 토큰과 리프레시 토큰 만료일 컬럼
     private String refreshToken;
 
@@ -80,5 +84,18 @@ public class User {
     public void updateRefreshToken(String token, LocalDateTime expireAt) {
         this.refreshToken = token;
         this.refreshTokenExpireAt = expireAt;
+    }
+
+    // 마이 페이지 업데이트
+    public void updateProfile(String name, String phone, String address, String addressDetail, Integer type, File file)
+    {
+        if (name != null) { this.name = name; }
+        if (phone != null) { this.phone = phone; }
+        if (address != null) { this.address = address; }
+        if (addressDetail != null) { this.addressDetail = addressDetail; }
+        if (type != null) { this.type = type; }
+        if (file != null) {this.file = file;}
+
+        this.updatedAt = LocalDateTime.now();
     }
 }
