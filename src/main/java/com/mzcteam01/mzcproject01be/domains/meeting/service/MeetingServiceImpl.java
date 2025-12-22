@@ -49,6 +49,11 @@ public class MeetingServiceImpl implements MeetingService {
     private final QTeacherRepository qTeacherRepository;
     private final RoomRepository roomRepository;
 
+    private static final List<String> DEFAULT_TIME_SLOTS = List.of(
+            "09:00", "10:00", "11:00", "12:00", "13:00",
+            "14:00", "15:00", "16:00", "17:00", "18:00"
+    );
+
     @Override
     @Transactional
     public void create(boolean isOnline, String name, int organizationId, int teacherId, int studentId, LocalDateTime startAt, LocalDateTime endAt,
@@ -354,35 +359,33 @@ public class MeetingServiceImpl implements MeetingService {
         }
     }
 
+    @Override
+    public AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date) {
 
+        qTeacherRepository.findByTeacherId(teacherId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.TEACHER_NOT_FOUND.getMessage()));
 
-//    @Override
-//    public AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date) {
-//        // 선생님 존재 여부 확인
-//        qTeacherRepository.findByTeacherId(teacherId)
-//                .orElseThrow(() -> new CustomException(UserErrorCode.TEACHER_NOT_FOUND.getMessage()));
-//
-//        // 해당 날짜에 이미 예약된 시간대 조회
-//        Set<String> bookedTimes = getBookedTimesForDate(teacherId, date);
-//
-//        // 시간대별 상태 생성
-//        List<AvailableTimesResponse.TimeSlot> timeSlots = DEFAULT_TIME_SLOTS.stream()
-//                .map(time -> {
-//                    boolean isBooked = bookedTimes.contains(time);
-//                    return AvailableTimesResponse.TimeSlot.builder()
-//                            .time(time)
-//                            .available(!isBooked)
-//                            .status(isBooked ? "BOOKED" : "AVAILABLE")
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        return AvailableTimesResponse.builder()
-//                .teacherId(teacherId)
-//                .date(date)
-//                .timeSlots(timeSlots)
-//                .build();
-//    }
+        // 해당 날짜에 이미 예약된 시간대 조회
+        Set<String> bookedTimes = getBookedTimesForDate(teacherId, date);
+
+        // 시간대별 상태 생성
+        List<AvailableTimesResponse.TimeSlot> timeSlots = DEFAULT_TIME_SLOTS.stream()
+                .map(time -> {
+                    boolean isBooked = bookedTimes.contains(time);
+                    return AvailableTimesResponse.TimeSlot.builder()
+                            .time(time)
+                            .available(!isBooked)
+                            .status(isBooked ? "BOOKED" : "AVAILABLE")
+                            .build();
+                })
+                .toList();
+
+        return AvailableTimesResponse.builder()
+                .teacherId(teacherId)
+                .date(date)
+                .timeSlots(timeSlots)
+                .build();
+    }
 
 
     // Private 헬퍼 메서드

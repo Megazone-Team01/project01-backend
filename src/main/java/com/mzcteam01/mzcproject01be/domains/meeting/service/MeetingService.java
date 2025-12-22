@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherDetailRespo
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.TeacherListResponse;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,5 +42,7 @@ public interface MeetingService {
     void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request);
 
     void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason);
+
+    AvailableTimesResponse getAvailableTimes(int teacherId, LocalDate date);
 
 }
