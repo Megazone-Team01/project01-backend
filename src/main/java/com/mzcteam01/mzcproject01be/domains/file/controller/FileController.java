@@ -54,26 +54,4 @@ public class FileController {
         return ResponseEntity.ok( fileService.getFileWithLecture( lectureId ) );
     }
 
-    @GetMapping("/{fileName}")
-    public ResponseEntity<Resource> getFile(@PathVariable String fileName) throws IOException {
-        // URL 디코딩 (한글/공백 파일명 대응)
-        String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
-
-        Resource resource = new ClassPathResource("files/" + decodedFileName);
-        if (!resource.exists()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // 확장자별 Content-Type
-        MediaType mediaType;
-        if (decodedFileName.endsWith(".png")) mediaType = MediaType.IMAGE_PNG;
-        else if (decodedFileName.endsWith(".jpg") || decodedFileName.endsWith(".jpeg")) mediaType = MediaType.IMAGE_JPEG;
-        else if (decodedFileName.endsWith(".gif")) mediaType = MediaType.IMAGE_GIF;
-        else mediaType = MediaType.APPLICATION_OCTET_STREAM; // 기타 파일
-
-        return ResponseEntity.ok()
-                .contentType(mediaType)
-                .body(resource);
-    }
-
 }
