@@ -11,6 +11,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
+import com.mzcteam01.mzcproject01be.domains.notification.service.NotificationService;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.CreateOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.GetOrganizationRequest;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrganizationRequest;
@@ -46,6 +47,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     private final RelatedEntityChecker relatedEntityChecker;
     private final LectureFacade lectureFacade;
     private final CategoryConverter categoryConverter;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -172,6 +174,15 @@ public class OrganizationServiceImpl implements OrganizationService{
                 .createdBy( user.getId() )
                 .build();
         userOrganizationRepository.save( target );
+
+        // 알람 전달
+        // 강사가 신청한 경우 -> 대표에게 알림
+        if( user.getRole().getName().equals("TEACHER") ) {
+            String message = String.format( "새로운 강사님이 기관에 등록 신청을 했습니다");
+            notificationService.sendNotification( organization.getOwner().getId(), message );
+        }
+        // 학생이 신청한 경우 -> 강사들 + 대표에게 알림
+
     }
 
     private List<Lecture> getAllOnlineLectureByOrganizationId( int organizationId ) {
