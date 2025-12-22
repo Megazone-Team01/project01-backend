@@ -76,6 +76,20 @@ public class MeetingController {
         return ResponseEntity.ok(meetings);
     }
 
+    @GetMapping("/teacher/my")
+    @Operation(summary = "강사의 상담 요청 목록 조회",
+            description = "로그인한 강사가 자신에게상담 요청 목록을 조회함")
+    public ResponseEntity<List<MyMeetingListResponse>> getTeacherMeetings(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestParam(defaultValue = "ALL") String type,
+            @RequestParam(required = false) Integer status
+    ) {
+        int teacherId = authUser.getId();
+        ChannelType channelType = ChannelType.fromName(type);
+        List<MyMeetingListResponse> meetings = meetingService.getTeacherMeetings(teacherId, channelType, status);
+        return ResponseEntity.ok(meetings);
+    }
+
     @DeleteMapping("/{meetingId}")
     @Operation(summary = "상담 취소", description = "학생이 본인의 상담 예약을 취소함")
     public ResponseEntity<Map<String, String>> cancelMeeting(
