@@ -222,19 +222,26 @@ public class UserServiceImpl implements UserService {
         log.info(String.valueOf(newType));
         // 2. 변경 로직
         if (newType == 1) { // 온라인으로 변경
-            // lectureIds 중 오프라인 강의가 있는지 확인
             boolean hasOfflineLecture = lectureIds.stream()
                     .anyMatch(offlineLectureRepository::existsById);
+
             if (hasOfflineLecture) {
-                throw new IllegalArgumentException("오프라인 강의를 수강 중이므로 온라인 회원으로 변경할 수 없습니다.");
+                throw new CustomException(
+                        LectureErrorCode.OFFLINE_LECTURE_EXISTED.getMessage()
+                );
             }
+
         } else if (newType == 2) { // 오프라인으로 변경
             boolean hasOnlineLecture = lectureIds.stream()
                     .anyMatch(onlineLectureRepository::existsById);
+
             if (hasOnlineLecture) {
-                throw new IllegalArgumentException("온라인 강의를 수강 중이므로 오프라인 회원으로 변경할 수 없습니다.");
+                throw new CustomException(
+                        LectureErrorCode.ONLINE_LECTURE_EXISTED.getMessage()
+                );
             }
         }
+
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
