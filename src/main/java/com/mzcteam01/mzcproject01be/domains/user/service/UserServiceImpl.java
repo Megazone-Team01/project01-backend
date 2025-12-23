@@ -24,10 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -232,10 +234,19 @@ public class UserServiceImpl implements UserService {
             }
 
         } else if (newType == 2) { // 오프라인으로 변경
-            boolean hasOnlineLecture = lectureIds.stream()
-                    .anyMatch(onlineLectureRepository::existsById);
+            LocalDateTime now = LocalDateTime.now();
 
-            if (hasOnlineLecture) {
+            // 오프라인 강의 중 현재 시각이 시작~종료 사이에 있는 강의가 있는지 체크
+            boolean hasActiveOfflineLecture = lectureIds.stream()
+                    .map(offlineLectureRepository::findById)  // Optional<OfflineLecture>
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .anyMatch(lecture ->
+                            !now.isBefore(lecture.getStartAt()) &&
+                                    !now.isAfter(lecture.getEndAt())
+                    );
+
+            if (hasActiveOfflineLecture) {
                 throw new CustomException(
                         LectureErrorCode.ONLINE_LECTURE_EXISTED.getMessage()
                 );
