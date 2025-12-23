@@ -39,6 +39,7 @@ public interface MeetingService {
 
     List<MyMeetingListResponse> getMyMeetings(int studentId, ChannelType channelType, Integer status);
 
+    List<MyMeetingListResponse> getTeacherMeetings(int teacherId, ChannelType channelType, Integer status);
     void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request);
 
     void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason);
