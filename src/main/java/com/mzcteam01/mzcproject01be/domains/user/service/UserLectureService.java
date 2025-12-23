@@ -36,11 +36,12 @@ public class UserLectureService {
         if( isOnline ) onlineRepository.findById( lectureId ).orElseThrow( () -> new LectureException(LectureErrorCode.ONLINE_NOT_FOUND) );
         else offlineRepository.findById( lectureId ).orElseThrow( () -> new LectureException(LectureErrorCode.ONLINE_NOT_FOUND));
         boolean exists = userLectureRepository.existsByUserIdAndLectureId(userId, lectureId);
+        boolean isOnlineExists = userLectureRepository.existsByUserIdAndLectureIdAndIsOnlineTrue(userId,lectureId);
 
         UserStatusResponse status = qOfflineLectureRepository.status(user.getId());
 
-        if(exists){
-            log.info("exists lecture applied {} ", "이미 신청한 강의 존재합니다.");
+        if(exists && isOnlineExists){
+            log.info("exists lecture applied {} ", "이미 신청한 강의가 존재합니다.");
             throw new LectureException(LectureErrorCode.APPLIED_LECTURE);
         }
 
@@ -98,5 +99,10 @@ public class UserLectureService {
 
     public boolean UserAppliedLecture(int userId, int lectureId){
         return userLectureRepository.existsByUserIdAndLectureId(userId, lectureId);
+    }
+
+    public boolean UserAppliedOnlineLecture(int userId, int lectureId, int isOnline){
+
+        return userLectureRepository.existsByUserIdAndLectureIdAndIsOnlineTrue(userId, lectureId);
     }
 }

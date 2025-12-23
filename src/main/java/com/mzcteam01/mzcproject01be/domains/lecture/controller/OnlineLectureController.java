@@ -66,14 +66,23 @@ public class OnlineLectureController {
 
   @GetMapping("/{onlineId}")
   public ResponseEntity<LectureOnlineDetailResponse> online(
-            @PathVariable int onlineId
+            @PathVariable int onlineId,
+            Authentication authentication
   ) {
       try {
+          AuthUser authUser = (AuthUser) authentication.getPrincipal();
+          int userId = authUser.getId();
           LectureOnlineDetailResponse online = lectureService
                   .online()
                   .findLecture(onlineId);
+
+          boolean exists = userLectureService.UserAppliedOnlineLecture(userId, onlineId, 1);
+          log.info("Controller.Online.online: {}",exists);
+          LectureOnlineDetailResponse response = online.toBuilder().exists(exists).build();
+
+
           log.info("Controller.Online, onlineId: {} data : {}", onlineId,online);
-          return ResponseEntity.ok().body(online);
+          return ResponseEntity.ok().body( response);
       } catch (CustomException e){
           log.error("Controller.Online.error, onlineId: {}, error: {}", onlineId,e.getMessage());
           return ResponseEntity.badRequest().build();
