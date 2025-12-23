@@ -20,6 +20,7 @@ public class AdminGetUserOrganizationResponse {
     private String organizationName;
     private LocalDateTime registeredAt;
     private LocalDateTime expiredAt;
+    private String url;
 
     public static AdminGetUserOrganizationResponse of(UserOrganization userOrganization){
         return AdminGetUserOrganizationResponse.builder()
@@ -29,6 +30,7 @@ public class AdminGetUserOrganizationResponse {
                 .organizationId( userOrganization.getOrganization().getId() )
                 .organizationName( userOrganization.getOrganization().getName() )
                 .registeredAt( userOrganization.getRegisteredAt() )
+                .url( userOrganization.getUser().getFile() != null ? userOrganization.getUser().getFile().getUrl() : null )
                 .expiredAt( userOrganization.getExpiredAt() )
                 .build();
     }

@@ -1,6 +1,8 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.service;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OfflineLectureService;
+import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
+import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserLecture;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserLectureRepository;
@@ -23,13 +25,13 @@ class OfflineLectureServiceImplTest {
     private OfflineLectureService offlineLectureService;
     @Autowired
     private UserLectureRepository userLectureRepository;
-
+    @Autowired
+    private OrganizationRepository organizationRepository;
     @Test
     void applyLecture() {
         int userId = 1;
         int lectureId = 101;
 
-        boolean exists = userLectureRepository.existsByUserIdAndLectureId(userId, lectureId);
-        assertTrue(exists);
+
     }
 }

@@ -12,6 +12,7 @@ public enum UserErrorCode {
     DEFAULT_ROLE_NOT_FOUND("기본 사용자 권한을 찾을 수 없습니다."),
     USER_ORGANIZATION_NOT_FOUND("기관에 가입한 강사가 없습니다."),
     ROLE_NOT_FOUND("사용자 역할을 찾을 수 없습니다."),
+    USER_ALREADY_APPLIED("이미 정보가 존재합니다" ),
     LOGIN_FAILED("로그인에 실패하였습니다.");
 
     private final String message;

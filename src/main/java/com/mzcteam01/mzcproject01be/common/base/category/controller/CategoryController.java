@@ -47,4 +47,11 @@ public class CategoryController {
         categoryService.delete( id, authUser.getId());
         return ResponseEntity.ok( null );
     }
+
+    @GetMapping("/lecture")
+    public ResponseEntity<List<CategoryResponse>> getLectureCategoryTree() {
+        List<CategoryResponse> tree = categoryService.getLectureCategoryTree();
+        System.out.println(tree);
+        return ResponseEntity.ok(tree);
+    }
 }

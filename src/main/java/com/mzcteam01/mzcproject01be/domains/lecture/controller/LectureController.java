@@ -30,6 +30,7 @@ public class LectureController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String searchString
     ) {
+        // 4개?
         return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline, status, sortBy, searchString ) );
     }
 
@@ -90,7 +91,7 @@ public class LectureController {
             @PathVariable Integer id,
             @AuthenticationPrincipal AuthUser authUser
     ){
-        lectureFacade.updateLecture( id, request.isOnline(), request, authUser.getId() );
+        lectureFacade.updateLecture( id, request.getIsOnline() == 1, request, authUser.getId() );
         return ResponseEntity.ok( null );
     }
 
