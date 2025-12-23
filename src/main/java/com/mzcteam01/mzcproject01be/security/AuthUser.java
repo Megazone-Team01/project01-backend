@@ -17,12 +17,14 @@ public class AuthUser implements UserDetails {
     private String email;
     private String name;
     private String role;
+    private int type;
 
-    public AuthUser(int id, String email, String name, String role) {
+    public AuthUser(int id, String email, String name, String role, int type) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.role = role;
+        this.type = type;
     }
 
     @Override
@@ -47,6 +49,7 @@ public class AuthUser implements UserDetails {
         claims.put("email", email);
         claims.put("name", name);
         claims.put("role", role);
+        claims.put("type", type);
         return claims;
     }
 }

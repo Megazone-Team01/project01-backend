@@ -112,7 +112,8 @@ public class UserServiceImpl implements UserService {
                 "id", user.getId(),
                 "email", user.getEmail(),
                 "name", user.getName(),
-                "role", user.getRole().getName()
+                "role", user.getRole().getName(),
+                "type", user.getType()
         );
 
         // AccessToken, RefreshToken 생성
@@ -130,6 +131,7 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .name(user.getName())
                 .role(user.getRole().getName())
+                .type(user.getType())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

@@ -16,6 +16,7 @@ public class GetLoginResponse {
     private String email;
     private String name;
     private String role;
+    private int type;
 
     private String accessToken;
     private String refreshToken;
