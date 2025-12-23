@@ -12,6 +12,7 @@ import com.mzcteam01.mzcproject01be.domains.meeting.repository.OfflineMeetingRep
 import com.mzcteam01.mzcproject01be.domains.meeting.repository.OnlineMeetingRepository;
 import com.mzcteam01.mzcproject01be.domains.meeting.repository.QOfflineMeetingRepository;
 import com.mzcteam01.mzcproject01be.domains.meeting.repository.QOnlineMeetingRepository;
+import com.mzcteam01.mzcproject01be.domains.notification.service.NotificationService;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
@@ -48,6 +49,8 @@ public class MeetingServiceImpl implements MeetingService {
     private final QOfflineMeetingRepository qOfflineMeetingRepository;
     private final QTeacherRepository qTeacherRepository;
     private final RoomRepository roomRepository;
+
+    private final NotificationService notificationService;
 
     private static final List<String> DEFAULT_TIME_SLOTS = List.of(
             "09:00", "10:00", "11:00", "12:00", "13:00",
@@ -88,6 +91,9 @@ public class MeetingServiceImpl implements MeetingService {
                     .build();
             offlineMeetingRepository.save(meeting);
         }
+        // 면담이 생성된 경우 알림 전달
+        String message = "새로운 면담 신청이 접수되었습니다.";
+        notificationService.sendNotification( teacher.getId(), message );
     }
 
     @Override
@@ -337,6 +343,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     @Transactional
     public void approveMeeting(int teacherId, int meetingId, boolean isOnline, ApproveMeetingRequest request) {
+        String message ="";
         if (isOnline) {
             OnlineMeeting meeting = onlineMeetingRepository.findById(meetingId)
                     .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
@@ -350,6 +357,8 @@ public class MeetingServiceImpl implements MeetingService {
             }
 
             meeting.approve(request.getLocation());
+            message += meeting.getTeacher().getName() + " 강사님과 면담 신청이 승인되었습니다.";
+            notificationService.sendNotification( meeting.getStudent().getId(), message );
         } else {
             OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
                     .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
@@ -359,12 +368,15 @@ public class MeetingServiceImpl implements MeetingService {
             }
 
             meeting.approve();
+            message += meeting.getTeacher().getName() + " 강사님과 면담 신청이 승인되었습니다.";
+            notificationService.sendNotification( meeting.getStudent().getId(), message );
         }
     }
 
     @Override
     @Transactional
     public void rejectMeeting(int teacherId, int meetingId, boolean isOnline, String reason) {
+        String message ="";
         // 반려 사유 필수 검증
         if (reason == null || reason.isBlank()) {
             throw new CustomException(MeetingErrorCode.REJECT_REASON_REQUIRED.getMessage());
@@ -379,6 +391,8 @@ public class MeetingServiceImpl implements MeetingService {
             }
 
             meeting.reject(reason);
+            message += meeting.getTeacher().getName() + " 강사님과 면담 신청이 반려되었습니다. 사유: " + reason;
+            notificationService.sendNotification( meeting.getStudent().getId(), message );
         } else {
             OfflineMeeting meeting = offlineMeetingRepository.findById(meetingId)
                     .orElseThrow(() -> new CustomException(MeetingErrorCode.MEETING_NOT_FOUND.getMessage()));
@@ -388,6 +402,8 @@ public class MeetingServiceImpl implements MeetingService {
             }
 
             meeting.reject(reason);
+            message += meeting.getTeacher().getName() + " 강사님과 면담 신청이 반려되었습니다. 사유: " + reason;
+            notificationService.sendNotification( meeting.getStudent().getId(), message );
         }
     }
 

@@ -28,4 +28,5 @@ public class AdminCreateLectureRequest {
     private String startTimeAt;
     private String endTimeAt;
     private List<String> dayValue;
+    private Integer thumbnailId;
 }
