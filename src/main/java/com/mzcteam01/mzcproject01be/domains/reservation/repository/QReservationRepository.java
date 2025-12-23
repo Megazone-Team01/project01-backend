@@ -17,6 +17,7 @@ import java.util.List;
 public class QReservationRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final QReservation reservation = QReservation.reservation;
 
     /* 각 사용자의 예약 목록 조회 - 조회시점에서 가까운 일정순으로
     @Query(
@@ -79,5 +80,24 @@ public class QReservationRepository {
                 )
                 .orderBy(reservation.startAt.desc())
                 .fetch();
+    }
+
+    /**
+     * 특정 회의실의 특정 시간대에 예약이 있는지 확인 (중복 예약 방지)
+     */
+    public boolean existsByRoomIdAndTimeRange(int roomId, LocalDateTime startAt, LocalDateTime endAt) {
+        Long count = queryFactory
+                .select(reservation.count())
+                .from(reservation)
+                .where(
+                        reservation.room.id.eq(roomId),
+                        reservation.deletedAt.isNull(),
+                        // 시간 겹침 체크
+                        reservation.startAt.lt(endAt),
+                        reservation.endAt.gt(startAt)
+                )
+                .fetchOne();
+
+        return count != null && count > 0;
     }
 }

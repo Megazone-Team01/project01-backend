@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.entity;
 
 import com.mzcteam01.mzcproject01be.common.base.BaseEntity;
+import com.mzcteam01.mzcproject01be.domains.file.entity.File;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import jakarta.persistence.*;
@@ -46,8 +47,16 @@ public abstract class Lecture extends BaseEntity {
     @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
+    @OneToOne( fetch = FetchType.LAZY )
+    @JoinColumn( name = "thumbnail" )
+    private File thumbnailFile;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "thumbnail" )
+    private File thumbnail;
 
     public void update( String name, User teacher, Integer price, LocalDateTime startAt, LocalDateTime endAt, String description ) {
         if( name != null ) this.name = name;

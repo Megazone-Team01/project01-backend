@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.service;
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
 import com.mzcteam01.mzcproject01be.common.exception.LectureErrorCode;
 import com.mzcteam01.mzcproject01be.common.utils.CategoryConverter;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.OnlineLectureUploadRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineListResponse;
@@ -51,4 +52,10 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
         return LectureOnlineListResponse.of(onlineLecture);
     }
 
+
+    @Override
+    @Transactional
+    public void createOfflineLecture(OnlineLectureUploadRequest request, int userId) {
+
+    }
 }
