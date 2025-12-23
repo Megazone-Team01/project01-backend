@@ -193,7 +193,7 @@ public class LectureFacade {
                 );
                 result.add( lecture );
             }
-            else if( userLecture.getIsOnline() == 2 ){
+            else if( userLecture.getIsOnline() == 0 ){
                 Lecture lecture = offlineRepository.findById( userLecture.getLectureId() ).orElseThrow(
                         () -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage())
                 );
