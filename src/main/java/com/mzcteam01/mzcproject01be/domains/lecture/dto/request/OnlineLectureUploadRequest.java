@@ -36,11 +36,11 @@ public class OnlineLectureUploadRequest {
     private Integer price;
 
     @NotNull(message = "시작일은 필수입니다.")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startAt;
 
     @NotNull(message = "종료일은 필수입니다.")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endAt;
 
     @NotNull(message = "소속 기관은 필수입니다.")

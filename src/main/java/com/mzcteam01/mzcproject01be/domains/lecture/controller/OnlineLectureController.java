@@ -120,6 +120,8 @@ public class OnlineLectureController {
 
         AuthUser authUser = (AuthUser) authentication.getPrincipal();
         int userId = authUser.getId();
+        log.info("video = {}", request.getVideo());
+        log.info("name = {}", request.getName());
         log.info("orgainzaition {}",request.getOrganizationId());
         log.info("Controller.Offline.upload {}, authUser: {},offline: {}", request, authUser.getId(),request.getIsOnline());
         lectureService.online().createOfflineLecture(request, userId);
