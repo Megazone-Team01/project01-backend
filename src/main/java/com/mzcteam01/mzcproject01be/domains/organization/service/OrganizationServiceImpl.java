@@ -18,10 +18,13 @@ import com.mzcteam01.mzcproject01be.domains.organization.dto.request.UpdateOrgan
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.AdminGetOrganizationResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.dto.response.GetOrganizationResponse;
+import com.mzcteam01.mzcproject01be.domains.organization.dto.response.OrganizationWithRoomsResponse;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.QOrganizationRepository;
+import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
+import com.mzcteam01.mzcproject01be.domains.room.repository.RoomRepository;
 import com.mzcteam01.mzcproject01be.domains.user.entity.User;
 import com.mzcteam01.mzcproject01be.domains.user.entity.UserOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserOrganizationRepository;
@@ -49,6 +52,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     private final RelatedEntityChecker relatedEntityChecker;
     private final LectureFacade lectureFacade;
     private final CategoryConverter categoryConverter;
+    private final RoomRepository roomRepository;
     private final NotificationService notificationService;
 
     @Override
@@ -155,6 +159,33 @@ public class OrganizationServiceImpl implements OrganizationService{
             List<String> categoryLayer = categoryConverter.fullCodeToLayer( lecture.getCategory() );
             return AdminGetLectureResponse.of( lecture, null, categoryLayer );
         }).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganizationWithRoomsResponse> getOrganizationsWithRooms() {
+        List<Organization> organizations = organizationRepository.findAllByDeletedAtIsNull();
+
+        return organizations.stream()
+                .map(org -> {
+                    List<Room> rooms = roomRepository.findAllByOrganizationIdAndDeletedAtIsNull(org.getId());
+
+                    List<OrganizationWithRoomsResponse.RoomInfo> roomInfos = rooms.stream()
+                            .map(room -> OrganizationWithRoomsResponse.RoomInfo.builder()
+                                    .id(room.getId())
+                                    .name(room.getName())
+                                    .maxNum(room.getMaxNum())
+                                    .location(room.getLocation())
+                                    .build())
+                            .toList();
+
+                    return OrganizationWithRoomsResponse.builder()
+                            .id(org.getId())
+                            .name(org.getName())
+                            .rooms(roomInfos)
+                            .build();
+                })
+                .toList();
     }
 
     @Override

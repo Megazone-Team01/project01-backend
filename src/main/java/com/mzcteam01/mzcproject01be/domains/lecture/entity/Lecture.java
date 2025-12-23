@@ -47,6 +47,10 @@ public abstract class Lecture extends BaseEntity {
     @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
+    @OneToOne( fetch = FetchType.LAZY )
+    @JoinColumn( name = "thumbnail" )
+    private File thumbnailFile;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 

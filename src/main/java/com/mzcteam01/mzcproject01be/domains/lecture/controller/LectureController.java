@@ -30,6 +30,7 @@ public class LectureController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String searchString
     ) {
+        // 4개?
         return ResponseEntity.ok( lectureFacade.getAllLecturesWithFilter( isOnline, status, sortBy, searchString ) );
     }
 

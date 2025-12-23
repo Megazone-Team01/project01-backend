@@ -1,12 +1,13 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.controller;
 
 import com.mzcteam01.mzcproject01be.common.exception.CustomException;
+import com.mzcteam01.mzcproject01be.domains.lecture.dto.request.OnlineLectureUploadRequest;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.*;
 import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserLectureService;
-import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -108,5 +109,23 @@ public class OnlineLectureController {
         userLectureService.delete(userId, onlineId, true);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadOffline(
+            @Valid @ModelAttribute OnlineLectureUploadRequest request,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication
+    ){
+
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        int userId = authUser.getId();
+        log.info("video = {}", request.getVideo());
+        log.info("name = {}", request.getName());
+        log.info("orgainzaition {}",request.getOrganizationId());
+        log.info("Controller.Offline.upload {}, authUser: {},offline: {}", request, authUser.getId(),request.getIsOnline());
+        lectureService.online().createOfflineLecture(request, userId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

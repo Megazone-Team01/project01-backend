@@ -45,7 +45,7 @@ public class OrganizationController {
     public ResponseEntity<List<GetOrganizationTeacherResponse>> findAllTeachersInOrganization(
             @PathVariable int organizationId
     ){
-        //return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
+//        return ResponseEntity.ok( service.findOrganizationTeacher( organizationId ) );
         return null;
     }
 
@@ -123,6 +123,11 @@ public class OrganizationController {
             @PathVariable int id
     ){
         return ResponseEntity.ok( service.getDetailById( id ) );
+    }
+    @GetMapping("/with-rooms")
+    public ResponseEntity<List<OrganizationWithRoomsResponse>> getOrganizationsWithRooms() {
+        List<OrganizationWithRoomsResponse> data = service.getOrganizationsWithRooms();
+        return ResponseEntity.ok(data);
     }
 
     @PostMapping("/apply/{organizationId}")
