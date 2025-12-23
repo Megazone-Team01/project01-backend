@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
+import com.mzcteam01.mzcproject01be.domains.user.entity.QUserLecture;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
@@ -26,6 +27,7 @@ public class QOnlineLectureRepository {
     private final JPAQueryFactory queryFactory;
     QOrganization organization = QOrganization.organization;
     QUser user = QUser.user;
+    QUserLecture userLecture = QUserLecture.userLecture;
 
     public Optional<OnlineLecture> findById(int id){
         return Optional.ofNullable(
@@ -40,19 +42,40 @@ public class QOnlineLectureRepository {
         );
     }
 
-    public Page<OnlineLecture> findOnlineLectures(Integer SearchType, Pageable pageable,String keyword) {
-        log.info("findOnlineLectures start: "+keyword);
-        List<OnlineLecture> online = queryFactory
-                .selectFrom(onlineLecture)
-                .where(keywordContains(keyword))
-                .orderBy(getCreatedOrder(SearchType, onlineLecture.createdAt))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+
+    public Page<OnlineLecture> findOnlineLectures(Integer searchType, Pageable pageable, String keyword) {
+        log.info("findOnlineLectures start: " + keyword);
+
+        List<OnlineLecture> online;
+
+        if (searchType != null && searchType == 3) {
+            // 인기순: Join + GroupBy 사용
+            online = queryFactory
+                    .select(onlineLecture)
+                    .from(onlineLecture)
+                    .leftJoin(userLecture)
+                    .on(userLecture.lectureId.eq(onlineLecture.id).and(userLecture.isOnline.eq(1)))
+                    .where(keywordContains(keyword))
+                    .groupBy(onlineLecture.id)
+                    .orderBy(userLecture.count().desc())
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+        } else {
+            // 날짜순 (최신순/오래된순)
+            online = queryFactory
+                    .selectFrom(onlineLecture)
+                    .where(keywordContains(keyword))
+                    .orderBy(getCreatedOrder(searchType, onlineLecture.startAt))
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+        }
 
         Long total = queryFactory
                 .select(onlineLecture.count())
                 .from(onlineLecture)
+                .where(keywordContains(keyword))
                 .fetchOne();
 
         return new PageImpl<>(online, pageable, total == null ? 0L : total);
@@ -68,11 +91,12 @@ public class QOnlineLectureRepository {
 
     private OrderSpecifier<?> getCreatedOrder(
             Integer searchType,
-            ComparableExpressionBase<?> createdAt
+            ComparableExpressionBase<?> startAt
     ) {
         return (searchType == null || searchType == 1) ?
-                createdAt.desc() :
-                createdAt.asc();
+                    startAt.asc()
+                    :startAt.desc();
+
     }
 
     private BooleanExpression keywordContains(String keyword){
@@ -81,5 +105,6 @@ public class QOnlineLectureRepository {
         }
         return onlineLecture.name.containsIgnoreCase(keyword);
     }
+
 
 }
