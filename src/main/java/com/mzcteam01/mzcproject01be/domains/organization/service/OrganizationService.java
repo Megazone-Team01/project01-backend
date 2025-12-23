@@ -21,6 +21,6 @@ public interface OrganizationService {
     List<GetOrganizationResponse> list( GetOrganizationRequest request );
     AdminGetOrganizationResponse findById( int id );
     AdminGetOrganizationDetailResponse getDetailById( int id );
-
     List<AdminGetLectureResponse> findLecturesByOrganizationId( int id );
+    void apply( int organizationId, int userId );
 }

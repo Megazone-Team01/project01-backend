@@ -45,7 +45,7 @@ public class AdminGetUserDetailResponse {
                 .createdAt( user.getCreatedAt() )
                 .updatedAt( user.getUpdatedAt() )
                 .deletedAt( user.getDeletedAt() )
-                .profileImage( user.getFile().getUrl() )
+                .profileImage( user.getFile() != null ? user.getFile().getUrl() : null )
                 .lectures( lecture )
                 .organizations( organization )
                 .build();

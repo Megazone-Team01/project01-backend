@@ -78,7 +78,7 @@ public class MeetingController {
 
     @GetMapping("/teacher/my")
     @Operation(summary = "강사의 상담 요청 목록 조회",
-            description = "로그인한 강사가 자신에게상담 요청 목록을 조회함")
+            description = "로그인한 강사가 자신에게 온 상담 요청 목록을 조회함")
     public ResponseEntity<List<MyMeetingListResponse>> getTeacherMeetings(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestParam(defaultValue = "ALL") String type,

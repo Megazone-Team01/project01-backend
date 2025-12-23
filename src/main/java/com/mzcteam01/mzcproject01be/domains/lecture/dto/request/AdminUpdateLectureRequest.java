@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AdminUpdateLectureRequest {
-    private boolean isOnline;
+    private int isOnline;
     private String name;
     private Integer price;
     private LocalDateTime startAt;
