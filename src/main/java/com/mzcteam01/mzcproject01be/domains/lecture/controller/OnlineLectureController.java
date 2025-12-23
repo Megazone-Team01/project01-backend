@@ -37,6 +37,7 @@ public class OnlineLectureController {
         List<GetLectureResponse> online = lectureService
                 .online()
                 .getTop9Lectures(null);
+        log.info("Controller.Get.HomeOnline {}", online);
         return ResponseEntity.ok(online);
     }
 
@@ -77,12 +78,14 @@ public class OnlineLectureController {
                   .findLecture(onlineId);
 
           boolean exists = userLectureService.UserAppliedOnlineLecture(userId, onlineId, 1);
-          log.info("Controller.Online.online: {}",exists);
-          LectureOnlineDetailResponse response = online.toBuilder().exists(exists).build();
 
+          log.info("Controller.Online.online: {}",exists);
+          online.setExists(exists);
+
+          log.info("Controller.Online.online: {}",online);
 
           log.info("Controller.Online, onlineId: {} data : {}", onlineId,online);
-          return ResponseEntity.ok().body( response);
+          return ResponseEntity.ok().body( online);
       } catch (CustomException e){
           log.error("Controller.Online.error, onlineId: {}, error: {}", onlineId,e.getMessage());
           return ResponseEntity.badRequest().build();

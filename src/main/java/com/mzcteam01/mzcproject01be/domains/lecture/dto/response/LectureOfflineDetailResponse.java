@@ -1,10 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.dto.response;
 
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 @Builder(toBuilder = true)
 public class LectureOfflineDetailResponse {
     private String name;
@@ -26,6 +24,7 @@ public class LectureOfflineDetailResponse {
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private boolean exists;
+    private String thumbnail;
 
     public static LectureOfflineDetailResponse of(OfflineLecture offline, List<String> categoryLayer ){
         return LectureOfflineDetailResponse.builder()
@@ -33,6 +32,7 @@ public class LectureOfflineDetailResponse {
                 .teacherName(offline.getTeacher().getName())
                 .organizationName(offline.getOrganization().getName())
                 .organizationDescription(offline.getOrganization().getDescription())
+                .thumbnail(offline.getThumbnailFile() != null ? offline.getThumbnailFile().getUrl() : null)
                 .day(offline.getDay())
                 .category( categoryLayer )
                 .maxNum(offline.getMaxNum())

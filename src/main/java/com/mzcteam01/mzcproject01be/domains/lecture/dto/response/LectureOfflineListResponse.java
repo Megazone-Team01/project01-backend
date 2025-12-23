@@ -20,6 +20,8 @@ public class LectureOfflineListResponse {
     private long totalElements;
     private boolean hasNext;
     private boolean hasPrevious;
+    private String thumbnail;
+
 
     public static LectureOfflineListResponse of(Page<OfflineLecture> page) {
         List<GetLectureResponse> offline = page.stream()
