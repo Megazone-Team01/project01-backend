@@ -275,7 +275,7 @@ public class UserServiceImpl implements UserService {
         if( !relatedEntityChecker.relatedUserCheck( id ) )
             throw new CustomException( CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
 
-        user.delete(id);
+        user.delete();
     }
 
 
