@@ -9,7 +9,9 @@ public enum LectureErrorCode {
     ONLINE_NOT_FOUND("존재하지 않는 온라인강의입니다!",HttpStatus.NOT_FOUND),
     LECTURE_TYPE_ERROR("강의 유형이 잘못되었습니다", HttpStatus.BAD_REQUEST),
     STATUS_NOT_APPROVED("승인되지 않았습니다. 기관에 문의하십시오!",HttpStatus.FORBIDDEN),
-    APPLIED_LECTURE("이미 신청한 강의입니다!",HttpStatus.CONFLICT);
+    APPLIED_LECTURE("이미 신청한 강의입니다!",HttpStatus.CONFLICT),
+    ONLINE_LECTURE_EXISTED("온라인 강의를 수강 중이므로 오프라인 회원으로 변경할 수 없습니다.",HttpStatus.BAD_REQUEST),
+    OFFLINE_LECTURE_EXISTED("오프라인 강의를 수강 중이므로 온라인 회원으로 변경할 수 없습니다.",HttpStatus.BAD_REQUEST);
 
 
     private final String message;
