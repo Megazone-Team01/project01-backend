@@ -59,7 +59,9 @@ public class UserServiceImpl implements UserService {
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
             throw new CustomException(UserErrorCode.PASSWORD_NOT_MATCH.getMessage());
         }
-
+        userRepository.findByEmail(request.getEmail())
+                .ifPresent(user -> log.info("User found: id={}, email={}, name={}", user.getId(), user.getEmail(), user.getName()));
+        // User found: id=11, email=Mindun334@naver.com, name=박민둔
         // 이메일 중복 체크
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new CustomException(UserErrorCode.EMAIL_ALREADY_EXISTS.getMessage());
@@ -223,17 +225,17 @@ public class UserServiceImpl implements UserService {
                 "OFFLINE".equalsIgnoreCase(request.getType()) ? 2 : 0;
         log.info(String.valueOf(newType));
         // 2. 변경 로직
-        if (newType == 1) { // 온라인으로 변경
+        if (newType == 2) { // 오프라인으로 변경
             boolean hasOfflineLecture = lectureIds.stream()
                     .anyMatch(offlineLectureRepository::existsById);
 
             if (hasOfflineLecture) {
                 throw new CustomException(
-                        LectureErrorCode.OFFLINE_LECTURE_EXISTED.getMessage()
+                        LectureErrorCode.ONLINE_LECTURE_EXISTED.getMessage()
                 );
             }
 
-        } else if (newType == 2) { // 오프라인으로 변경
+        } else if (newType == 1) { // 온라인으로 변경
             LocalDateTime now = LocalDateTime.now();
 
             // 오프라인 강의 중 현재 시각이 시작~종료 사이에 있는 강의가 있는지 체크
@@ -248,7 +250,7 @@ public class UserServiceImpl implements UserService {
 
             if (hasActiveOfflineLecture) {
                 throw new CustomException(
-                        LectureErrorCode.ONLINE_LECTURE_EXISTED.getMessage()
+                        LectureErrorCode.OFFLINE_LECTURE_EXISTED.getMessage()
                 );
             }
         }
