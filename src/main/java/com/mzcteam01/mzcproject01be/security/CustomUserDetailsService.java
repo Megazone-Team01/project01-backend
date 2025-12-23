@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // 인증된 사용자 정보를 담음
         AuthUser authUser = new AuthUser(user.getId(),user.getEmail(), user.getName(),
-                user.getRole().getName());
+                user.getRole().getName(), user.getType());
 
 
         return authUser;
