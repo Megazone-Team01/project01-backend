@@ -269,13 +269,13 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = false)
     public void deleteUserInfo(int id){
 
-        userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
 
         if( !relatedEntityChecker.relatedUserCheck( id ) )
             throw new CustomException( CommonErrorCode.RELATED_ENTITY_EXISTED.getMessage());
 
-        userRepository.deleteById(id);
+        user.delete(id);
     }
 
 
