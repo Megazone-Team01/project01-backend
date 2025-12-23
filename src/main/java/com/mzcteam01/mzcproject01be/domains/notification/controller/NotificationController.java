@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.notification.controller;
 
 import com.mzcteam01.mzcproject01be.domains.notification.repository.EmitterRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@Tag( name = "알람 SSE" )
+@Tag( name = "알람 SSE", description = "실시간 알람을 위한 API")
 @Slf4j
 @RequestMapping("/api/v1/sse")
 public class NotificationController {
     private final EmitterRepository emitterRepository;
 
     @GetMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation( summary = "실시간 알람을 위해 클라이언트와 서버 연결")
     public SseEmitter connect(@RequestParam Integer userId) {
         SseEmitter emitter = new SseEmitter(30 * 60 * 1000L);
 
@@ -55,6 +57,7 @@ public class NotificationController {
     }
 
     @PostMapping("/send/{userId}")
+    @Operation( summary = "사용자에게 알람 전달")
     public ResponseEntity<String> sendToUser(
             @PathVariable Integer userId,
             @RequestBody Map<String, Object> data) {

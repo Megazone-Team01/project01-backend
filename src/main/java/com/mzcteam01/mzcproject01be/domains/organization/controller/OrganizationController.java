@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping( "/api/v1/organization" )
-@Tag( name = "Organization Controller", description = "아카데미(기관)에 대한 API" )
+@Tag( name = "Organization", description = "아카데미(기관)에 대한 API" )
 public class OrganizationController {
     private final OrganizationService service;
 
@@ -125,13 +125,14 @@ public class OrganizationController {
         return ResponseEntity.ok( service.getDetailById( id ) );
     }
     @GetMapping("/with-rooms")
+    @Operation( summary = "해당 기관의 강의실 목록을 함께 조회")
     public ResponseEntity<List<OrganizationWithRoomsResponse>> getOrganizationsWithRooms() {
         List<OrganizationWithRoomsResponse> data = service.getOrganizationsWithRooms();
         return ResponseEntity.ok(data);
     }
 
     @PostMapping("/apply/{organizationId}")
-    @Operation( summary = "해당 기관에 등록 신청하는 API" )
+    @Operation( summary = "해당 기관에 등록 신청" )
     public ResponseEntity<Void> applyOrganization(
             @PathVariable int organizationId,
             @AuthenticationPrincipal AuthUser authUser

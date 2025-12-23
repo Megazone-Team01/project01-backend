@@ -7,6 +7,8 @@ import com.mzcteam01.mzcproject01be.domains.lecture.enums.SearchType;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserLectureService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/lecture/online")
+@Tag( name = "Online Lecture", description = "온라인 강의에 대한 API")
 public class OnlineLectureController {
 
     private final LectureService lectureService;
@@ -32,6 +35,7 @@ public class OnlineLectureController {
 
 
     @GetMapping
+    @Operation( summary = "홈 화면에서 온라인 강의를 조회" )
     public ResponseEntity<List<GetLectureResponse>> homeOnline(){
         log.info("Controller.Get.HomeOnline");
         List<GetLectureResponse> online = lectureService
@@ -41,6 +45,7 @@ public class OnlineLectureController {
     }
 
     @GetMapping("/courses")
+    @Operation( summary = "온라인 강의 목록 조회")
     public ResponseEntity<LectureOnlineListResponse> onlineList(
             @RequestParam(required = false) Integer searchTypeCode,
             @RequestParam(defaultValue = "1") int page,
@@ -65,6 +70,7 @@ public class OnlineLectureController {
     }
 
   @GetMapping("/{onlineId}")
+  @Operation( summary = "특정 온라인 강의에 대한 상세 조회")
   public ResponseEntity<LectureOnlineDetailResponse> online(
             @PathVariable int onlineId,
             Authentication authentication
@@ -90,7 +96,8 @@ public class OnlineLectureController {
   }
 
   @PostMapping("{onlineId}")
-    public ResponseEntity<UserEnrolledResponse> apply(
+  @Operation( summary = "온라인 강의에 강의 신청")
+  public ResponseEntity<UserEnrolledResponse> apply(
           @PathVariable int onlineId,
           @AuthenticationPrincipal UserDetails userDetails,
           Authentication authentication
@@ -107,6 +114,7 @@ public class OnlineLectureController {
   }
 
     @DeleteMapping("{onlineId}")
+    @Operation( summary = "특정 온라인 강의를 삭제")
     public ResponseEntity<?> delete(
             @PathVariable int onlineId,
             Authentication authentication
@@ -121,6 +129,7 @@ public class OnlineLectureController {
     }
 
     @PostMapping("/upload")
+    @Operation( summary = "오프라인 강의 생성")
     public ResponseEntity<?> uploadOffline(
             @Valid @ModelAttribute OnlineLectureUploadRequest request,
             @AuthenticationPrincipal UserDetails userDetails,

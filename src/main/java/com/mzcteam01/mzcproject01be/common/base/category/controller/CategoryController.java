@@ -16,12 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/category" )
 @RequiredArgsConstructor
-@Tag( name = "Category Controller", description = "카테고리 관련 컨트롤러" )
+@Tag( name = "Category", description = "카테고리 관련 API" )
 public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping()
-    @Operation( summary = "카테고리 조회 API" )
+    @Operation( summary = "카테고리 조회" )
     public ResponseEntity<List<CategoryResponse>> getCategory(
         @RequestParam(required = false) Integer parentId
     ){
@@ -49,6 +49,7 @@ public class CategoryController {
     }
 
     @GetMapping("/lecture")
+    @Operation( summary = "강의에 대한 카테고리 계층 조회")
     public ResponseEntity<List<CategoryResponse>> getLectureCategoryTree() {
         List<CategoryResponse> tree = categoryService.getLectureCategoryTree();
         System.out.println(tree);

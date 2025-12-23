@@ -12,6 +12,8 @@ import com.mzcteam01.mzcproject01be.domains.lecture.service.LectureFacade;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.LectureService;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserLectureService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +31,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/lecture/offline")
 @RequiredArgsConstructor
+@Tag( name = "Offline Lecture", description = "오프라인 강의에 관한 API")
 public class OfflineLectureController {
 
     private final LectureService lectureService;
     private final UserLectureService userLectureService;
 
     @GetMapping
+    @Operation( summary = "메인 화면에서 오프라인 강의를 조회")
     public ResponseEntity<List<GetLectureResponse>> homeOffline() {
         log.info("Controller.Get.HomeOffline");
         List<GetLectureResponse> offline = lectureService
@@ -44,6 +48,7 @@ public class OfflineLectureController {
     }
 
     @GetMapping("/courses")
+    @Operation( summary = "오프라인 강의 목록을 조회")
     public ResponseEntity<LectureOfflineListResponse> offlineList(
             @RequestParam(required = false) Integer searchTypeCode,
             @RequestParam(defaultValue = "1") int page,
@@ -68,6 +73,7 @@ public class OfflineLectureController {
     }
 
     @GetMapping("/{offlineId}")
+    @Operation( summary = "특정 오프라인 강의 상세 조회")
     public ResponseEntity<LectureOfflineDetailResponse> offline(
             @PathVariable int offlineId,
             Authentication authentication
@@ -92,6 +98,7 @@ public class OfflineLectureController {
     }
 
     @PostMapping("/{offlineId}")
+    @Operation(summary = "오프라인 강의에 신청")
     public ResponseEntity<UserEnrolledResponse> apply(
             @PathVariable int offlineId,
             @AuthenticationPrincipal UserDetails userDetails,
@@ -109,6 +116,7 @@ public class OfflineLectureController {
 
     }
 
+    @Operation( summary = "오프라인 강의 삭제")
     @DeleteMapping("{offlineId}")
     public ResponseEntity<?> delete(
             @PathVariable int offlineId,
@@ -124,6 +132,7 @@ public class OfflineLectureController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation( summary = "오프라인 강의 생성")
     @PostMapping("/upload")
     public ResponseEntity<?> uploadOffline(
             @Valid @ModelAttribute OfflineLectureUploadRequest request,

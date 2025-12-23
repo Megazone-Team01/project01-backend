@@ -11,6 +11,7 @@ import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetProfileResponse
 import com.mzcteam01.mzcproject01be.domains.user.dto.response.GetUserResponse;
 import com.mzcteam01.mzcproject01be.domains.user.service.UserService;
 import com.mzcteam01.mzcproject01be.security.AuthUser;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,27 +29,28 @@ import java.util.Map;
 @RequestMapping("/api/v1/user")
 @RestController
 @RequiredArgsConstructor
+@Tag( name = "User", description = "사용자 관련 API")
 public class UserController {
 
     private final UserService userService;
     private final UserOrganizationService userOrganizationService;
 
     @PostMapping("/signup")
-    @Operation(summary = "회원가입 API", description = "신규 사용자를 가입시키고 사용자 정보를 반환합니다.")
+    @Operation(summary = "회원가입", description = "신규 사용자를 가입시키고 사용자 정보를 반환합니다.")
     public ResponseEntity<GetUserResponse> signup(@RequestBody CreateUserRequest createUserRequest) {
         GetUserResponse user = userService.signup(createUserRequest);
         return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/login")
-    @Operation(summary = "로그인 API", description = "사용자 로그인 후 토큰 및 사용자 정보를 반환합니다.")
+    @Operation(summary = "로그인", description = "사용자 로그인 후 토큰 및 사용자 정보를 반환합니다.")
     public ResponseEntity<GetLoginResponse> login(@RequestBody LoginRequest loginRequest) {
         GetLoginResponse user = userService.login(loginRequest);
         return ResponseEntity.ok().body(user);
     }
 
     @GetMapping()
-    @Operation( summary = "모든 사용자 조회 API" )
+    @Operation( summary = "모든 사용자 조회" )
     public ResponseEntity<List<AdminGetUserResponse>> getUser(
             @ModelAttribute GetUserRequest request
     ) {
@@ -56,7 +58,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @Operation( summary = "특정 사용자 상세 조회 API" )
+    @Operation( summary = "특정 사용자 상세 조회" )
     public ResponseEntity<AdminGetUserDetailResponse> getUserDetailById(
             @PathVariable Integer id
     ){
@@ -64,7 +66,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation( summary = "사용자 삭제 API" )
+    @Operation( summary = "사용자 삭제" )
     public ResponseEntity<Void> deleteUser(
             @PathVariable Integer id,
             @AuthenticationPrincipal AuthUser authUser
@@ -132,7 +134,7 @@ public class UserController {
     }
 
     @PatchMapping("/update/{id}/admin")
-    @Operation( summary = "관리자의 사용자 업데이트 API" )
+    @Operation( summary = "관리자의 사용자 업데이트" )
     public ResponseEntity<GetProfileUpdateResponse> putMyInfo(
             @RequestBody UpdateUserRequest request,
             @PathVariable Integer id

@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/lectures")
 @RequiredArgsConstructor
-@Tag( name = "Lecture Controller", description = "통합 강의 관련 컨트롤러 ")
+@Tag( name = "Lecture", description = "통합 강의 관련 API")
 public class LectureController {
     private final LectureFacade lectureFacade;
 

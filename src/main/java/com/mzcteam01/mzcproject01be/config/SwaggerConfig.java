@@ -25,8 +25,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Team Project 01 API Swagger") // API의 제목
-                .description("팀프로젝트1 API 명세") // API에 대한 설명
+                .title("LinkEd Service API Swagger") // API의 제목
+                .description("LinkEd 서비스에 대한 API 명세") // API에 대한 설명
                 .version("1.0.0"); // API의 버전
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/day")
 @RequiredArgsConstructor
-@Tag( name = "Day Controller", description = "요일 관련 컨트롤러" )
+@Tag( name = "Day", description = "요일 관련 API" )
 public class DayController {
     private final DayService dayService;
 
