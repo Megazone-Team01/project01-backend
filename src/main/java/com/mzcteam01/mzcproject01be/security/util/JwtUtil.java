@@ -57,15 +57,19 @@ public class JwtUtil {
                     .getBody();
 
         } catch (MalformedJwtException e) {
+            log.info("MalformedJwtException");
             throw new CustomJwtException(JwtErrorCode.MALFORMED_TOKEN);
         } catch (ExpiredJwtException e) {
             log.info("token expired");
             throw e;
         } catch (InvalidClaimException e) {
+            log.info("token invalid");
             throw new CustomJwtException(JwtErrorCode.INVALID_CLAIM);
         } catch (io.jsonwebtoken.JwtException e) { // 서명 검증 실패 등
+            log.info("token expired");
             throw new CustomJwtException(JwtErrorCode.JWT_ERROR);
         } catch (Exception e) {
+            log.info("token error");
             throw new CustomJwtException(JwtErrorCode.GENERAL_ERROR);
         }
 

@@ -259,8 +259,8 @@ public class UserServiceImpl implements UserService {
                 user.getAddress(),
                 user.getAddressDetail(),
                 user.getType(),
-                user.getFile().getId(),
-                user.getFile().getUrl()
+                user.getFile() != null ? user.getFile().getId() : null,
+                user.getFile() != null ? user.getFile().getUrl() : ""
         );
     }
 
@@ -284,9 +284,6 @@ public class UserServiceImpl implements UserService {
         // ownerId가 소유자인 조직 중 status=0(가입요청 상태)인 모든 UserOrganization 조회
         List<UserOrganization> requests = qUserOrganizationRepository.findActiveByUserAndOwner(id);
 
-        if (requests.isEmpty()) {
-            throw new CustomException(UserErrorCode.USER_ORGANIZATION_NOT_FOUND.getMessage());
-        }
 
         // UserOrganization 객체 전체를 DTO로 변환
         List<GetApproveOrganizationResponse> responseList = requests.stream()

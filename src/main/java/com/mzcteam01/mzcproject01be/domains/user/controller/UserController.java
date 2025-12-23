@@ -34,12 +34,14 @@ public class UserController {
     private final UserOrganizationService userOrganizationService;
 
     @PostMapping("/signup")
+    @Operation(summary = "회원가입 API", description = "신규 사용자를 가입시키고 사용자 정보를 반환합니다.")
     public ResponseEntity<GetUserResponse> signup(@RequestBody CreateUserRequest createUserRequest) {
         GetUserResponse user = userService.signup(createUserRequest);
         return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/login")
+    @Operation(summary = "로그인 API", description = "사용자 로그인 후 토큰 및 사용자 정보를 반환합니다.")
     public ResponseEntity<GetLoginResponse> login(@RequestBody LoginRequest loginRequest) {
         GetLoginResponse user = userService.login(loginRequest);
         return ResponseEntity.ok().body(user);
@@ -86,6 +88,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
+    @Operation(summary = "내 프로필 조회", description = "로그인한 사용자의 프로필 정보를 조회합니다.")
     public ResponseEntity<GetProfileResponse> getProfileInfo(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
 
@@ -95,6 +98,7 @@ public class UserController {
     }
 
     @PutMapping("/profile")
+    @Operation(summary = "내 프로필 수정", description = "로그인한 사용자가 자신의 프로필 정보를 수정합니다.")
     public ResponseEntity<GetProfileUpdateResponse> putMyInfo(@AuthenticationPrincipal AuthUser authUser,
                                                         @RequestBody UpdateUserRequest request) {
         int id = authUser.getId();
@@ -103,6 +107,7 @@ public class UserController {
     }
 
     @DeleteMapping("/profile")
+    @Operation(summary = "회원 탈퇴", description = "로그인한 사용자가 자신의 계정을 삭제합니다.")
     public ResponseEntity<Map<String,String>> deleteMyInfo(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
         userService.deleteUserInfo(id);
@@ -111,6 +116,7 @@ public class UserController {
 
     // 기관 승인 요청 화면의 조회
     @GetMapping("/approveOrganization")
+    @Operation(summary = "기관 승인 요청 조회", description = "로그인한 사용자의 기관 승인 요청 목록을 조회합니다.")
     public ResponseEntity<List<GetApproveOrganizationResponse>> getApproveOrganization(@AuthenticationPrincipal AuthUser authUser) {
         int id = authUser.getId();
         List<GetApproveOrganizationResponse> users = userService.approveOrganization(id);
@@ -119,6 +125,7 @@ public class UserController {
 
     // 기관 승인 요청 화면의 승인, 거절 처리
     @PatchMapping("/approveOrganization")
+    @Operation(summary = "기관 승인 요청 처리", description = "기관 승인 요청에 대해 승인/거절 처리를 합니다.")
     public ResponseEntity<Map<String,String>> updateStatus(@RequestBody UpdateStatusUserOrganizationRequest request) {
         userService.updateStatusUserOrganization(request);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","처리 완료하였습니다."));
