@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class LectureOfflineDetailResponse {
     private String name;
     private String description;
@@ -25,6 +25,7 @@ public class LectureOfflineDetailResponse {
     private int maxNum;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
+    private boolean exists;
 
     public static LectureOfflineDetailResponse of(OfflineLecture offline, List<String> categoryLayer ){
         return LectureOfflineDetailResponse.builder()

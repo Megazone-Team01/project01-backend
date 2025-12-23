@@ -95,4 +95,8 @@ public class UserLectureService {
         else lectureName = offlineRepository.findById(userLecture.getLectureId()).orElseThrow( () -> new CustomException("해당 강의 등록이 존재하지 않습니다" ) ).getName();
         return AdminGetUserLectureResponse.of( userLecture, lectureName );
     }
+
+    public boolean UserAppliedLecture(int userId, int lectureId){
+        return userLectureRepository.existsByUserIdAndLectureId(userId, lectureId);
+    }
 }
