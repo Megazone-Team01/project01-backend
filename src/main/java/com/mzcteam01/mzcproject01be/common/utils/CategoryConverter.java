@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class CategoryConverter {
     // - ex. TDSF -> [ '프로그래밍', 'Java', 'Spring Boot', 'JPA' ]
     public List<String> fullCodeToLayer( String fullString ){
         List<String> layers = new ArrayList<>();
-        String[] codes = fullString.split("_");
+        String[] codes = fullString.split("");
         for( String code : codes ){
             Category category = categoryRepository.findByCode(code).orElseThrow(
                     () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
