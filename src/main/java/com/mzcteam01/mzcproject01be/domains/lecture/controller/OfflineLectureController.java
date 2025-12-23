@@ -44,6 +44,8 @@ public class OfflineLectureController {
         List<GetLectureResponse> offline = lectureService
                 .offline()
                 .getTop9Lectures(null);
+        log.info("Controller.Get.HomeOffline {}", offline.toString());
+
         return ResponseEntity.ok(offline);
     }
 
@@ -63,7 +65,7 @@ public class OfflineLectureController {
 
             log.info("검색 조건: {} ({})", searchType.getCategorys(), searchType.getCode());
 //            log.info("searchKeyword: {}", searchKeyword);
-            LectureOfflineListResponse response = lectureService.offline().getAllLectures(searchType.getCode(), page,keyword);
+            LectureOfflineListResponse response = lectureService.offline().getAllLectures(searchType.getCode(), page, keyword);
             return ResponseEntity.ok().body(response);
         } catch (Exception e){
             log.error("error : {}",e.getMessage());
@@ -84,13 +86,11 @@ public class OfflineLectureController {
             LectureOfflineDetailResponse offline = lectureService.offline().findLecture(offlineId);
             boolean exists = userLectureService.UserAppliedLecture(userId, offlineId);
 
-            LectureOfflineDetailResponse response = offline.toBuilder()
-                    .exists(exists)
-                    .build();
+           offline.setExists(exists);
 
 
             log.info("Controller.Offline.offline, offlineId: {} data : {}", offlineId,offline);
-            return ResponseEntity.ok().body(response);
+            return ResponseEntity.ok().body(offline);
         } catch (CustomException e){
             log.error("Controller.Offline.error, offlineId: {}, error: {}", offlineId,e.getMessage());
             return ResponseEntity.badRequest().build();

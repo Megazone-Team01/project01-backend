@@ -1,5 +1,6 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl;
 
+import com.mzcteam01.mzcproject01be.domains.file.entity.QFile;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
 import com.mzcteam01.mzcproject01be.domains.user.entity.QUser;
@@ -28,11 +29,13 @@ public class QOnlineLectureRepository {
     QOrganization organization = QOrganization.organization;
     QUser user = QUser.user;
     QUserLecture userLecture = QUserLecture.userLecture;
+    QFile file = QFile.file;
 
     public Optional<OnlineLecture> findById(int id){
         return Optional.ofNullable(
                 queryFactory
                         .selectFrom(onlineLecture)
+                        .join(onlineLecture.thumbnailFile, file).fetchJoin()
                         .join(onlineLecture.teacher, user).fetchJoin()
                         .join(onlineLecture.organization, organization).fetchJoin()
                         .where(
@@ -53,6 +56,7 @@ public class QOnlineLectureRepository {
             online = queryFactory
                     .select(onlineLecture)
                     .from(onlineLecture)
+                    .join(onlineLecture.thumbnailFile, file).fetchJoin()
                     .leftJoin(userLecture)
                     .on(userLecture.lectureId.eq(onlineLecture.id).and(userLecture.isOnline.eq(1)))
                     .where(keywordContains(keyword))

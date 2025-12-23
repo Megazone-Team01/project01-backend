@@ -1,6 +1,7 @@
 package com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl;
 
 
+import com.mzcteam01.mzcproject01be.domains.file.entity.QFile;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.UserStatusResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.QOrganization;
@@ -30,6 +31,7 @@ public class QOfflineLectureRepository {
     QOrganization organization = QOrganization.organization;
     QUser user = QUser.user;
     QUserLecture userLecture = QUserLecture.userLecture;
+    QFile file = QFile.file;
 
     public UserStatusResponse status(int userId){
         return queryFactory
@@ -43,6 +45,7 @@ public class QOfflineLectureRepository {
         return Optional.ofNullable(
                 queryFactory
                         .selectFrom(offlineLecture)
+                        .join(offlineLecture.thumbnailFile, file).fetchJoin()
                         .join(offlineLecture.teacher, user).fetchJoin()
                         .join(offlineLecture.organization, organization).fetchJoin()
                         .where(
@@ -65,6 +68,7 @@ public class QOfflineLectureRepository {
             // 인기순: Join + GroupBy 사용
             offline = queryFactory
                     .select(offlineLecture)
+                    .join(offlineLecture.thumbnailFile, file).fetchJoin()
                     .from(offlineLecture)
                     .leftJoin(userLecture)
                     .on(userLecture.lectureId.eq(offlineLecture.id).and(userLecture.isOnline.eq(0)))
@@ -80,6 +84,7 @@ public class QOfflineLectureRepository {
             // 날짜순
             offline = queryFactory
                     .selectFrom(offlineLecture)
+                    .join(offlineLecture.thumbnailFile, file).fetchJoin()
                     .where(
                             keywordContains(keyword)
                     )
