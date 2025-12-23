@@ -27,6 +27,7 @@ public class AdminGetLectureResponse {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
+    private String thumbnail;
 
     public static AdminGetLectureResponse of(Lecture lecture, Boolean isOnline, List<String> categoryLayer ) {
         return AdminGetLectureResponse.builder()
@@ -40,6 +41,7 @@ public class AdminGetLectureResponse {
                 .price( lecture.getPrice() )
                 .startAt( lecture.getStartAt() )
                 .endAt( lecture.getEndAt() )
+                .thumbnail( lecture.getThumbnail() != null ? lecture.getThumbnail().getUrl() : null  )
                 .description(lecture.getDescription())
                 .createdAt(lecture.getCreatedAt())
                 .deletedAt(lecture.getDeletedAt())

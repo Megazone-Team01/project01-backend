@@ -130,4 +130,14 @@ public class UserController {
         userService.updateStatusUserOrganization(request);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","처리 완료하였습니다."));
     }
+
+    @PatchMapping("/update/{id}/admin")
+    @Operation( summary = "관리자의 사용자 업데이트 API" )
+    public ResponseEntity<GetProfileUpdateResponse> putMyInfo(
+            @RequestBody UpdateUserRequest request,
+            @PathVariable Integer id
+    ) {
+        GetProfileUpdateResponse my = userService.updateProfileInfo(id, request);
+        return ResponseEntity.ok().body(my);
+    }
 }

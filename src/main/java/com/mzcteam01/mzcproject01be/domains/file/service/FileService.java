@@ -34,7 +34,7 @@ public class FileService {
     private final OnlineLectureRepository onlineLectureRepository;
 
     // Stage 환경에서는 경로가 변경되어야 함 -> FE에서 조회 필요
-    @Value("${file.path}")
+    @Value("${file.absolute-path}")
     private String FILE_PATH;
 
     public Map<String, Object> uploadFiles(MultipartFile file, int uploaderId){
@@ -53,7 +53,7 @@ public class FileService {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             // 파일 엔티티 저장
-            File fileEntity = this.createFileEntity( FILE_PATH + "/" + filename, uploaderId, originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toUpperCase(), originalFilename );
+            File fileEntity = this.createFileEntity( filename, uploaderId, originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toUpperCase(), originalFilename );
 
             result.put( "fileId", fileEntity.getId() );
             result.put( "fileUrl", fileEntity.getUrl() );

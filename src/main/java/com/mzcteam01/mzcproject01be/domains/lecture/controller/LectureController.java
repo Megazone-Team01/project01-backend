@@ -90,7 +90,7 @@ public class LectureController {
             @PathVariable Integer id,
             @AuthenticationPrincipal AuthUser authUser
     ){
-        lectureFacade.updateLecture( id, request.isOnline(), request, authUser.getId() );
+        lectureFacade.updateLecture( id, request.getIsOnline() == 1, request, authUser.getId() );
         return ResponseEntity.ok( null );
     }
 
