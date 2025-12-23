@@ -41,7 +41,7 @@ public class AdminGetLectureResponse {
                 .price( lecture.getPrice() )
                 .startAt( lecture.getStartAt() )
                 .endAt( lecture.getEndAt() )
-                .thumbnail( lecture.getThumbnail() != null ? lecture.getThumbnail().getUrl() : null  )
+                .thumbnail( lecture.getThumbnailFile() != null ? lecture.getThumbnailFile().getUrl() : null  )
                 .description(lecture.getDescription())
                 .createdAt(lecture.getCreatedAt())
                 .deletedAt(lecture.getDeletedAt())
