@@ -54,6 +54,10 @@ public abstract class Lecture extends BaseEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "thumbnail" )
+    private File thumbnail;
+
     public void update( String name, User teacher, Integer price, LocalDateTime startAt, LocalDateTime endAt, String description ) {
         if( name != null ) this.name = name;
         if( price != null ) this.price = price;

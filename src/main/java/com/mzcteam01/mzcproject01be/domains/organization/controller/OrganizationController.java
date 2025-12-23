@@ -129,4 +129,15 @@ public class OrganizationController {
         List<OrganizationWithRoomsResponse> data = service.getOrganizationsWithRooms();
         return ResponseEntity.ok(data);
     }
+
+    @PostMapping("/apply/{organizationId}")
+    @Operation( summary = "해당 기관에 등록 신청하는 API" )
+    public ResponseEntity<Void> applyOrganization(
+            @PathVariable int organizationId,
+            @AuthenticationPrincipal AuthUser authUser
+    ){
+        service.apply( organizationId, authUser.getId() );
+        return ResponseEntity.ok().body( null );
+    }
+
 }

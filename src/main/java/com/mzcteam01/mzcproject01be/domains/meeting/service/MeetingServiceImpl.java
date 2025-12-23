@@ -159,6 +159,36 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
+    public List<MyMeetingListResponse> getTeacherMeetings(int teacherId, ChannelType channelType, Integer status) {
+
+        userRepository.findById(teacherId)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND.getMessage()));
+
+        List<MyMeetingListResponse> result = new ArrayList<>();
+
+        switch (channelType) {
+            case ALL -> {
+                List<OnlineMeeting> onlineMeetings = qOnlineMeetingRepository.findByTeacherId(teacherId, status);
+                List<OfflineMeeting> offlineMeetings = qOfflineMeetingRepository.findByTeacherId(teacherId, status);
+
+                onlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOnline(meeting)));
+                offlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOffline(meeting)));
+
+                result.sort((a, b) -> b.getStartAt().compareTo(a.getStartAt()));
+            }
+            case ONLINE -> {
+                List<OnlineMeeting> onlineMeetings = qOnlineMeetingRepository.findByTeacherId(teacherId, status);
+                onlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOnline(meeting)));
+            }
+            case OFFLINE -> {
+                List<OfflineMeeting> offlineMeetings = qOfflineMeetingRepository.findByTeacherId(teacherId, status);
+                offlineMeetings.forEach(meeting -> result.add(MyMeetingListResponse.fromOffline(meeting)));
+            }
+        }
+
+        return result;
+    }
+    @Override
     public TeacherDetailResponse getTeacherDetails(int teacherId) {
         User teacher = qTeacherRepository.findByTeacherId(teacherId)
                 .orElseThrow(() -> new CustomException(UserErrorCode.TEACHER_NOT_FOUND.LOGIN_FAILED.getMessage()));
@@ -193,6 +223,7 @@ public class MeetingServiceImpl implements MeetingService {
                     .endAt(request.getEndAt())
                     .status(0)  // 대기 상태
                     .location(null)
+                    .rejectReason("")
                     .build();
             meeting.setCreatedBy(studentId);
             onlineMeetingRepository.save(meeting);
@@ -221,6 +252,7 @@ public class MeetingServiceImpl implements MeetingService {
                     .endAt(request.getEndAt())
                     .status(0)  // 대기 상태
                     .room(room)
+                    .rejectReason("")
                     .build();
             meeting.setCreatedBy(studentId);
             offlineMeetingRepository.save(meeting);

@@ -94,4 +94,20 @@ public class QOfflineMeetingRepository {
 
         return count != null && count > 0;
     }
+
+    public List<OfflineMeeting> findByTeacherId(int teacherId, Integer status) {
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(offlineMeeting.teacher.id.eq(teacherId));
+        builder.and(offlineMeeting.deletedAt.isNull());
+
+        if (status != null) {
+            builder.and(offlineMeeting.status.eq(status));
+        }
+
+        return query
+                .selectFrom(offlineMeeting)
+                .where(builder)
+                .orderBy(offlineMeeting.startAt.desc())
+                .fetch();
+    }
 }

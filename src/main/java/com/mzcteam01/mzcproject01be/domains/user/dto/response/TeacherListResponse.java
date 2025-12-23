@@ -25,7 +25,7 @@ public class TeacherListResponse {
                 .name(teacher.getName())
                 .type(teacher.getType())
                 .typeName(ChannelType.ALL.getDescription())
-                .profileImage(teacher.getFile().getUrl())
+                .profileImage(teacher.getFile() != null ? teacher.getFile().getUrl() : null)
                 .available(true) // 기본값으로 현재는 모두 상담 가능, 추후 가용 시간 체크 로직에 추가 후 변경
                 //.categories(categoryNames)
                 .build();
