@@ -69,12 +69,22 @@ public class OfflineLectureController {
 
     @GetMapping("/{offlineId}")
     public ResponseEntity<LectureOfflineDetailResponse> offline(
-            @PathVariable int offlineId
+            @PathVariable int offlineId,
+            Authentication authentication
     ){
         try{
+            AuthUser authUser = (AuthUser) authentication.getPrincipal();
+            int userId = authUser.getId();
             LectureOfflineDetailResponse offline = lectureService.offline().findLecture(offlineId);
+            boolean exists = userLectureService.UserAppliedLecture(userId, offlineId);
+
+            LectureOfflineDetailResponse response = offline.toBuilder()
+                    .exists(exists)
+                    .build();
+
+
             log.info("Controller.Offline.offline, offlineId: {} data : {}", offlineId,offline);
-            return ResponseEntity.ok().body(offline);
+            return ResponseEntity.ok().body(response);
         } catch (CustomException e){
             log.error("Controller.Offline.error, offlineId: {}, error: {}", offlineId,e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -87,12 +97,12 @@ public class OfflineLectureController {
             @AuthenticationPrincipal UserDetails userDetails,
             Authentication authentication
        ){
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        int userId = authUser.getId();
 
         log.info("🔍 받은 lectureId: {}" , offlineId);
         log.info("🔍 받은 user: {}", userDetails.getUsername());
 
-        AuthUser authUser = (AuthUser) authentication.getPrincipal();
-        int userId = authUser.getId();
 
         userLectureService.create(userId, offlineId, false, LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.CREATED).body(UserEnrolledResponse.of(true));
