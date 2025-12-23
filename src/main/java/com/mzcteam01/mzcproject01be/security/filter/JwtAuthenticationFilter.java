@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +33,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtil jwtUtil) {
+        return new JwtAuthenticationFilter(userRoleRepository, userRepository, jwtUtil);
+    }
 
     // 필터 적용 여부
     // return 값에 따라 ture : 필터 미적용. false : 필터 적용.
@@ -64,12 +70,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String accessToken = authHeader.substring(7);
 
             // 2. 토큰 검증 후 클레임 파싱
-            Map<String, Object> claims = JwtUtil.validateToken(accessToken);
+            Map<String, Object> claims = jwtUtil.validateToken(accessToken);
 
             int id = (int) claims.get("id");
             String email = (String) claims.get("email");
             String name = (String) claims.get("name");
             String roleName = (String) claims.get("role");
+            int type = (int) claims.get("type");
 
 
             // 3. DB에서 Role 엔티티 조회
@@ -77,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .orElseThrow(() -> new RuntimeException("Role not found"));
 
             // 4. AuthUser Dto에 정보 세팅
-            AuthUser authUser = new AuthUser(id, email, name, role.getName());
+            AuthUser authUser = new AuthUser(id, email, name, role.getName(), type);
 
             // 5. Spring Security 권한 리스트 생성
             List<GrantedAuthority> authorities =
@@ -90,10 +97,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             filterChain.doFilter(request, response);
-//            log.info("Authentication in context: {}", SecurityContextHolder.getContext().getAuthentication());
-//            log.info("Authentication 객체: {}", SecurityContextHolder.getContext().getAuthentication());
-//            log.info("Granted Authorities: {}", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-
 
         } catch (CustomJwtException ex) {
             // 이미 CustomJwtException이면 그대로 ControllerAdvice에서 처리
@@ -119,19 +122,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     "id", user.getId(),
                     "email", user.getEmail(),
                     "name", user.getName(),
-                    "role", user.getRole().getName()
+                    "role", user.getRole().getName(),
+                    "type", user.getType()
             );
 
             // 새 Access Token 발급 (10분 만료)
-            String newAccessToken = JwtUtil.generateToken(newClaims, 10);
-            log.info("New access token: {}", newAccessToken);
+            String newAccessToken = jwtUtil.generateToken(newClaims, 10);
 
             // 새 토큰을 Response Header에 추가
             response.setHeader("Authorization", "Bearer " + newAccessToken);
             response.setHeader("Access-Control-Expose-Headers", "Authorization"); // 이거 필수!
 
             // 인증 객체를 SecurityContext에 세팅
-            AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getName(), user.getRole().getName());
+            AuthUser authUser = new AuthUser(user.getId(), user.getEmail(), user.getName(), user.getRole().getName(), user.getType());
 
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
 

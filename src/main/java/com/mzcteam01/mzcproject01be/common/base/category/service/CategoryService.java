@@ -11,6 +11,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.Lecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -74,7 +76,8 @@ public class CategoryService {
 
     // Category Code -> Category Layer
     public List<Category> categoryCodeToLayer( String categoryCode ){
-        String[] categoryLayer = categoryCode.split("");
+        String[] categoryLayer = categoryCode.split("_");
+        log.info("cetegory Layer. {}", categoryLayer);
         List<Category> result = new ArrayList<>();
         for( String layer : categoryLayer ){
             Category categoryName = categoryRepository.findByCode( layer ).orElseThrow( () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage()) );

@@ -54,7 +54,6 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
 
 
     @Override
-    @Transactional
     public void createOfflineLecture(OnlineLectureUploadRequest request, int userId) {
 
     }

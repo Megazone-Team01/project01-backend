@@ -17,6 +17,12 @@ import java.util.Map;
 @Slf4j
 public class ApiAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    private final JwtUtil jwtUtil;
+
+    public ApiAuthenticationSuccessHandler(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
@@ -26,8 +32,8 @@ public class ApiAuthenticationSuccessHandler implements AuthenticationSuccessHan
         Map<String, Object> claims = auditUser.getClaims();
 
         // Access Token, Refresh Token 생성
-        String accessToken = JwtUtil.generateToken(claims, 10);
-        String refreshToken = JwtUtil.generateToken(claims, 60 * 24 * 180);  // 180일
+        String accessToken = jwtUtil.generateToken(claims, 10);
+        String refreshToken = jwtUtil.generateToken(claims, 60 * 24 * 180);  // 180일
 
         claims.put("accessToken", accessToken);
         claims.put("refreshToken", refreshToken);

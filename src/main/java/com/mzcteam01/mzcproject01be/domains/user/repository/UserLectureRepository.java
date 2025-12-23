@@ -16,4 +16,7 @@ public interface UserLectureRepository extends JpaRepository<UserLecture, Intege
 
     @Query(value = "SELECT lecture_id FROM user_lecture WHERE user_id = :userId", nativeQuery = true)
     List<Integer> findLectureIdsByUserId(@Param("userId") int userId);
+
+    boolean existsByUserIdAndLectureIdAndIsOnlineTrue(@Param("userId") int userId,
+                                                      @Param("lectureId") int lectureId);
 }

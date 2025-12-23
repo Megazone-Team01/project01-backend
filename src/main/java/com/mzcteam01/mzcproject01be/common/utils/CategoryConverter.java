@@ -21,7 +21,7 @@ public class CategoryConverter {
     // - ex. TDSF -> [ '프로그래밍', 'Java', 'Spring Boot', 'JPA' ]
     public List<String> fullCodeToLayer( String fullString ){
         List<String> layers = new ArrayList<>();
-        String[] codes = fullString.split("");
+        String[] codes = fullString.split("_");
         for( String code : codes ){
             Category category = categoryRepository.findByCode(code).orElseThrow(
                     () -> new CustomException(CategoryErrorCode.CATEGORY_NOT_FOUND.getMessage())
