@@ -6,6 +6,7 @@ import com.mzcteam01.mzcproject01be.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -51,14 +52,25 @@ public class SecurityConfig {
 
                 // URL 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/user/signup", "/api/v1/user/login", "/api/v1/refresh","/api/v1/lecture/**", "/api/v1/sse/**").permitAll()
+                        .requestMatchers(
+                                "/api/v1/user/signup",
+                                "/api/v1/user/login",
+                                "/api/v1/refresh",
+                                "/api/v1/lecture/**",
+                                "/api/v1/sse/**",
+                                "/api/v1/user/teacher/organization/**"
+                        ).permitAll()
+                        .requestMatchers( HttpMethod.GET,
+                                "/api/v1/organization/**"
+                        ).permitAll()
                         .requestMatchers(
                                 "/ping",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
                                 "/files/**",
-                                "/api-docs/**").permitAll()
+                                "/api-docs/**")
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 // 주소 api만 허용

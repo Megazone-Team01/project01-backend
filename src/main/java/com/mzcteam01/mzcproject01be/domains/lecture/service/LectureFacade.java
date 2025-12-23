@@ -19,6 +19,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.entity.OfflineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OfflineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
+import com.mzcteam01.mzcproject01be.domains.notification.service.NotificationService;
 import com.mzcteam01.mzcproject01be.domains.organization.entity.Organization;
 import com.mzcteam01.mzcproject01be.domains.organization.repository.OrganizationRepository;
 import com.mzcteam01.mzcproject01be.domains.room.entity.Room;
@@ -51,6 +52,7 @@ public class LectureFacade {
     private final CategoryConverter categoryConverter;
     private final RelatedEntityChecker relatedEntityChecker;
     private final DayService dayService;
+    private final NotificationService notificationService;
 
     @Transactional
     public List<AdminGetLectureResponse> getAllLecturesWithFilter( Integer isOnline, Integer status, String sortBy, String searchString ) {
@@ -104,8 +106,9 @@ public class LectureFacade {
             File file = fileRepository.findById( request.getFileId() ).orElseThrow(
                     () -> new CustomException(FileErrorCode.FILE_NOT_FOUND.getMessage())
             );
+
             String categoryFullCode = categoryConverter.singleToFullCode( request.getCategory() );
-            OnlineLecture lecture = OnlineLecture.builder()
+            OnlineLecture.OnlineLectureBuilder lecture = OnlineLecture.builder()
                     .name(request.getName())
                     .organization( organization )
                     .teacher( teacher )
@@ -116,9 +119,19 @@ public class LectureFacade {
                     .file( file )
                     .startAt( request.getStartAt() )
                     .endAt( request.getEndAt() )
-                    .createdBy( createdBy )
-                    .build();
-            onlineRepository.save( lecture );
+                    .createdBy( createdBy );
+            if( request.getThumbnailId() != null ) {
+                File thumbnail = fileRepository.findById( request.getThumbnailId() ).orElseThrow(
+                        () -> new CustomException(FileErrorCode.FILE_NOT_FOUND.getMessage())
+                );
+                lecture.thumbnailFile( thumbnail );
+            }
+            onlineRepository.save( lecture.build() );
+            // 온라인 강의의 경우 관리자에게 알림 전달
+            List<User> admins = userRepository.findAllByRoleName("ADMIN");
+            String message = "새로운 온라인 강의 등록이 접수되었습니다";
+            for( User admin: admins ) notificationService.sendNotification( admin.getId(), message );
+
         }
         else if( request.getType() == 2 ){
             Room room = roomRepository.findById( request.getRoomId() ).orElseThrow(
