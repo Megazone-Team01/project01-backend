@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +33,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtil jwtUtil) {
+        return new JwtAuthenticationFilter(userRoleRepository, userRepository, jwtUtil);
+    }
 
     // 필터 적용 여부
     // return 값에 따라 ture : 필터 미적용. false : 필터 적용.
@@ -64,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String accessToken = authHeader.substring(7);
 
             // 2. 토큰 검증 후 클레임 파싱
-            Map<String, Object> claims = JwtUtil.validateToken(accessToken);
+            Map<String, Object> claims = jwtUtil.validateToken(accessToken);
 
             int id = (int) claims.get("id");
             String email = (String) claims.get("email");
@@ -121,7 +127,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
 
             // 새 Access Token 발급 (10분 만료)
-            String newAccessToken = JwtUtil.generateToken(newClaims, 10);
+            String newAccessToken = jwtUtil.generateToken(newClaims, 10);
 
             // 새 토큰을 Response Header에 추가
             response.setHeader("Authorization", "Bearer " + newAccessToken);

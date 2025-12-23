@@ -3,6 +3,7 @@ package com.mzcteam01.mzcproject01be.config;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import com.mzcteam01.mzcproject01be.domains.user.repository.UserRoleRepository;
 import com.mzcteam01.mzcproject01be.security.filter.JwtAuthenticationFilter;
+import com.mzcteam01.mzcproject01be.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +31,8 @@ public class SecurityConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(userRoleRepository, userRepository);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtUtil jwtUtil) {
+        return new JwtAuthenticationFilter(userRoleRepository, userRepository, jwtUtil);
     }
 
     @Bean
@@ -41,7 +42,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .formLogin(login -> login.disable())
                 .httpBasic(basic -> basic.disable())
@@ -81,7 +82,7 @@ public class SecurityConfig {
                 )
 
                 // JWT 필터 등록 (추가)
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
