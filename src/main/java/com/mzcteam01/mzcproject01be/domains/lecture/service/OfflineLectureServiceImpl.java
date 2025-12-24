@@ -28,11 +28,13 @@ import com.mzcteam01.mzcproject01be.domains.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,18 +71,34 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
     @Override
     public List<GetLectureResponse> getTop9Lectures(Integer searchType) {
 
-        PageRequest pageRequest = PageRequest.of(0, 9);
-        return qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest,null)
-                .stream()
-                .map(GetLectureResponse::of)
-                .toList();
+        PageRequest pageRequest = PageRequest.of(0, 70);
+        List<OfflineLecture> lectures = qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest,null).stream().toList();
+        List<String> existed = new ArrayList<>();
+        List<OfflineLecture> results = new ArrayList<>();
+        for( OfflineLecture lecture : lectures) {
+            if(!existed.contains(lecture.getName())){
+                results.add(lecture);
+                existed.add( lecture.getName() );
+            }
+        }
+        return results.stream().limit(9).map( GetLectureResponse::of ).toList();
+
     }
 
     @Override
     public LectureOfflineListResponse getAllLectures(Integer searchType, int page, String keyword) {
-        PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<OfflineLecture> offline = qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest, keyword);
-        return LectureOfflineListResponse.of(offline);
+        PageRequest pageRequest = PageRequest.of(page, 50);
+        List<OfflineLecture> lectures = qOfflineLectureRepository.findOfflineLectures(searchType, pageRequest, keyword).stream().toList();
+        List<String> existed = new ArrayList<>();
+        List<OfflineLecture> results = new ArrayList<>();
+        for( OfflineLecture lecture : lectures) {
+            if(!existed.contains(lecture.getName())){
+                results.add(lecture);
+                existed.add( lecture.getName() );
+            }
+        }
+
+        return LectureOfflineListResponse.of( new PageImpl<>( results, pageRequest, results.size() ));
     }
 
 

@@ -8,6 +8,7 @@ import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.GetLectureRespo
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineDetailResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.dto.response.LectureOnlineListResponse;
 import com.mzcteam01.mzcproject01be.domains.lecture.entity.OnlineLecture;
+import com.mzcteam01.mzcproject01be.domains.lecture.repository.OnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.repository.queryDsl.QOnlineLectureRepository;
 import com.mzcteam01.mzcproject01be.domains.lecture.service.interfaces.OnlineLectureService;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,11 @@ public class OnlineLectureServiceImpl implements OnlineLectureService {
 
     private final QOnlineLectureRepository qOnlineLectureRepository;
     private final CategoryConverter categoryConverter;
+    private final OnlineLectureRepository onlineLectureRepository;
 
     @Override
     public LectureOnlineDetailResponse findLecture(int id) {
-        OnlineLecture onlineLecture = qOnlineLectureRepository.findById(id)
+        OnlineLecture onlineLecture = onlineLectureRepository.findById(id)
                 .orElseThrow(() -> new CustomException(LectureErrorCode.ONLINE_NOT_FOUND.getMessage()));
         return LectureOnlineDetailResponse.of(onlineLecture, categoryConverter.fullCodeToLayer(onlineLecture.getCategory()));
     }

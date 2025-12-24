@@ -68,13 +68,7 @@ public class QOfflineLectureRepository {
             // 인기순: Join + GroupBy 사용
             offline = queryFactory
                     .select(offlineLecture)
-                    .join(offlineLecture.thumbnailFile, file).fetchJoin()
                     .from(offlineLecture)
-                    .leftJoin(userLecture)
-                    .on(userLecture.lectureId.eq(offlineLecture.id).and(userLecture.isOnline.eq(0)))
-                    .where(
-                            keywordContains(keyword)
-                    )
                     .groupBy(offlineLecture.id)
                     .orderBy(userLecture.count().desc())
                     .offset(pageable.getOffset())
@@ -84,10 +78,6 @@ public class QOfflineLectureRepository {
             // 날짜순
             offline = queryFactory
                     .selectFrom(offlineLecture)
-                    .join(offlineLecture.thumbnailFile, file).fetchJoin()
-                    .where(
-                            keywordContains(keyword)
-                    )
                     .orderBy(getCreatedOrder(searchType, offlineLecture.startAt))
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
