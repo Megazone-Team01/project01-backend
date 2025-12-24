@@ -29,9 +29,9 @@ jobs:
         run: |
           cd ~/mzc-project01
           
-          sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${{ steps.get_tag.outputs.IMAGE_TAG }}/" .env
-          sed -i "s/^JWT_SECRET=.*/JWT_SECRET=${{ secrets.JWT_SECRET }}/" .env
-          sed -i "s/^ABSOLUTE_FILE_PATH=.*/ABSOLUTE_FILE_PATH=${{ secrets.ABSOLUTE_FILE_PATH }}/" .env
+          sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ steps.get_tag.outputs.IMAGE_TAG }}|" .env
+          sed -i "s|^JWT_SECRET=.*|JWT_SECRET=${{ secrets.JWT_SECRET }}|" .env
+          sed -i "s|^ABSOLUTE_FILE_PATH=.*|ABSOLUTE_FILE_PATH=${{ secrets.ABSOLUTE_FILE_PATH }}|" .env
           
           docker pull $IMAGE_FULL_URL
           docker compose up -d
