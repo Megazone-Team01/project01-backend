@@ -60,6 +60,7 @@ public class QOnlineLectureRepository {
                     .leftJoin(userLecture)
                     .on(userLecture.lectureId.eq(onlineLecture.id).and(userLecture.isOnline.eq(1)))
                     .where(keywordContains(keyword))
+                    .where(onlineLecture.status.eq(1))
                     .groupBy(onlineLecture.id)
                     .orderBy(userLecture.count().desc())
                     .offset(pageable.getOffset())
@@ -71,6 +72,7 @@ public class QOnlineLectureRepository {
                     .selectFrom(onlineLecture)
                     .where(keywordContains(keyword))
                     .orderBy(getCreatedOrder(searchType, onlineLecture.startAt))
+                    .where(onlineLecture.status.eq(1))
                     .offset(pageable.getOffset())
                     .limit(pageable.getPageSize())
                     .fetch();

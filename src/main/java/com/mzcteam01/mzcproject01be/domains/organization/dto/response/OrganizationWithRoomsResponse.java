@@ -15,6 +15,7 @@ import java.util.List;
 public class OrganizationWithRoomsResponse {
     private Integer id;
     private String name;
+    private Integer isOnline;
     private List<RoomInfo> rooms;
 
     @Getter

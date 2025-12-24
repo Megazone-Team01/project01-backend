@@ -59,7 +59,7 @@ public class OfflineLectureServiceImpl implements OfflineLectureService {
 
     @Override
     public LectureOfflineDetailResponse findLecture(int id) {
-        OfflineLecture offlineLecture = qOfflineLectureRepository.findById(id)
+        OfflineLecture offlineLecture = offlineLectureRepository.findById(id)
                 .orElseThrow(() -> new CustomException(LectureErrorCode.OFFLINE_NOT_FOUND.getMessage()));
 
         return LectureOfflineDetailResponse.of(offlineLecture, categoryConverter.fullCodeToLayer(offlineLecture.getCategory()));

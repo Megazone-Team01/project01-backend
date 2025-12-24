@@ -183,6 +183,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                             .id(org.getId())
                             .name(org.getName())
                             .rooms(roomInfos)
+                            .isOnline(org.getIsOnline())
                             .build();
                 })
                 .toList();
